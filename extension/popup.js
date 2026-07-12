@@ -10,7 +10,7 @@ const detectBtn = document.getElementById("detectBtn");
 const clearBtn = document.getElementById("clearBtn");
 const saveBtn = document.getElementById("saveBtn");
 const statusEl = document.getElementById("status");
-const DEFAULT_API_BASE = "https://YOUR-SPYSAVE-VERCEL-URL.vercel.app";
+const DEFAULT_API_BASE = "https://spysave.vercel.app";
 
 function setStatus(message, isError = false) {
   statusEl.textContent = message;
@@ -237,3 +237,4 @@ userIdInput.addEventListener("input", saveSettings);
 detectBtn.addEventListener("click", fillFromPage);
 clearBtn.addEventListener("click", clearAdFields);
 saveBtn.addEventListener("click", saveAd);
+

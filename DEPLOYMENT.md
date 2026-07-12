@@ -31,11 +31,11 @@
 
 ## Chrome Extension Beta
 
-1. After Vercel gives the final URL, replace `https://YOUR-SPYSAVE-VERCEL-URL.vercel.app` in:
+1. Production API base is configured as `https://spysave.vercel.app` in:
    - `extension/background.js`
    - `extension/content.js`
    - `extension/popup.js`
-2. Run `Compress-Archive -Path extension\* -DestinationPath public\spysave-extension.zip -Force`.
+2. Run `Compress-Archive -Path extension\* -DestinationPath public\spysave-extension.zip -Force` after every extension change.
 3. Open `chrome://extensions`.
 4. Reload the unpacked extension.
 5. Login on the deployed website.
@@ -50,3 +50,4 @@
 3. Use the strict Firestore rules from `firestore.rules`.
 4. Add privacy policy and terms pages before publishing the extension publicly.
 5. Review Chrome extension permissions before Chrome Web Store submission.
+

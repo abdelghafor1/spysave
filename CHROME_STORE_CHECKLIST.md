@@ -35,7 +35,8 @@
 
 ## Before Final ZIP
 
-- Replace `https://YOUR-SPYSAVE-VERCEL-URL.vercel.app` with the final Vercel URL.
-- Bump `extension/manifest.json` version.
+- Confirm `https://spysave.vercel.app` is the production API base.
+- Bump `extension/manifest.json` version after every release.
 - Rebuild `public/spysave-extension.zip`.
 - Test the extension from a clean Chrome profile.
+

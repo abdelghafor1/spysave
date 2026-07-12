@@ -4,7 +4,7 @@
   window.__SPYSAVE_CONTENT_READY__ = true;
 
   const PANEL_ID = "spysave-floating-panel";
-  const DEFAULT_API_BASE = "https://YOUR-SPYSAVE-VERCEL-URL.vercel.app";
+  const DEFAULT_API_BASE = "https://spysave.vercel.app";
 
   function normalizeText(text) {
     return (text || "")
@@ -618,3 +618,4 @@
     }
   });
 })();
+

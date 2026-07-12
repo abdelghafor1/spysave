@@ -1,4 +1,4 @@
-const DEFAULT_API_BASE = "https://YOUR-SPYSAVE-VERCEL-URL.vercel.app";
+const DEFAULT_API_BASE = "https://spysave.vercel.app";
 
 chrome.action.onClicked.addListener(async (tab) => {
   if (!tab.id || !tab.url || /^chrome:|^edge:|^about:/i.test(tab.url)) {
@@ -85,3 +85,4 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
 
   return true;
 });
+
