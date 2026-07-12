@@ -165,6 +165,7 @@ export default function SpySaveApp() {
   const [copiedUserId, setCopiedUserId] = useState(false);
   const [showSaveForm, setShowSaveForm] = useState(true);
   const [showExtensionHelper, setShowExtensionHelper] = useState(false);
+  const [showExtensionFallback, setShowExtensionFallback] = useState(false);
   const [extensionConnectStatus, setExtensionConnectStatus] = useState("");
   const [selectedAd, setSelectedAd] = useState<SpySaveAd | null>(null);
   const [reAnalyzingId, setReAnalyzingId] = useState<string | null>(null);
@@ -221,6 +222,7 @@ export default function SpySaveApp() {
       setExtensionConnectStatus(
         event.data.message || "SpySave extension connected.",
       );
+      setShowExtensionFallback(false);
 
       if (user) {
         window.localStorage.setItem(
@@ -374,6 +376,7 @@ export default function SpySaveApp() {
     if (!user) return;
 
     await navigator.clipboard.writeText(user.uid).catch(() => undefined);
+    setShowExtensionFallback(false);
     setExtensionConnectStatus("Connecting SpySave extension...");
 
     window.postMessage(
@@ -391,6 +394,7 @@ export default function SpySaveApp() {
           ? "If it did not open, reload SpySave in chrome://extensions, then click Open extension again. Your User ID is already copied."
           : current,
       );
+      setShowExtensionFallback(true);
     }, 1400);
   }
 
@@ -647,6 +651,53 @@ export default function SpySaveApp() {
       </header>
 
       <section className="mx-auto grid max-w-7xl gap-4 px-5 py-4 lg:grid-cols-[0.78fr_1.22fr]">
+        {showExtensionFallback ? (
+          <aside className="fixed bottom-5 right-5 z-50 w-[min(420px,calc(100vw-32px))] rounded-xl border border-[#dde4f3] bg-white p-4 text-[#172033] shadow-2xl">
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <p className="text-sm font-bold uppercase text-[#3157d5]">
+                  Extension setup
+                </p>
+                <h2 className="mt-1 text-xl font-semibold">
+                  SpySave did not open automatically
+                </h2>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowExtensionFallback(false)}
+                className="grid size-9 place-items-center rounded-lg border border-[#dde4f3] bg-white text-sm font-bold"
+              >
+                x
+              </button>
+            </div>
+            <p className="mt-2 text-sm leading-6 text-[#526173]">
+              Your User ID is already copied. Click the SpySave icon in Chrome,
+              or paste this ID once inside the extension.
+            </p>
+            <code className="mt-3 block max-w-full overflow-x-auto rounded-lg bg-[#eef3ff] px-3 py-3 text-xs font-bold">
+              {user.uid}
+            </code>
+            <div className="mt-3 grid gap-2 sm:grid-cols-2">
+              <button
+                type="button"
+                onClick={copyUserId}
+                className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-[#dde4f3] bg-white px-3 text-sm font-bold"
+              >
+                <Copy size={15} />
+                {copiedUserId ? "Copied" : "Copy ID"}
+              </button>
+              <button
+                type="button"
+                onClick={connectExtension}
+                className="brand-gradient inline-flex h-10 items-center justify-center gap-2 rounded-lg px-3 text-sm font-bold"
+              >
+                <Sparkles size={15} />
+                Try again
+              </button>
+            </div>
+          </aside>
+        ) : null}
+
         <div className="lg:col-span-2">
           <p className="text-sm font-bold uppercase text-[#07966f]">Dashboard</p>
           <h1 className="mt-1 text-4xl font-semibold">SpySave workspace</h1>
@@ -734,10 +785,18 @@ export default function SpySaveApp() {
               </code>
               <button
                 onClick={copyUserId}
-                className="brand-gradient inline-flex h-10 items-center gap-2 rounded-lg px-4 text-sm font-bold"
+                className="inline-flex h-10 items-center gap-2 rounded-lg border border-[#d8e8e1] bg-white px-4 text-sm font-bold text-[#13231f]"
               >
                 <Copy size={16} />
                 {copiedUserId ? "Copied" : "Copy User ID"}
+              </button>
+              <button
+                type="button"
+                onClick={connectExtension}
+                className="brand-gradient inline-flex h-10 items-center gap-2 rounded-lg px-4 text-sm font-bold"
+              >
+                <Sparkles size={16} />
+                Open extension
               </button>
             </div>
           </div>
