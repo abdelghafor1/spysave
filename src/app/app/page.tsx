@@ -227,6 +227,9 @@ export default function SpySaveApp() {
           `spysave-extension-helper-seen-${user.uid}`,
           "yes",
         );
+        if (event.data?.ok !== false) {
+          setShowExtensionHelper(false);
+        }
       }
     }
 
@@ -652,6 +655,53 @@ export default function SpySaveApp() {
           </p>
         </div>
 
+        {showExtensionHelper && (
+          <section className="premium-panel rounded-xl border-2 border-[#3157d5] p-5 lg:col-span-2">
+            <div className="grid gap-4 lg:grid-cols-[1fr_auto] lg:items-center">
+              <div>
+                <p className="text-sm font-bold uppercase text-[#3157d5]">
+                  Required first setup
+                </p>
+                <h2 className="mt-1 text-2xl font-semibold">
+                  Connect your Chrome extension first
+                </h2>
+                <p className="mt-1 max-w-2xl text-sm leading-6 text-[#4f635d]">
+                  Copy this User ID, open the SpySave extension on screen, and paste it once.
+                  After that, SpySave will remember it.
+                </p>
+                {extensionConnectStatus ? (
+                  <p className="mt-2 text-sm font-bold text-[#2f8a61]">
+                    {extensionConnectStatus}
+                  </p>
+                ) : null}
+              </div>
+
+              <div className="grid gap-2 sm:min-w-[420px]">
+                <code className="max-w-full overflow-x-auto rounded-lg bg-[#eef2f0] px-3 py-3 text-xs font-bold text-[#101413]">
+                  {user.uid}
+                </code>
+                <div className="grid gap-2 sm:grid-cols-2">
+                  <button
+                    onClick={copyUserId}
+                    className="inline-flex h-11 items-center justify-center gap-2 rounded-lg border border-[#d8e8e1] bg-white px-4 text-sm font-bold text-[#13231f]"
+                  >
+                    <Copy size={16} />
+                    {copiedUserId ? "Copied" : "Copy User ID"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={connectExtension}
+                    className="brand-gradient inline-flex h-11 items-center justify-center gap-2 rounded-lg px-4 text-sm font-bold"
+                  >
+                    <Sparkles size={16} />
+                    Open extension
+                  </button>
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
+
         <div className="grid gap-2 lg:col-span-2 md:grid-cols-3">
           {dashboardStats.map(([label, value]) => (
             <div
@@ -664,6 +714,7 @@ export default function SpySaveApp() {
           ))}
         </div>
 
+        {!showExtensionHelper && (
         <div className="lg:col-span-2">
           <div className="premium-panel flex flex-wrap items-center justify-between gap-3 rounded-xl p-4">
             <div>
@@ -691,52 +742,6 @@ export default function SpySaveApp() {
             </div>
           </div>
         </div>
-
-        {showExtensionHelper && (
-          <section className="premium-panel rounded-xl border-2 border-[#4ad7b4] p-4 lg:col-span-2">
-            <div className="flex flex-wrap items-center justify-between gap-4">
-              <div>
-                <p className="text-sm font-bold uppercase text-[#07966f]">
-                  First login
-                </p>
-                <h2 className="mt-1 text-2xl font-semibold">
-                  Open SpySave extension now
-                </h2>
-                <p className="mt-1 max-w-2xl text-sm leading-6 text-[#4f635d]">
-                  We will send your User ID to the extension so you do not need
-                  to paste it manually every time.
-                </p>
-                {extensionConnectStatus ? (
-                  <p className="mt-2 text-sm font-bold text-[#2f8a61]">
-                    {extensionConnectStatus}
-                  </p>
-                ) : null}
-              </div>
-              <div className="flex flex-wrap gap-2">
-                <button
-                  type="button"
-                  onClick={connectExtension}
-                  className="brand-gradient inline-flex h-11 items-center gap-2 rounded-lg px-4 text-sm font-bold"
-                >
-                  <Sparkles size={16} />
-                  Open extension
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    window.localStorage.setItem(
-                      `spysave-extension-helper-seen-${user.uid}`,
-                      "yes",
-                    );
-                    setShowExtensionHelper(false);
-                  }}
-                  className="inline-flex h-11 items-center rounded-lg border border-[#d8e8e1] bg-white px-4 text-sm font-bold text-[#13231f]"
-                >
-                  Later
-                </button>
-              </div>
-            </div>
-          </section>
         )}
 
         <section className="hidden">
