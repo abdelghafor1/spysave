@@ -19,7 +19,7 @@ window.addEventListener("message", (event) => {
   }
 
   chrome.storage.sync.set({ apiBase, userId }, () => {
-    chrome.runtime.sendMessage({ type: "SPYSAVE_OPEN_POPUP" }, (response) => {
+    chrome.runtime.sendMessage({ type: "SPYSAVE_OPEN_POPUP", forceOpen: true }, (response) => {
       const browserError = chrome.runtime.lastError?.message;
       window.postMessage(
         {

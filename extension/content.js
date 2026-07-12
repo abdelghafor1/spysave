@@ -482,9 +482,13 @@
     }
   }
 
-  function createPanel() {
+  function createPanel(options = {}) {
     const existing = document.getElementById(PANEL_ID);
     if (existing) {
+      if (options.forceOpen) {
+        existing.scrollIntoView({ block: "nearest", inline: "nearest" });
+        return;
+      }
       existing.remove();
       return;
     }
@@ -530,6 +534,9 @@
         button:disabled { cursor: wait; opacity: .65; }
         .close { display: grid; width: 38px; place-items: center; border: 1px solid #d8e8e1; background: #fff; color: #13231f; font-size: 20px; }
         .connection { display: inline-flex; align-items: center; min-height: 28px; border: 1px solid #fed7aa; border-radius: 999px; padding: 4px 10px; font-size: 12px; font-weight: 900; }
+        .welcome { margin: 12px 0; border: 1px solid #bfd0ff; border-radius: 10px; background: #eef3ff; padding: 12px; color: #172033; }
+        .welcome strong { display: block; font-size: 13px; }
+        .welcome span { display: block; margin-top: 4px; color: #526173; font-size: 12px; line-height: 1.5; }
         .secondary { width: 100%; margin-top: 12px; border: 1px solid #13b98f; background: #fff; color: #08775d; }
         .danger { width: 100%; margin-top: 8px; border: 1px solid #f2c4bc; background: #fff; color: #b42318; }
         .pick { width: 100%; margin-top: 8px; border: 1px solid #ff7a59; background: #fff7f2; color: #a84227; }
@@ -566,6 +573,10 @@
         <label>User ID<input data-spysave-field="userId" autocomplete="off" placeholder="Paste User ID from dashboard" /></label>
         <p class="hint">Paste it once. SpySave will remember it.</p>
         <p class="connection" data-spysave-connection>Checking connection...</p>
+        <div class="welcome">
+          <strong>Extension is ready on your screen.</strong>
+          <span>Open Meta Ad Library or TikTok Creative Center, click SpySave, then save the ad to your dashboard.</span>
+        </div>
 
         <button class="secondary" data-spysave-detect>Auto detect ad</button>
         <button class="danger" data-spysave-clear>Clear ad fields</button>
@@ -613,7 +624,7 @@
     }
 
     if (message.type === "SPYSAVE_TOGGLE_PANEL") {
-      createPanel();
+      createPanel({ forceOpen: message.forceOpen });
       sendResponse({ ok: true });
     }
   });

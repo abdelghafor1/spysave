@@ -37,20 +37,24 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
         // The content script may already be available on this page.
       }
 
-      chrome.tabs.sendMessage(tab.id, { type: "SPYSAVE_TOGGLE_PANEL" }, () => {
-        if (chrome.runtime.lastError) {
-          sendResponse({
-            ok: false,
-            message: "User ID saved. Click the SpySave extension icon once.",
-          });
-          return;
-        }
+      chrome.tabs.sendMessage(
+        tab.id,
+        { type: "SPYSAVE_TOGGLE_PANEL", forceOpen: Boolean(message.forceOpen) },
+        () => {
+          if (chrome.runtime.lastError) {
+            sendResponse({
+              ok: false,
+              message: "User ID saved. Click the SpySave extension icon once.",
+            });
+            return;
+          }
 
-        sendResponse({
-          ok: true,
-          message: "SpySave extension opened and connected.",
-        });
-      });
+          sendResponse({
+            ok: true,
+            message: "SpySave extension opened on your screen.",
+          });
+        },
+      );
     });
 
     return true;
