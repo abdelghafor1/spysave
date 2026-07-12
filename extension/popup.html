@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SpySave</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <main>
+      <header>
+        <img class="logo" src="icons/icon-48.png" alt="SpySave logo" />
+        <div>
+          <h1>SpySave</h1>
+          <p>Save Meta ads to your dashboard</p>
+        </div>
+      </header>
+      <p class="notice">Tip: click the extension icon on Meta Ad Library to open the persistent side panel.</p>
+
+      <label>
+        API base
+        <input id="apiBase" placeholder="https://your-site.vercel.app" />
+      </label>
+
+      <label>
+        User ID
+        <input
+          id="userId"
+          autocomplete="off"
+          placeholder="Paste User ID from SpySave dashboard"
+        />
+      </label>
+      <p class="hint">Paste it once. SpySave will remember it.</p>
+
+      <button id="detectBtn" class="secondary" type="button">Auto detect ad</button>
+      <button id="clearBtn" class="danger" type="button">Clear ad fields</button>
+
+      <label>
+        Page name
+        <input id="pageName" placeholder="Brand or competitor name" />
+      </label>
+
+      <label>
+        Ad text
+        <textarea id="adText" placeholder="Select ad text on the page, then open SpySave."></textarea>
+      </label>
+
+      <label>
+        Landing page URL
+        <input id="landingPageUrl" placeholder="https://store.com/product" />
+      </label>
+
+      <label>
+        Media URL
+        <input id="mediaUrl" placeholder="Detected image/video URL" />
+      </label>
+
+      <label>
+        Tags
+        <input id="tags" placeholder="skincare, ugc, winning idea" />
+      </label>
+
+      <label>
+        Notes
+        <textarea id="notes" class="short" placeholder="Why are you saving this ad?"></textarea>
+      </label>
+
+      <button id="saveBtn">Save ad</button>
+      <p id="status"></p>
+    </main>
+    <script src="popup.js"></script>
+  </body>
+</html>
