@@ -1,7 +1,31 @@
 const DEFAULT_API_BASE = "https://spysave.vercel.app";
 
+function isBlockedPage(url = "") {
+  return /^chrome:|^edge:|^about:/i.test(url);
+}
+
+function sendPanelToggle(tabId, forceOpen = false) {
+  return new Promise((resolve) => {
+    chrome.tabs.sendMessage(
+      tabId,
+      { type: "SPYSAVE_TOGGLE_PANEL", forceOpen },
+      (response) => {
+        if (chrome.runtime.lastError) {
+          resolve({
+            ok: false,
+            message: chrome.runtime.lastError.message || "Panel message failed.",
+          });
+          return;
+        }
+
+        resolve(response || { ok: true });
+      },
+    );
+  });
+}
+
 chrome.action.onClicked.addListener(async (tab) => {
-  if (!tab.id || !tab.url || /^chrome:|^edge:|^about:/i.test(tab.url)) {
+  if (!tab.id || !tab.url || isBlockedPage(tab.url)) {
     return;
   }
 
@@ -14,13 +38,13 @@ chrome.action.onClicked.addListener(async (tab) => {
     // The content script may already be injected on supported pages.
   }
 
-  chrome.tabs.sendMessage(tab.id, { type: "SPYSAVE_TOGGLE_PANEL" });
+  await sendPanelToggle(tab.id);
 });
 
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   if (message.type === "SPYSAVE_OPEN_POPUP") {
     chrome.tabs.query({ active: true, currentWindow: true }, async ([tab]) => {
-      if (!tab?.id || !tab.url || /^chrome:|^edge:|^about:/i.test(tab.url)) {
+      if (!tab?.id || !tab.url || isBlockedPage(tab.url)) {
         sendResponse({
           ok: false,
           message: "User ID saved. Click the SpySave extension icon on a normal page.",
@@ -37,31 +61,26 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
         // The content script may already be available on this page.
       }
 
-      chrome.tabs.sendMessage(
-        tab.id,
-        { type: "SPYSAVE_TOGGLE_PANEL", forceOpen: Boolean(message.forceOpen) },
-        async () => {
-          if (chrome.runtime.lastError) {
-            if (chrome.action.openPopup) {
-              try {
-                await chrome.action.openPopup();
-              } catch {
-                // Some Chrome versions only allow this from specific gestures.
-              }
-            }
-            sendResponse({
-              ok: false,
-              message: "User ID saved. If the panel did not appear, reload SpySave in chrome://extensions then click the extension icon once.",
-            });
-            return;
+      const panelResult = await sendPanelToggle(tab.id, Boolean(message.forceOpen));
+      if (!panelResult.ok) {
+        if (chrome.action.openPopup) {
+          try {
+            await chrome.action.openPopup();
+          } catch {
+            // Some Chrome versions only allow this from specific gestures.
           }
+        }
+        sendResponse({
+          ok: false,
+          message: "User ID saved. If the panel did not appear, reload SpySave in chrome://extensions then click the extension icon once.",
+        });
+        return;
+      }
 
-          sendResponse({
-            ok: true,
-            message: "SpySave extension opened on your screen.",
-          });
-        },
-      );
+      sendResponse({
+        ok: true,
+        message: "SpySave extension opened on your screen.",
+      });
     });
 
     return true;
