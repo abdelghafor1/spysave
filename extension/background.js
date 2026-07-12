@@ -40,11 +40,18 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
       chrome.tabs.sendMessage(
         tab.id,
         { type: "SPYSAVE_TOGGLE_PANEL", forceOpen: Boolean(message.forceOpen) },
-        () => {
+        async () => {
           if (chrome.runtime.lastError) {
+            if (chrome.action.openPopup) {
+              try {
+                await chrome.action.openPopup();
+              } catch {
+                // Some Chrome versions only allow this from specific gestures.
+              }
+            }
             sendResponse({
               ok: false,
-              message: "User ID saved. Click the SpySave extension icon once.",
+              message: "User ID saved. If the panel did not appear, reload SpySave in chrome://extensions then click the extension icon once.",
             });
             return;
           }

@@ -388,7 +388,7 @@ export default function SpySaveApp() {
     window.setTimeout(() => {
       setExtensionConnectStatus((current) =>
         current === "Connecting SpySave extension..."
-          ? "If it did not open, click the SpySave extension icon once. Your User ID is already copied."
+          ? "If it did not open, reload SpySave in chrome://extensions, then click Open extension again. Your User ID is already copied."
           : current,
       );
     }, 1400);
