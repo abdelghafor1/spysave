@@ -651,7 +651,11 @@
     document.documentElement.appendChild(host);
     bringPanelToFront(host);
 
-    const root = host.attachShadow({ mode: "open" });
+    const shell = document.createElement("div");
+    shell.style.cssText = "width:100%;height:100%;";
+    host.appendChild(shell);
+
+    const root = shell.attachShadow({ mode: "open" });
     root.innerHTML = `
       <style>
         * { box-sizing: border-box; }
