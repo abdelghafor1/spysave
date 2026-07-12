@@ -21,12 +21,14 @@
       host.parentNode.appendChild(host);
     }
 
-    if (typeof host.showModal === "function" && !host.open) {
+    if (typeof host.show === "function" && !host.open) {
       try {
-        host.showModal();
+        host.show();
       } catch {
         host.setAttribute("open", "");
       }
+    } else if (!host.open) {
+      host.setAttribute("open", "");
     }
   }
 
