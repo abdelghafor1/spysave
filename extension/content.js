@@ -5,6 +5,30 @@
 
   const PANEL_ID = "spysave-floating-panel";
   const DEFAULT_API_BASE = "https://spysave.vercel.app";
+  const TOP_Z_INDEX = "2147483647";
+
+  function bringPanelToFront(host) {
+    host.style.setProperty("z-index", TOP_Z_INDEX, "important");
+    host.style.setProperty("position", "fixed", "important");
+    host.style.setProperty("top", "0", "important");
+    host.style.setProperty("right", "0", "important");
+    host.style.setProperty("left", "auto", "important");
+    host.style.setProperty("bottom", "auto", "important");
+    host.style.setProperty("width", "min(420px, calc(100vw - 24px))", "important");
+    host.style.setProperty("height", "100vh", "important");
+
+    if (host.parentNode) {
+      host.parentNode.appendChild(host);
+    }
+
+    if (typeof host.showModal === "function" && !host.open) {
+      try {
+        host.showModal();
+      } catch {
+        host.setAttribute("open", "");
+      }
+    }
+  }
 
   function normalizeText(text) {
     return (text || "")
@@ -593,26 +617,39 @@
     const existing = document.getElementById(PANEL_ID);
     if (existing) {
       if (options.forceOpen) {
+        bringPanelToFront(existing);
         existing.scrollIntoView({ block: "nearest", inline: "nearest" });
         return;
+      }
+      if (typeof existing.close === "function" && existing.open) {
+        existing.close();
       }
       existing.remove();
       return;
     }
 
-    const host = document.createElement("div");
+    const host = document.createElement("dialog");
     host.id = PANEL_ID;
     host.style.cssText = [
       "position:fixed",
       "top:0",
       "right:0",
+      "left:auto",
+      "bottom:auto",
       "width:min(420px, calc(100vw - 24px))",
       "height:100vh",
-      "z-index:2147483647",
+      `z-index:${TOP_Z_INDEX}`,
       "box-shadow:-18px 0 40px rgba(24,23,19,.22)",
       "background:#f3fbf7",
+      "border:0",
+      "border-radius:0",
+      "padding:0",
+      "margin:0 0 0 auto",
+      "max-width:none",
+      "max-height:none",
     ].join(";");
     document.documentElement.appendChild(host);
+    bringPanelToFront(host);
 
     const root = host.attachShadow({ mode: "open" });
     root.innerHTML = `
@@ -722,7 +759,12 @@
       </main>
     `;
 
-    root.querySelector("[data-spysave-close]").addEventListener("click", () => host.remove());
+    root.querySelector("[data-spysave-close]").addEventListener("click", () => {
+      if (typeof host.close === "function" && host.open) {
+        host.close();
+      }
+      host.remove();
+    });
     root.querySelector("[data-spysave-detect]").addEventListener("click", () => fillDetectedFields(root));
     root.querySelector("[data-spysave-clear]").addEventListener("click", () => clearAdFields(root));
     root.querySelector("[data-spysave-pick]").addEventListener("click", () => pickFromPage(root, host));
