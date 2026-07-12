@@ -388,8 +388,38 @@
     setStatus(root, "Ad fields cleared. User ID stayed connected.");
   }
 
+  function stopPickMode(root, host, message = "Pick mode stopped.") {
+    if (host.__spysavePickHandler) {
+      document.removeEventListener("click", host.__spysavePickHandler, true);
+      host.__spysavePickHandler = null;
+    }
+
+    document.documentElement.style.cursor = "";
+
+    const pickButton = root.querySelector("[data-spysave-pick]");
+    if (pickButton) {
+      pickButton.classList.remove("active");
+      pickButton.textContent = "Pick ad from page";
+      pickButton.setAttribute("aria-pressed", "false");
+    }
+
+    if (message) {
+      setStatus(root, message);
+    }
+  }
+
   function pickFromPage(root, host) {
-    setStatus(root, "Click directly on the ad card/text in the page.");
+    if (host.__spysavePickHandler) {
+      stopPickMode(root, host, "Pick mode cancelled.");
+      return;
+    }
+
+    const pickButton = root.querySelector("[data-spysave-pick]");
+    if (pickButton) {
+      pickButton.classList.add("active");
+      pickButton.textContent = "Picking... click again to cancel";
+      pickButton.setAttribute("aria-pressed", "true");
+    }
 
     const onClick = (event) => {
       if (event.composedPath().includes(host)) return;
@@ -406,12 +436,13 @@
         !context.detectedText,
       );
 
-      document.removeEventListener("click", onClick, true);
-      document.documentElement.style.cursor = "";
+      stopPickMode(root, host, "");
     };
 
+    host.__spysavePickHandler = onClick;
     document.documentElement.style.cursor = "crosshair";
     document.addEventListener("click", onClick, true);
+    setStatus(root, "Pick mode active. Click directly on the ad card/text.");
   }
 
   function saveViaBackground(apiBase, payload) {
@@ -694,6 +725,7 @@
         .secondary { width: 100%; margin-top: 12px; border: 1px solid #13b98f; background: #fff; color: #08775d; }
         .danger { width: 100%; margin-top: 8px; border: 1px solid #f2c4bc; background: #fff; color: #b42318; }
         .pick { width: 100%; margin-top: 8px; border: 1px solid #ff7a59; background: #fff7f2; color: #a84227; }
+        .pick.active { border-color: #172033; background: #172033; color: #fff; box-shadow: 0 0 0 3px rgba(255, 122, 89, .24); }
         .primary { width: 100%; margin-top: 14px; background: linear-gradient(135deg, #13b98f, #dff77a, #ff7a59); color: #13231f; }
         .hint { margin-top: 6px; }
         .status { min-height: 20px; margin-top: 10px; font-weight: 800; }
@@ -740,7 +772,7 @@
         <section data-spysave-section="ads">
           <button class="secondary" data-spysave-detect>Auto detect ad</button>
           <button class="danger" data-spysave-clear>Clear ad fields</button>
-          <button class="pick" data-spysave-pick>Pick ad from page</button>
+          <button class="pick" data-spysave-pick aria-pressed="false">Pick ad from page</button>
 
           <label>Page name<input data-spysave-field="pageName" placeholder="Brand or competitor name" /></label>
           <label>Ad text<textarea data-spysave-field="adText" placeholder="Select or paste ad text"></textarea></label>
@@ -766,6 +798,7 @@
     `;
 
     root.querySelector("[data-spysave-close]").addEventListener("click", () => {
+      stopPickMode(root, host, "");
       if (typeof host.close === "function" && host.open) {
         host.close();
       }
