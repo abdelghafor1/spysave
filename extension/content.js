@@ -413,6 +413,31 @@
     });
   }
 
+  function saveCompetitorViaBackground(apiBase, payload) {
+    return new Promise((resolve, reject) => {
+      chrome.runtime.sendMessage(
+        {
+          type: "SPYSAVE_SAVE_COMPETITOR",
+          apiBase,
+          payload,
+        },
+        (result) => {
+          if (chrome.runtime.lastError) {
+            reject(new Error(chrome.runtime.lastError.message || "Extension background did not answer."));
+            return;
+          }
+
+          if (!result?.ok) {
+            reject(new Error(result?.error || "Competitor save failed."));
+            return;
+          }
+
+          resolve(result.data || {});
+        },
+      );
+    });
+  }
+
   async function saveDirectly(apiBase, payload) {
     const response = await fetch(`${apiBase}/api/ads`, {
       method: "POST",
@@ -423,6 +448,21 @@
 
     if (!response.ok) {
       throw new Error(data.error || "Save failed.");
+    }
+
+    return data;
+  }
+
+  async function saveCompetitorDirectly(apiBase, payload) {
+    const response = await fetch(`${apiBase}/api/competitors`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    const data = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+      throw new Error(data.error || "Competitor save failed.");
     }
 
     return data;
@@ -482,6 +522,73 @@
     }
   }
 
+  async function saveCompetitor(root) {
+    const apiBase = getField(root, "apiBase").value.trim().replace(/\/$/, "");
+    const userId = getField(root, "userId").value.trim();
+    await chrome.storage.sync.set({ apiBase, userId });
+
+    const payload = {
+      userId,
+      name: getField(root, "competitorName").value.trim(),
+      libraryUrl: getField(root, "competitorUrl").value.trim() || window.location.href,
+      niche: getField(root, "competitorNiche").value.trim(),
+      notes: getField(root, "competitorNotes").value.trim(),
+    };
+
+    if (!payload.userId) {
+      setStatus(root, "Paste your User ID from the SpySave dashboard first.", true);
+      return;
+    }
+    if (!payload.name) {
+      setStatus(root, "Add competitor name first.", true);
+      return;
+    }
+
+    const saveButton = root.querySelector("[data-spysave-save-competitor]");
+    saveButton.disabled = true;
+    setStatus(root, "Saving competitor...");
+
+    try {
+      let data;
+      try {
+        data = await saveCompetitorViaBackground(apiBase, payload);
+      } catch {
+        data = await saveCompetitorDirectly(apiBase, payload);
+      }
+
+      setConnectionStatus(root, true, "Competitor saved");
+      setStatus(root, `Competitor saved: ${data.competitor?.name || payload.name}.`);
+    } catch (error) {
+      setConnectionStatus(root, false, "Save failed");
+      setStatus(
+        root,
+        error instanceof Error ? error.message : "Could not save competitor.",
+        true,
+      );
+    } finally {
+      saveButton.disabled = false;
+    }
+  }
+
+  function fillCompetitorFields(root) {
+    if (!getField(root, "competitorName").value) {
+      getField(root, "competitorName").value = getPageTitle() || "Competitor page";
+    }
+    if (!getField(root, "competitorUrl").value) {
+      getField(root, "competitorUrl").value = window.location.href;
+    }
+  }
+
+  function setActivePanelTab(root, activeTab) {
+    root.querySelectorAll("[data-spysave-tab]").forEach((button) => {
+      const isActive = button.dataset.spysaveTab === activeTab;
+      button.classList.toggle("active", isActive);
+    });
+    root.querySelectorAll("[data-spysave-section]").forEach((section) => {
+      section.hidden = section.dataset.spysaveSection !== activeTab;
+    });
+  }
+
   function createPanel(options = {}) {
     const existing = document.getElementById(PANEL_ID);
     if (existing) {
@@ -537,6 +644,10 @@
         .welcome { margin: 12px 0; border: 1px solid #bfd0ff; border-radius: 10px; background: #eef3ff; padding: 12px; color: #172033; }
         .welcome strong { display: block; font-size: 13px; }
         .welcome span { display: block; margin-top: 4px; color: #526173; font-size: 12px; line-height: 1.5; }
+        .tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; border: 1px solid #d8e8e1; border-radius: 10px; background: #fff; padding: 5px; }
+        .tab { height: 38px; background: transparent; color: #526173; }
+        .tab.active { background: #172033; color: #fff; }
+        [hidden] { display: none !important; }
         .secondary { width: 100%; margin-top: 12px; border: 1px solid #13b98f; background: #fff; color: #08775d; }
         .danger { width: 100%; margin-top: 8px; border: 1px solid #f2c4bc; background: #fff; color: #b42318; }
         .pick { width: 100%; margin-top: 8px; border: 1px solid #ff7a59; background: #fff7f2; color: #a84227; }
@@ -575,21 +686,38 @@
         <p class="connection" data-spysave-connection>Checking connection...</p>
         <div class="welcome">
           <strong>Extension is ready on your screen.</strong>
-          <span>Open Meta Ad Library or TikTok Creative Center, click SpySave, then save the ad to your dashboard.</span>
+          <span>Use Ads to save creatives, or Competitors to track pages from the same extension.</span>
         </div>
 
-        <button class="secondary" data-spysave-detect>Auto detect ad</button>
-        <button class="danger" data-spysave-clear>Clear ad fields</button>
-        <button class="pick" data-spysave-pick>Pick ad from page</button>
+        <nav class="tabs" aria-label="SpySave extension menu">
+          <button class="tab active" type="button" data-spysave-tab="ads">Ads</button>
+          <button class="tab" type="button" data-spysave-tab="competitors">Competitors</button>
+        </nav>
 
-        <label>Page name<input data-spysave-field="pageName" placeholder="Brand or competitor name" /></label>
-        <label>Ad text<textarea data-spysave-field="adText" placeholder="Select or paste ad text"></textarea></label>
-        <label>Landing page URL<input data-spysave-field="landingPageUrl" placeholder="https://store.com/product" /></label>
-        <label>Media URL<input data-spysave-field="mediaUrl" placeholder="Detected image/video URL" /></label>
-        <label>Tags<input data-spysave-field="tags" placeholder="skincare, ugc, winning idea" /></label>
-        <label>Notes<textarea class="short" data-spysave-field="notes" placeholder="Why are you saving this ad?"></textarea></label>
+        <section data-spysave-section="ads">
+          <button class="secondary" data-spysave-detect>Auto detect ad</button>
+          <button class="danger" data-spysave-clear>Clear ad fields</button>
+          <button class="pick" data-spysave-pick>Pick ad from page</button>
 
-        <button class="primary" data-spysave-save>Save ad</button>
+          <label>Page name<input data-spysave-field="pageName" placeholder="Brand or competitor name" /></label>
+          <label>Ad text<textarea data-spysave-field="adText" placeholder="Select or paste ad text"></textarea></label>
+          <label>Landing page URL<input data-spysave-field="landingPageUrl" placeholder="https://store.com/product" /></label>
+          <label>Media URL<input data-spysave-field="mediaUrl" placeholder="Detected image/video URL" /></label>
+          <label>Tags<input data-spysave-field="tags" placeholder="skincare, ugc, winning idea" /></label>
+          <label>Notes<textarea class="short" data-spysave-field="notes" placeholder="Why are you saving this ad?"></textarea></label>
+
+          <button class="primary" data-spysave-save>Save ad</button>
+        </section>
+
+        <section data-spysave-section="competitors" hidden>
+          <button class="secondary" data-spysave-detect-competitor>Detect competitor page</button>
+          <label>Competitor name<input data-spysave-field="competitorName" placeholder="Brand / page name" /></label>
+          <label>Page or library URL<input data-spysave-field="competitorUrl" placeholder="Meta Library or TikTok page URL" /></label>
+          <label>Niche<input data-spysave-field="competitorNiche" placeholder="skincare, fashion, gadgets..." /></label>
+          <label>Notes<textarea class="short" data-spysave-field="competitorNotes" placeholder="Why track this competitor?"></textarea></label>
+          <button class="primary" data-spysave-save-competitor>Save competitor</button>
+        </section>
+
         <p class="status" data-spysave-status></p>
       </main>
     `;
@@ -599,6 +727,19 @@
     root.querySelector("[data-spysave-clear]").addEventListener("click", () => clearAdFields(root));
     root.querySelector("[data-spysave-pick]").addEventListener("click", () => pickFromPage(root, host));
     root.querySelector("[data-spysave-save]").addEventListener("click", () => saveAd(root));
+    root.querySelector("[data-spysave-detect-competitor]").addEventListener("click", () => {
+      fillCompetitorFields(root);
+      setStatus(root, "Competitor page detected. Review before saving.");
+    });
+    root.querySelector("[data-spysave-save-competitor]").addEventListener("click", () => saveCompetitor(root));
+    root.querySelectorAll("[data-spysave-tab]").forEach((button) => {
+      button.addEventListener("click", () => {
+        setActivePanelTab(root, button.dataset.spysaveTab);
+        if (button.dataset.spysaveTab === "competitors") {
+          fillCompetitorFields(root);
+        }
+      });
+    });
 
     const saveSettings = debounce(async () => {
       const apiBase = getField(root, "apiBase").value.trim().replace(/\/$/, "");
@@ -614,7 +755,10 @@
     getField(root, "apiBase").addEventListener("input", saveSettings);
     getField(root, "userId").addEventListener("input", saveSettings);
 
-    loadSettings(root).then(() => fillDetectedFields(root));
+    loadSettings(root).then(() => {
+      fillDetectedFields(root);
+      fillCompetitorFields(root);
+    });
   }
 
   chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {

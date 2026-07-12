@@ -60,6 +60,34 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     return true;
   }
 
+  if (message.type === "SPYSAVE_SAVE_COMPETITOR") {
+    (async () => {
+      const apiBase = (message.apiBase || DEFAULT_API_BASE).replace(/\/$/, "");
+      const response = await fetch(`${apiBase}/api/competitors`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(message.payload),
+      });
+      const data = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        throw new Error(data.error || "Competitor save failed");
+      }
+
+      return data;
+    })()
+      .then((data) => sendResponse({ ok: true, data }))
+      .catch((error) =>
+        sendResponse({
+          ok: false,
+          error:
+            error instanceof Error ? error.message : "Competitor save failed",
+        }),
+      );
+
+    return true;
+  }
+
   if (message.type !== "SPYSAVE_SAVE_AD") {
     return;
   }
