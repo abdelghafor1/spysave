@@ -6,6 +6,7 @@
   const PANEL_ID = "spysave-floating-panel";
   const DEFAULT_API_BASE = "https://spysave.vercel.app";
   const TOP_Z_INDEX = "2147483647";
+  let externalPickHandler = null;
 
   function bringPanelToFront(host) {
     host.style.setProperty("z-index", TOP_Z_INDEX, "important");
@@ -445,6 +446,40 @@
     setStatus(root, "Pick mode active. Click directly on the ad card/text.");
   }
 
+  function stopExternalPickMode() {
+    if (externalPickHandler) {
+      document.removeEventListener("click", externalPickHandler, true);
+      externalPickHandler = null;
+    }
+    document.documentElement.style.cursor = "";
+  }
+
+  function startExternalPickMode() {
+    if (externalPickHandler) {
+      stopExternalPickMode();
+      return { ok: true, active: false, message: "Pick mode cancelled." };
+    }
+
+    externalPickHandler = (event) => {
+      const host = document.getElementById(PANEL_ID);
+      if (host && event.composedPath().includes(host)) return;
+
+      event.preventDefault();
+      event.stopPropagation();
+
+      const context = contextFromElement(event.target);
+      chrome.runtime.sendMessage({
+        type: "SPYSAVE_PAGE_PICK_RESULT",
+        context,
+      });
+      stopExternalPickMode();
+    };
+
+    document.documentElement.style.cursor = "crosshair";
+    document.addEventListener("click", externalPickHandler, true);
+    return { ok: true, active: true, message: "Pick mode active." };
+  }
+
   function saveViaBackground(apiBase, payload) {
     return new Promise((resolve, reject) => {
       chrome.runtime.sendMessage(
@@ -724,8 +759,8 @@
         [hidden] { display: none !important; }
         .secondary { width: 100%; margin-top: 12px; border: 1px solid #13b98f; background: #fff; color: #08775d; }
         .danger { width: 100%; margin-top: 8px; border: 1px solid #f2c4bc; background: #fff; color: #b42318; }
-        .pick { width: 100%; margin-top: 8px; border: 1px solid #ff7a59; background: #fff7f2; color: #a84227; }
-        .pick.active { border-color: #172033; background: #172033; color: #fff; box-shadow: 0 0 0 3px rgba(255, 122, 89, .24); }
+        .pick { width: 100%; margin-top: 8px; border: 1px solid #8ea7ff; background: #f1f5ff; color: #3157d5; }
+        .pick.active { border-color: #3157d5; background: #3157d5; color: #fff; box-shadow: 0 0 0 3px rgba(49, 87, 213, .22); }
         .primary { width: 100%; margin-top: 14px; background: linear-gradient(135deg, #13b98f, #dff77a, #ff7a59); color: #13231f; }
         .hint { margin-top: 6px; }
         .status { min-height: 20px; margin-top: 10px; font-weight: 800; }
@@ -851,6 +886,17 @@
     if (message.type === "SPYSAVE_TOGGLE_PANEL") {
       createPanel({ forceOpen: message.forceOpen });
       sendResponse({ ok: true });
+      return;
+    }
+
+    if (message.type === "SPYSAVE_START_PAGE_PICK") {
+      sendResponse(startExternalPickMode());
+      return;
+    }
+
+    if (message.type === "SPYSAVE_STOP_PAGE_PICK") {
+      stopExternalPickMode();
+      sendResponse({ ok: true, active: false });
     }
   });
 })();

@@ -8,9 +8,11 @@ const tagsInput = document.getElementById("tags");
 const notesInput = document.getElementById("notes");
 const detectBtn = document.getElementById("detectBtn");
 const clearBtn = document.getElementById("clearBtn");
+const pickBtn = document.getElementById("pickBtn");
 const saveBtn = document.getElementById("saveBtn");
 const statusEl = document.getElementById("status");
 const DEFAULT_API_BASE = "https://spysave.vercel.app";
+let isPickMode = false;
 
 function setStatus(message, isError = false) {
   statusEl.textContent = message;
@@ -104,6 +106,81 @@ function clearAdFields() {
   tagsInput.value = "";
   notesInput.value = "";
   setStatus("Ad fields cleared. User ID stayed connected.");
+}
+
+function setPickMode(active) {
+  isPickMode = active;
+  pickBtn.classList.toggle("active", active);
+  pickBtn.setAttribute("aria-pressed", active ? "true" : "false");
+  pickBtn.textContent = active
+    ? "Picking... click again to cancel"
+    : "Pick ad from page";
+}
+
+function applyPickedContext(context) {
+  if (!context) return;
+
+  if (context.detectedText) {
+    adTextInput.value = context.detectedText;
+  }
+  if (!pageNameInput.value && context.title) {
+    pageNameInput.value = context.title;
+  }
+  if (!landingPageUrlInput.value && context.landingPageUrl) {
+    landingPageUrlInput.value = context.landingPageUrl;
+  }
+  if (!mediaUrlInput.value && context.mediaUrl) {
+    mediaUrlInput.value = context.mediaUrl;
+  }
+}
+
+async function sendPagePickMessage(type) {
+  const tab = await getActiveTab();
+  if (!tab?.id) {
+    throw new Error("Open a normal page first.");
+  }
+
+  try {
+    await chrome.scripting.executeScript({
+      target: { tabId: tab.id },
+      files: ["content.js"],
+    });
+  } catch {
+    // The content script may already be injected.
+  }
+
+  return new Promise((resolve, reject) => {
+    chrome.tabs.sendMessage(tab.id, { type }, (response) => {
+      if (chrome.runtime.lastError) {
+        reject(new Error(chrome.runtime.lastError.message || "Could not talk to the page."));
+        return;
+      }
+      resolve(response || {});
+    });
+  });
+}
+
+async function togglePickFromPage() {
+  try {
+    if (isPickMode) {
+      await sendPagePickMessage("SPYSAVE_STOP_PAGE_PICK");
+      setPickMode(false);
+      setStatus("Pick mode cancelled.");
+      return;
+    }
+
+    const response = await sendPagePickMessage("SPYSAVE_START_PAGE_PICK");
+    setPickMode(Boolean(response.active));
+    setStatus("Pick mode active. Click the ad card/text in the page.");
+  } catch (error) {
+    setPickMode(false);
+    setStatus(
+      error instanceof Error
+        ? error.message
+        : "Could not start pick mode.",
+      true,
+    );
+  }
 }
 
 async function fillFromPage() {
@@ -236,5 +313,19 @@ apiBaseInput.addEventListener("input", saveSettings);
 userIdInput.addEventListener("input", saveSettings);
 detectBtn.addEventListener("click", fillFromPage);
 clearBtn.addEventListener("click", clearAdFields);
+pickBtn.addEventListener("click", togglePickFromPage);
 saveBtn.addEventListener("click", saveAd);
+
+chrome.runtime.onMessage.addListener((message) => {
+  if (message.type !== "SPYSAVE_PAGE_PICK_RESULT") return;
+
+  applyPickedContext(message.context);
+  setPickMode(false);
+  setStatus(
+    message.context?.detectedText
+      ? "Picked ad info from the page. Review before saving."
+      : "Could not read that area. Try another part of the ad.",
+    !message.context?.detectedText,
+  );
+});
 

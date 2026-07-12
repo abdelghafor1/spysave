@@ -111,6 +111,20 @@ button.danger {
   color: #b42318;
 }
 
+button.pick {
+  margin-top: 8px;
+  border: 1px solid #8ea7ff;
+  background: #f1f5ff;
+  color: #3157d5;
+}
+
+button.pick.active {
+  border-color: #3157d5;
+  background: #3157d5;
+  color: #fff;
+  box-shadow: 0 0 0 3px rgba(49, 87, 213, 0.22);
+}
+
 button:disabled {
   cursor: wait;
   opacity: 0.68;
