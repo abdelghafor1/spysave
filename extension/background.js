@@ -1,7 +1,32 @@
 const DEFAULT_API_BASE = "https://spysave.vercel.app";
 
+chrome.runtime.onInstalled.addListener(() => {
+  if (chrome.sidePanel?.setPanelBehavior) {
+    chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true }).catch(() => undefined);
+  }
+});
+
 function isBlockedPage(url = "") {
   return /^chrome:|^edge:|^about:/i.test(url);
+}
+
+async function openSpySaveSidePanel(tab) {
+  if (!chrome.sidePanel?.open) {
+    return { ok: false, message: "Chrome Side Panel is not available." };
+  }
+
+  try {
+    await chrome.sidePanel.open({ windowId: tab.windowId });
+    return { ok: true, message: "SpySave side panel opened." };
+  } catch (error) {
+    return {
+      ok: false,
+      message:
+        error instanceof Error
+          ? error.message
+          : "Chrome blocked the side panel. Click the SpySave icon once.",
+    };
+  }
 }
 
 function sendPanelToggle(tabId, forceOpen = false) {
@@ -29,6 +54,9 @@ chrome.action.onClicked.addListener(async (tab) => {
     return;
   }
 
+  const opened = await openSpySaveSidePanel(tab);
+  if (opened.ok) return;
+
   try {
     await chrome.scripting.executeScript({
       target: { tabId: tab.id },
@@ -52,17 +80,26 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
         return;
       }
 
-      try {
-        await chrome.scripting.executeScript({
-          target: { tabId: tab.id },
-          files: ["content.js"],
-        });
-      } catch {
-        // The content script may already be available on this page.
-      }
+      const opened = await openSpySaveSidePanel(tab);
+      if (!opened.ok) {
+        try {
+          await chrome.scripting.executeScript({
+            target: { tabId: tab.id },
+            files: ["content.js"],
+          });
+        } catch {
+          // The content script may already be available on this page.
+        }
 
-      const panelResult = await sendPanelToggle(tab.id, Boolean(message.forceOpen));
-      if (!panelResult.ok) {
+        const panelResult = await sendPanelToggle(tab.id, Boolean(message.forceOpen));
+        if (panelResult.ok) {
+          sendResponse({
+            ok: true,
+            message: "SpySave panel opened on your screen.",
+          });
+          return;
+        }
+
         if (chrome.action.openPopup) {
           try {
             await chrome.action.openPopup();
@@ -79,7 +116,7 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
 
       sendResponse({
         ok: true,
-        message: "SpySave extension opened on your screen.",
+        message: opened.message,
       });
     });
 
