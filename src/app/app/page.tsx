@@ -23,6 +23,7 @@ import {
   User,
   createUserWithEmailAndPassword,
   onAuthStateChanged,
+  sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
@@ -95,6 +96,36 @@ function scoreLabel(analysis?: SpySaveAnalysis) {
     score: `${analysis.winningScore}/100`,
     verdict: analysis.verdict || "Good",
   };
+}
+
+function friendlyAuthError(error: unknown) {
+  const message = error instanceof Error ? error.message : "";
+
+  if (
+    message.includes("auth/invalid-credential") ||
+    message.includes("auth/user-not-found") ||
+    message.includes("auth/wrong-password")
+  ) {
+    return "Email or password is not correct. If this is your first time, switch to Register.";
+  }
+
+  if (message.includes("auth/email-already-in-use")) {
+    return "This email already has an account. Switch to Login.";
+  }
+
+  if (message.includes("auth/weak-password")) {
+    return "Password must be at least 6 characters.";
+  }
+
+  if (message.includes("auth/too-many-requests")) {
+    return "Too many attempts. Wait a little, then try again.";
+  }
+
+  if (message.includes("auth/unauthorized-domain")) {
+    return "This domain is not authorized in Firebase. Add spysave.vercel.app in Firebase Authorized domains.";
+  }
+
+  return "Authentication failed. Please check your details and try again.";
 }
 
 async function analyzeAd(form: AdForm) {
@@ -276,8 +307,25 @@ export default function SpySaveApp() {
 
       setStatus("Account connected.");
     } catch (authError) {
-      setError(authError instanceof Error ? authError.message : "Auth failed");
+      setError(friendlyAuthError(authError));
       setStatus("");
+    }
+  }
+
+  async function handlePasswordReset() {
+    setError("");
+    setStatus("");
+
+    if (!email.trim()) {
+      setError("Add your email first, then click reset password.");
+      return;
+    }
+
+    try {
+      await sendPasswordResetEmail(auth, email.trim());
+      setStatus("Password reset email sent. Check your inbox.");
+    } catch (resetError) {
+      setError(friendlyAuthError(resetError));
     }
   }
 
@@ -537,6 +585,16 @@ export default function SpySaveApp() {
             <button className="brand-gradient mt-5 h-11 w-full rounded-lg text-sm font-bold">
               {authMode === "register" ? "Create account" : "Login"}
             </button>
+
+            {authMode === "login" ? (
+              <button
+                type="button"
+                onClick={handlePasswordReset}
+                className="mt-3 h-10 w-full rounded-lg border border-[#d8dfdc] bg-white text-sm font-bold text-[#3157d5]"
+              >
+                Forgot password?
+              </button>
+            ) : null}
 
             {status && <p className="mt-3 text-sm font-semibold text-[#2f8a61]">{status}</p>}
             {error && <p className="mt-3 text-sm font-semibold text-[#b42318]">{error}</p>}
