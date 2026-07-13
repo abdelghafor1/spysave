@@ -1650,3 +1650,417 @@ article:hover {
   }
 }
 
+/* Closer Raycast composition pass */
+.ray-page {
+  --bg-primary: #050505;
+  --bg-secondary: #080909;
+  --card-bg: rgba(12, 13, 13, 0.72);
+  --card-bg-solid: #0d0e0e;
+  --screenshot-bg: #070707;
+  --accent: #10b981;
+  --accent-strong: #50e3ad;
+  background:
+    radial-gradient(circle at 50% 3%, rgba(255, 255, 255, 0.055), transparent 18%),
+    radial-gradient(circle at 50% 28%, rgba(16, 185, 129, 0.08), transparent 20%),
+    linear-gradient(180deg, #050505 0%, #050505 38%, #080909 100%) !important;
+}
+
+.ray-page[data-theme="light"] {
+  --bg-primary: #fafafa;
+  --bg-secondary: #f2f2ef;
+  --card-bg: rgba(255, 255, 255, 0.72);
+  --card-bg-solid: #fafafa;
+  --text-primary: #111312;
+  --text-secondary: #5b6661;
+  --text-muted: #8a9490;
+  background:
+    radial-gradient(circle at 50% 3%, rgba(16, 185, 129, 0.11), transparent 18%),
+    linear-gradient(180deg, #fafafa 0%, #f2f2ef 100%) !important;
+}
+
+.ray-nav {
+  width: min(1040px, calc(100% - 36px));
+  padding: 14px 0;
+}
+
+.ray-nav::after {
+  background: color-mix(in srgb, var(--bg-primary) 74%, transparent);
+}
+
+.ray-brand svg {
+  width: 30px;
+  height: 30px;
+}
+
+.ray-brand strong {
+  font-size: 0.92rem;
+}
+
+.ray-brand small {
+  font-size: 0.68rem;
+}
+
+.ray-nav-actions a,
+.ray-theme-toggle {
+  min-height: 32px;
+  padding: 0 11px;
+  font-size: 0.73rem;
+}
+
+.ray-theme-toggle {
+  width: 34px;
+}
+
+.ray-hero {
+  display: flex;
+  width: min(1060px, calc(100% - 28px));
+  min-height: auto;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+  padding: 86px 0 48px;
+  text-align: center;
+}
+
+.ray-hero-copy {
+  display: flex;
+  max-width: 700px;
+  flex-direction: column;
+  align-items: center;
+}
+
+.ray-hero-copy h1 {
+  max-width: 560px;
+  margin-top: 18px;
+  font-size: clamp(2.5rem, 6.8vw, 5.15rem);
+  letter-spacing: -0.02em;
+}
+
+.ray-hero-copy > p {
+  max-width: 510px;
+  margin-top: 16px;
+  color: color-mix(in srgb, var(--text-secondary) 84%, transparent);
+  font-size: 0.88rem;
+  line-height: 1.65;
+}
+
+.ray-eyebrow {
+  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.045);
+  color: var(--text-secondary);
+  padding: 6px 10px;
+  font-size: 0.7rem;
+}
+
+.ray-page[data-theme="light"] .ray-eyebrow {
+  border-color: rgba(16, 19, 18, 0.1);
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.ray-cta-row {
+  justify-content: center;
+  margin-top: 24px;
+}
+
+.ray-button {
+  min-height: 36px;
+  border-radius: 8px;
+  padding: 0 13px;
+  font-size: 0.74rem;
+}
+
+.ray-button-primary {
+  background: #f4f7f5;
+  border-color: #f4f7f5;
+  color: #050505;
+  box-shadow: 0 14px 34px rgba(255, 255, 255, 0.08);
+}
+
+.ray-button-secondary {
+  background: rgba(255, 255, 255, 0.035);
+  color: var(--text-secondary);
+}
+
+.ray-store-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.ray-store-buttons a {
+  display: inline-flex;
+  min-height: 28px;
+  align-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 7px;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-secondary);
+  padding: 0 10px;
+  font-size: 0.65rem;
+  font-weight: 800;
+}
+
+.ray-page[data-theme="light"] .ray-store-buttons a {
+  border-color: rgba(16, 19, 18, 0.12);
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.ray-proof-row {
+  justify-content: center;
+  margin-top: 12px;
+}
+
+.ray-proof-row span {
+  border: 0;
+  background: transparent;
+  color: var(--text-muted);
+  padding: 0;
+  font-size: 0.62rem;
+}
+
+.ray-shot-hero {
+  width: min(980px, 100%);
+  margin-top: 8px;
+}
+
+.ray-shot-hero .ray-window {
+  min-height: 360px;
+  border-radius: 18px;
+  transform: perspective(1200px) rotateX(2.4deg);
+  background:
+    radial-gradient(circle at 50% 100%, rgba(16, 185, 129, 0.18), transparent 24%),
+    radial-gradient(circle at 42% 72%, rgba(180, 42, 42, 0.22), transparent 28%),
+    #070707;
+}
+
+.ray-shot-hero .ray-shot-glow {
+  inset: 50% 7% -12%;
+  opacity: 0.24;
+  filter: blur(48px);
+}
+
+.ray-window-top {
+  height: 42px;
+  padding: 10px 14px;
+}
+
+.ray-window-search {
+  height: 25px;
+  font-size: 0.65rem;
+}
+
+.ray-command {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 46px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #d5ded9;
+  padding: 0 14px;
+  font-size: 0.86rem;
+  font-weight: 800;
+}
+
+.ray-command-list {
+  display: grid;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.075);
+  border-radius: 14px;
+  background:
+    radial-gradient(circle at 54% 100%, rgba(16, 185, 129, 0.14), transparent 38%),
+    rgba(255, 255, 255, 0.035);
+}
+
+.ray-command-list div {
+  display: grid;
+  grid-template-columns: 12px 1fr auto;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 0 14px;
+}
+
+.ray-command-list div:last-child {
+  border-bottom: 0;
+}
+
+.ray-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 99px;
+  background: var(--accent);
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.8);
+}
+
+.ray-command-list strong {
+  color: #f4f7f5;
+  font-size: 0.82rem;
+  font-weight: 850;
+  text-align: left;
+}
+
+.ray-command-list em {
+  color: var(--accent-strong);
+  font-size: 0.76rem;
+  font-style: normal;
+  font-weight: 900;
+}
+
+.ray-section {
+  width: min(760px, calc(100% - 34px));
+  padding: 92px 0 20px;
+  text-align: center;
+}
+
+.ray-section-heading {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  max-width: none;
+}
+
+.ray-section-heading h2 {
+  max-width: 560px;
+  font-size: clamp(1.8rem, 4vw, 3.5rem);
+}
+
+.ray-section-heading p {
+  max-width: 520px;
+  font-size: 0.9rem;
+}
+
+.ray-workflow-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: 28px;
+}
+
+.ray-workflow-card {
+  min-height: 210px;
+  border-radius: 16px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.025));
+  padding: 17px;
+  text-align: left;
+}
+
+.ray-workflow-card > span {
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  background: rgba(16, 185, 129, 0.16);
+  color: var(--accent-strong);
+}
+
+.ray-workflow-card h3 {
+  font-size: 0.9rem;
+}
+
+.ray-workflow-card p {
+  font-size: 0.76rem;
+}
+
+.ray-feature-stack {
+  width: min(980px, calc(100% - 34px));
+  gap: 120px;
+  margin-top: 112px;
+}
+
+.ray-feature,
+.ray-feature-dominant {
+  grid-template-columns: minmax(0, 0.72fr) minmax(360px, 1fr);
+  gap: 58px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.ray-feature-copy h2,
+.ray-feature-dominant .ray-feature-copy h2 {
+  max-width: 460px;
+  font-size: clamp(1.9rem, 4.4vw, 3.7rem);
+  letter-spacing: -0.02em;
+}
+
+.ray-feature-copy p {
+  max-width: 390px;
+  font-size: 0.9rem;
+}
+
+.ray-feature-dominant .ray-window-body {
+  min-height: 420px;
+}
+
+.ray-feature .ray-window {
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 50% 100%, rgba(16, 185, 129, 0.12), transparent 28%),
+    #070707;
+}
+
+.ray-feature .ray-shot-glow {
+  opacity: 0.14;
+}
+
+.ray-card,
+.ray-metric,
+.ray-list span,
+.ray-filters span {
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.ray-beta {
+  width: min(760px, calc(100% - 34px));
+  flex-direction: column;
+  justify-content: center;
+  margin-top: 140px;
+  text-align: center;
+}
+
+.ray-beta .ray-eyebrow {
+  margin-inline: auto;
+}
+
+.ray-beta p {
+  margin-inline: auto;
+}
+
+.ray-footer {
+  width: min(980px, calc(100% - 34px));
+}
+
+@media (max-width: 980px) {
+  .ray-workflow-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .ray-feature,
+  .ray-feature-dominant {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 680px) {
+  .ray-hero {
+    padding-top: 58px;
+  }
+
+  .ray-shot-hero .ray-window {
+    min-height: 0;
+    transform: none;
+  }
+
+  .ray-workflow-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ray-command-list strong {
+    font-size: 0.72rem;
+  }
+}
+

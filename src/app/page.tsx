@@ -159,34 +159,47 @@ function Mockup({ type, hero = false }: { type: string; hero?: boolean }) {
 function HeroMockup() {
   return (
     <>
-      <div className="ray-grid-3">
-        <Metric label="Saved ads" value="248" />
-        <Metric label="Winners" value="37" />
-        <Metric label="Avg score" value="82/100" />
+      <div className="ray-command">
+        <Search size={16} />
+        <span>Search ads, hooks, offers, competitors...</span>
       </div>
-      <div className="ray-card ray-card-strong">
+      <div className="ray-command-list">
         <div>
-          <p className="ray-label">AI recommendation</p>
-          <h3>Build this as a 15s UGC demo</h3>
+          <span className="ray-dot" />
+          <strong>GlowLab dark spot serum</strong>
+          <em>91/100</em>
         </div>
-        <strong>87/100</strong>
+        <div>
+          <span className="ray-dot" />
+          <strong>NovaFit resistance band UGC</strong>
+          <em>87/100</em>
+        </div>
+        <div>
+          <span className="ray-dot" />
+          <strong>CasaNest modular sofa demo</strong>
+          <em>84/100</em>
+        </div>
+        <div>
+          <span className="ray-dot" />
+          <strong>TrendCart portable blender</strong>
+          <em>79/100</em>
+        </div>
       </div>
       <div className="ray-split">
-        <div className="ray-card">
-          <p className="ray-label">Hook</p>
-          <h4>“Stop wasting money on weak creatives.”</h4>
-          <MiniBar width="86%" />
-        </div>
-        <div className="ray-card">
-          <p className="ray-label">Next test</p>
+        <div className="ray-card ray-card-strong">
+          <p className="ray-label">AI recommendation</p>
           <h4>Curiosity hook + proof CTA</h4>
           <MiniBar width="74%" />
+        </div>
+        <div className="ray-card">
+          <p className="ray-label">Fatigue risk</p>
+          <h4>Refresh thumbnail after 7 days</h4>
+          <MiniBar width="56%" />
         </div>
       </div>
     </>
   );
 }
-
 function AiMockup() {
   return (
     <>
@@ -200,7 +213,7 @@ function AiMockup() {
       <div className="ray-grid-2">
         <div className="ray-card">
           <p className="ray-label">Hook</p>
-          <h4>“Your dark spots are not your fault.”</h4>
+          <h4>&quot;Your dark spots are not your fault.&quot;</h4>
         </div>
         <div className="ray-card">
           <p className="ray-label">Offer / CTA</p>
@@ -235,7 +248,7 @@ function DashboardMockup() {
       </div>
       <div className="ray-card">
         <p className="ray-label">Quick action</p>
-        <h4>Analyze “NovaFit Bands” saved 12 minutes ago.</h4>
+        <h4>Analyze &quot;NovaFit Bands&quot; saved 12 minutes ago.</h4>
       </div>
       <div className="ray-list">
         <span>GlowLab - Possible winner - 91/100</span>
@@ -288,7 +301,7 @@ function NotificationsMockup() {
   return (
     <div className="ray-list ray-list-cards">
       <span>NovaFit launched 4 new ads - 2 possible winners</span>
-      <span>GlowLab changed CTA from “Shop now” to “Claim offer”</span>
+      <span>GlowLab changed CTA from &quot;Shop now&quot; to &quot;Claim offer&quot;</span>
       <span>CasaNest fatigue risk increased on 3 creatives</span>
       <span>Weekly report ready: 14 high-scoring hooks</span>
     </div>
@@ -376,6 +389,10 @@ export default function Home() {
             <a href="#workflow" className="ray-button ray-button-secondary">
               See workflow
             </a>
+          </div>
+          <div className="ray-store-buttons">
+            <a href="/app">Continue to web app</a>
+            <a href="#ai-detail">View AI breakdown</a>
           </div>
           <div className="ray-proof-row">
             <span>Meta ads research</span>
