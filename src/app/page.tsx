@@ -1,541 +1,373 @@
 "use client";
 
 import {
+  ArrowRight,
   Bell,
   Bot,
+  CheckCircle2,
   ChevronRight,
+  FileText,
   Gauge,
-  HelpCircle,
   Library,
-  Moon,
   Search,
   ShieldCheck,
   Sparkles,
-  Sun,
+  Target,
   Users,
-  Zap,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { BrandMark } from "@/components/BrandMark";
 
-type Theme = "dark" | "light";
-
-const DEMO_LINK = "https://calendly.com/spysave/demo";
-
-const workflowSteps = [
-  {
-    title: "Capture the ad",
-    body: "Open Meta Ad Library, TikTok Creative Center, or a competitor page and save the creative into SpySave.",
-  },
-  {
-    title: "Organize the research",
-    body: "Group ads by competitor, niche, hook type, folder, and testing priority.",
-  },
-  {
-    title: "Analyze with AI",
-    body: "Break down the hook, offer, CTA, audience, fatigue risk, objections, and rewrite ideas.",
-  },
-  {
-    title: "Launch the next test",
-    body: "Turn the strongest angles into hooks, UGC scripts, Meta rewrites, and creative briefs.",
-  },
+const workflow = [
+  "Save ads from Meta, Facebook, or TikTok Creative Center.",
+  "Organize by brand, niche, tag, folder, and campaign idea.",
+  "Run AI only when you want strategy, not automatic noise.",
+  "Turn analysis into hooks, scripts, rewrites, and test plans.",
 ];
 
-const features = [
+const featureSections = [
   {
-    id: "ai-detail",
-    eyebrow: "Core differentiator",
-    title: "AI Detail turns saved ads into creative strategy.",
-    body: "SpySave explains why an ad may work, where it is weak, what audience it targets, and what to test next. It moves the user from research to action.",
-    cta: "See a real ad breakdown",
+    kicker: "AI creative strategist",
+    title: "Know what to do after you save the ad.",
+    body: "SpySave does not just describe a competitor ad. It gives you the hook, offer, CTA, audience, pain point, trust signals, fatigue risk, objection handling, weaknesses, and concrete test ideas.",
+    stats: ["91/100 winning score", "7 strategy fields", "5 rewrite ideas"],
     icon: Bot,
-    dominant: true,
     mockup: "ai",
   },
   {
-    id: "dashboard",
-    eyebrow: "Command center",
-    title: "Dashboard keeps the whole research workflow visible.",
-    body: "Saved ads, winners, competitors, notifications, and quick actions stay in one clean workspace.",
-    cta: "See your command center",
-    icon: Gauge,
-    dominant: false,
-    mockup: "dashboard",
-  },
-  {
-    id: "saved-ads",
-    eyebrow: "Swipe file",
-    title: "Saved Ads becomes a searchable creative library.",
-    body: "Users can filter by winner status, score, hook, tag, folder, page name, and export research when needed.",
-    cta: "See a swipe file example",
+    kicker: "Swipe file system",
+    title: "Build a searchable library of competitor creatives.",
+    body: "Every saved ad stays connected to the page name, source link, media, landing page, folder, notes, tags, and AI score. Your team stops losing ideas in screenshots and browser tabs.",
+    stats: ["248 saved ads", "42 tags", "CSV export"],
     icon: Library,
-    dominant: false,
-    mockup: "saved",
+    mockup: "library",
   },
   {
-    id: "tracking",
-    eyebrow: "Competitor watchlist",
-    title: "Tracking shows which brands deserve attention.",
-    body: "Competitor pages, niches, saved-ad counts, best scores, and update checks keep research organized.",
-    cta: "See competitor tracking",
+    kicker: "Competitor tracking",
+    title: "See which brands are moving before they become obvious.",
+    body: "Track competitor pages, monitor saved activity, compare scores, and review changes from one clean workspace. The goal is simple: know which creative angles are worth copying, avoiding, or improving.",
+    stats: ["18 brands", "4 new ads", "2 possible winners"],
     icon: Users,
-    dominant: false,
     mockup: "tracking",
   },
   {
-    id: "notifications",
-    eyebrow: "Activity inbox",
-    title: "Notifications make competitor activity easy to review.",
-    body: "Updates from tracked brands land in one inbox before email delivery is connected.",
-    cta: "See notifications",
-    icon: Bell,
-    dominant: false,
-    mockup: "notifications",
+    kicker: "Reports and signals",
+    title: "Turn research into weekly creative intelligence.",
+    body: "SpySave surfaces repeated hooks, strong offers, fatigue risks, and top-performing patterns so dropshippers and small e-commerce teams know what to test next.",
+    stats: ["14 top hooks", "72% curiosity angle", "3 fatigue alerts"],
+    icon: FileText,
+    mockup: "reports",
   },
-  {
-    id: "help",
-    eyebrow: "Setup guide",
-    title: "Help gives users a clean onboarding path.",
-    body: "The product explains extension setup, saving ads, AI analysis, tracking, privacy, and launch steps.",
-    cta: "See the setup guide",
-    icon: HelpCircle,
-    dominant: false,
-    mockup: "help",
-  },
-] as const;
+];
 
-function getInitialTheme(): Theme {
-  if (typeof window === "undefined") return "dark";
-  const saved = window.localStorage.getItem("spysave-theme");
-  if (saved === "dark" || saved === "light") return saved;
-  return window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
-}
-
-function Metric({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="ray-metric">
-      <span>{label}</span>
-      <strong>{value}</strong>
-    </div>
-  );
-}
-
-function MiniBar({ width }: { width: string }) {
-  return (
-    <span className="ray-bar">
-      <span style={{ width }} />
-    </span>
-  );
-}
-
-function Mockup({ type, hero = false }: { type: string; hero?: boolean }) {
-  return (
-    <div className={`ray-shot ${hero ? "ray-shot-hero" : ""}`}>
-      <div className="ray-shot-glow" />
-      <div className="ray-window">
-        <div className="ray-window-top">
-          <span />
-          <span />
-          <span />
-          <div className="ray-window-search">
-            <Search size={13} />
-            <span>Search ads, hooks, brands...</span>
-          </div>
-        </div>
-        <div className={`ray-window-body ray-${type}`}>
-          {type === "hero" ? <HeroMockup /> : null}
-          {type === "ai" ? <AiMockup /> : null}
-          {type === "dashboard" ? <DashboardMockup /> : null}
-          {type === "saved" ? <SavedMockup /> : null}
-          {type === "tracking" ? <TrackingMockup /> : null}
-          {type === "notifications" ? <NotificationsMockup /> : null}
-          {type === "help" ? <HelpMockup /> : null}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function HeroMockup() {
-  return (
-    <>
-      <div className="ray-command">
-        <Search size={16} />
-        <span>Search ads, hooks, offers, competitors...</span>
-      </div>
-      <div className="ray-command-list">
-        <div>
-          <span className="ray-dot" />
-          <strong>GlowLab dark spot serum</strong>
-          <em>91/100</em>
-        </div>
-        <div>
-          <span className="ray-dot" />
-          <strong>NovaFit resistance band UGC</strong>
-          <em>87/100</em>
-        </div>
-        <div>
-          <span className="ray-dot" />
-          <strong>CasaNest modular sofa demo</strong>
-          <em>84/100</em>
-        </div>
-        <div>
-          <span className="ray-dot" />
-          <strong>TrendCart portable blender</strong>
-          <em>79/100</em>
-        </div>
-      </div>
-      <div className="ray-split">
-        <div className="ray-card ray-card-strong">
-          <p className="ray-label">AI recommendation</p>
-          <h4>Curiosity hook + proof CTA</h4>
-          <MiniBar width="74%" />
-        </div>
-        <div className="ray-card">
-          <p className="ray-label">Fatigue risk</p>
-          <h4>Refresh thumbnail after 7 days</h4>
-          <MiniBar width="56%" />
-        </div>
-      </div>
-    </>
-  );
-}
-function AiMockup() {
-  return (
-    <>
-      <div className="ray-ai-header">
-        <div>
-          <p className="ray-label">GlowLab Skincare</p>
-          <h3>Creative breakdown</h3>
-        </div>
-        <strong>91/100</strong>
-      </div>
-      <div className="ray-grid-2">
-        <div className="ray-card">
-          <p className="ray-label">Hook</p>
-          <h4>&quot;Your dark spots are not your fault.&quot;</h4>
-        </div>
-        <div className="ray-card">
-          <p className="ray-label">Offer / CTA</p>
-          <h4>20% off starter kit - Shop now</h4>
-        </div>
-        <div className="ray-card">
-          <p className="ray-label">Fatigue risk</p>
-          <h4>Medium: refresh thumbnail after 7 days</h4>
-        </div>
-        <div className="ray-card">
-          <p className="ray-label">Objection handling</p>
-          <h4>Before/after proof + refund guarantee</h4>
-        </div>
-      </div>
-      <div className="ray-card ray-card-strong">
-        <div>
-          <p className="ray-label">What to do now</p>
-          <h3>Test a UGC curiosity opener with social proof in the first 3 seconds.</h3>
-        </div>
-      </div>
-    </>
-  );
-}
-
-function DashboardMockup() {
-  return (
-    <>
-      <div className="ray-grid-3">
-        <Metric label="Saved ads" value="248" />
-        <Metric label="AI scores" value="183" />
-        <Metric label="Tracked brands" value="18" />
-      </div>
-      <div className="ray-card">
-        <p className="ray-label">Quick action</p>
-        <h4>Analyze &quot;NovaFit Bands&quot; saved 12 minutes ago.</h4>
-      </div>
-      <div className="ray-list">
-        <span>GlowLab - Possible winner - 91/100</span>
-        <span>NovaFit - Good - 78/100</span>
-        <span>CasaNest - Needs rewrite - 54/100</span>
-      </div>
-    </>
-  );
-}
-
-function SavedMockup() {
-  return (
-    <>
-      <div className="ray-filters">
-        <span>All</span>
-        <span>Winners</span>
-        <span>Skincare</span>
-        <span>UGC</span>
-      </div>
-      <div className="ray-list ray-list-cards">
-        <span>GlowLab - Dark spot serum - 91/100</span>
-        <span>CasaNest - Modular sofa - 84/100</span>
-        <span>TrendCart - Portable blender - 79/100</span>
-      </div>
-      <div className="ray-card">
-        <p className="ray-label">Export ready</p>
-        <h4>3 folders, 42 tags, 248 saved ads</h4>
-      </div>
-    </>
-  );
-}
-
-function TrackingMockup() {
-  return (
-    <>
-      <div className="ray-list ray-list-cards">
-        <span>GlowLab - 23 saved ads - best 91/100</span>
-        <span>CasaNest - 17 saved ads - best 84/100</span>
-        <span>NovaFit - 31 saved ads - best 88/100</span>
-      </div>
-      <div className="ray-card ray-card-strong">
-        <p className="ray-label">Last check</p>
-        <h3>4 new saved ads found for NovaFit.</h3>
-      </div>
-    </>
-  );
-}
-
-function NotificationsMockup() {
-  return (
-    <div className="ray-list ray-list-cards">
-      <span>NovaFit launched 4 new ads - 2 possible winners</span>
-      <span>GlowLab changed CTA from &quot;Shop now&quot; to &quot;Claim offer&quot;</span>
-      <span>CasaNest fatigue risk increased on 3 creatives</span>
-      <span>Weekly report ready: 14 high-scoring hooks</span>
-    </div>
-  );
-}
-
-function HelpMockup() {
-  return (
-    <div className="ray-list ray-list-cards">
-      <span>1. Install the extension and paste your User ID</span>
-      <span>2. Save ads from Meta or TikTok Creative Center</span>
-      <span>3. Run AI analysis only when you need strategy</span>
-      <span>4. Review reports, tracking, and notifications</span>
-    </div>
-  );
-}
-
-export default function Home() {
-  const [theme, setTheme] = useState<Theme>(() => getInitialTheme());
-
+function useReveal() {
   useEffect(() => {
-    window.localStorage.setItem("spysave-theme", theme);
-  }, [theme]);
-
-  useEffect(() => {
-    const sections = document.querySelectorAll<HTMLElement>(".ray-reveal");
+    const nodes = document.querySelectorAll<HTMLElement>(".linear-reveal");
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            entry.target.classList.add("ray-reveal-visible");
+            entry.target.classList.add("linear-visible");
             observer.unobserve(entry.target);
           }
         });
       },
-      { threshold: 0.14 },
+      { threshold: 0.16 },
     );
 
-    sections.forEach((section) => observer.observe(section));
+    nodes.forEach((node) => observer.observe(node));
     return () => observer.disconnect();
   }, []);
+}
+
+function UiShell({
+  type,
+  large = false,
+}: {
+  type: "hero" | "ai" | "library" | "tracking" | "reports" | "dashboard";
+  large?: boolean;
+}) {
+  return (
+    <div className={`linear-ui ${large ? "linear-ui-large" : ""}`}>
+      <div className="linear-ui-glow" />
+      <div className="linear-window">
+        <div className="linear-window-top">
+          <span />
+          <span />
+          <span />
+          <div>
+            <Search size={13} />
+            <em>Search ads, hooks, brands...</em>
+          </div>
+        </div>
+        <div className={`linear-window-body linear-window-${type}`}>
+          {type === "hero" && <HeroUi />}
+          {type === "ai" && <AiUi />}
+          {type === "library" && <LibraryUi />}
+          {type === "tracking" && <TrackingUi />}
+          {type === "reports" && <ReportsUi />}
+          {type === "dashboard" && <DashboardUi />}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function HeroUi() {
+  return (
+    <>
+      <div className="linear-command">
+        <Search size={16} />
+        <span>Find winning skincare ads with curiosity hooks</span>
+        <kbd>⌘K</kbd>
+      </div>
+      <div className="linear-hero-grid">
+        <div className="linear-list">
+          <span><b>GlowLab Serum</b><em>91/100</em></span>
+          <span><b>NovaFit Bands</b><em>87/100</em></span>
+          <span><b>CasaNest Sofa</b><em>84/100</em></span>
+          <span><b>TrendCart Blender</b><em>79/100</em></span>
+        </div>
+        <div className="linear-panel linear-panel-hot">
+          <p>AI action plan</p>
+          <h3>Build this as a 15-second UGC test with proof in the first 3 seconds.</h3>
+          <button>Generate hooks</button>
+        </div>
+      </div>
+    </>
+  );
+}
+
+function AiUi() {
+  return (
+    <>
+      <div className="linear-score-card">
+        <div>
+          <p>GlowLab dark spot serum</p>
+          <h3>Creative breakdown</h3>
+        </div>
+        <strong>91</strong>
+      </div>
+      <div className="linear-card-grid">
+        <article><p>Hook</p><h4>Your dark spots are not your fault.</h4></article>
+        <article><p>Audience</p><h4>Women 25-40 buying skincare online.</h4></article>
+        <article><p>Fatigue risk</p><h4>Medium. Refresh visual after 7 days.</h4></article>
+        <article><p>Objection</p><h4>Add proof, guarantee, and ingredient clarity.</h4></article>
+      </div>
+      <div className="linear-code-block">
+        <span>Rewrite suggestion</span>
+        <code>Stop hiding dark spots. Test a gentle routine built for visible proof.</code>
+      </div>
+    </>
+  );
+}
+
+function LibraryUi() {
+  return (
+    <>
+      <div className="linear-tabs"><span>All</span><span>Winners</span><span>UGC</span><span>Skincare</span></div>
+      <div className="linear-table">
+        <span><b>GlowLab Serum</b><em>Hook: curiosity</em><strong>91</strong></span>
+        <span><b>CasaNest Sofa</b><em>Offer: bundle</em><strong>84</strong></span>
+        <span><b>NovaFit Bands</b><em>CTA: urgency</em><strong>87</strong></span>
+        <span><b>TrendCart Blender</b><em>Weak: proof</em><strong>79</strong></span>
+      </div>
+    </>
+  );
+}
+
+function TrackingUi() {
+  return (
+    <>
+      <div className="linear-brand-row"><b>NovaFit</b><span>4 new ads</span><em>2 winners</em></div>
+      <div className="linear-brand-row"><b>GlowLab</b><span>CTA changed</span><em>91 top score</em></div>
+      <div className="linear-brand-row"><b>CasaNest</b><span>3 active offers</span><em>84 top score</em></div>
+      <div className="linear-timeline">
+        <i />
+        <i />
+        <i />
+        <i />
+      </div>
+    </>
+  );
+}
+
+function ReportsUi() {
+  return (
+    <>
+      <div className="linear-report-chart">
+        <span style={{ height: "74%" }} />
+        <span style={{ height: "48%" }} />
+        <span style={{ height: "88%" }} />
+        <span style={{ height: "64%" }} />
+        <span style={{ height: "36%" }} />
+      </div>
+      <div className="linear-panel">
+        <p>Weekly insight</p>
+        <h3>72% of high-scoring ads use curiosity hooks before the product reveal.</h3>
+      </div>
+    </>
+  );
+}
+
+function DashboardUi() {
+  return (
+    <>
+      <div className="linear-metrics">
+        <span><b>248</b><em>Saved ads</em></span>
+        <span><b>183</b><em>AI scores</em></span>
+        <span><b>18</b><em>Brands</em></span>
+      </div>
+      <div className="linear-panel">
+        <p>Next action</p>
+        <h3>Analyze NovaFit’s new UGC angle and generate 5 hook variants.</h3>
+      </div>
+    </>
+  );
+}
+
+export default function Home() {
+  useReveal();
 
   return (
-    <main className="ray-page" data-theme={theme}>
-      <nav className="ray-nav">
-        <div className="ray-nav-shell">
-          <a href="#" className="ray-brand" aria-label="SpySave home">
-            <BrandMark size={38} />
-            <span>
-              <strong>SpySave</strong>
-            </span>
-          </a>
-
-          <div className="ray-nav-links">
-            <a href="#workflow">Workflow</a>
-            <a href="#ai-detail">AI</a>
-            <a href="#saved-ads">Saved Ads</a>
-            <a href="#tracking">Tracking</a>
-            <a href="#reports">Reports</a>
-            <a href="#extension">Extension</a>
-          </div>
-
-          <div className="ray-nav-right">
-            <a href="/app" className="ray-login-link">
-              Log in
-            </a>
-            <a href="/app" className="ray-download-button">
-              Try for free
-            </a>
-            <button
-              type="button"
-              className="ray-theme-toggle"
-              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              aria-label="Toggle theme"
-            >
-              {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
-            </button>
-          </div>
+    <main className="linear-page">
+      <nav className="linear-nav">
+        <a href="#" className="linear-brand" aria-label="SpySave home">
+          <BrandMark size={34} />
+          <strong>SpySave</strong>
+        </a>
+        <div className="linear-links">
+          <a href="#workflow">Workflow</a>
+          <a href="#ai">AI</a>
+          <a href="#library">Library</a>
+          <a href="#tracking">Tracking</a>
+          <a href="#reports">Reports</a>
+        </div>
+        <div className="linear-actions">
+          <a href="/app" className="linear-login">Log in</a>
+          <a href="/app" className="linear-primary">Try for free</a>
         </div>
       </nav>
 
-      <section className="ray-hero ray-reveal">
-        <div className="ray-hero-copy">
-          <span className="ray-eyebrow">
-            <Sparkles size={16} />
-            AI creative research, not just screenshots
+      <section className="linear-hero linear-reveal">
+        <div className="linear-hero-copy">
+          <span className="linear-kicker">
+            <Sparkles size={14} />
+            AI creative research for e-commerce teams
           </span>
-          <h1>Turn any competitor ad into your next winning creative.</h1>
+          <h1>Turn competitor ads into creative tests that actually ship.</h1>
           <p>
-            SpySave saves, scores, and breaks down competitor ads with AI - hook,
-            offer, fatigue risk - so you skip the guesswork and launch faster.
+            SpySave helps dropshippers and small e-commerce teams save public
+            ads, score the creative, understand the strategy, and generate the
+            next hook, script, or offer to test.
           </p>
-          <div className="ray-cta-row">
-            <a href="/app" className="ray-button ray-button-primary">
-              Try for free
-              <ChevronRight size={17} />
+          <div className="linear-hero-actions">
+            <a href="/app" className="linear-primary linear-primary-big">
+              Start researching
+              <ArrowRight size={16} />
             </a>
-            <a href="#workflow" className="ray-button ray-button-secondary">
-              See workflow
+            <a href="#workflow" className="linear-secondary">
+              See how it works
             </a>
-          </div>
-          <div className="ray-store-buttons">
-            <a href="/app">Continue to web app</a>
-            <a href="#ai-detail">View AI breakdown</a>
-          </div>
-          <div className="ray-proof-row">
-            <span>Meta ads research</span>
-            <span>Manual save + extension</span>
-            <span>AI action plans</span>
           </div>
         </div>
-        <Mockup type="hero" hero />
+        <UiShell type="hero" large />
       </section>
 
-      <section id="workflow" className="ray-section ray-reveal">
-        <div className="ray-section-heading">
-          <span className="ray-eyebrow">
-            <Zap size={16} />
-            Workflow
-          </span>
-          <h2>From competitor ad to test idea.</h2>
-          <p>
-            SpySave gives e-commerce teams a repeatable path from saving ads to
-            launching stronger creative tests.
-          </p>
+      <section id="workflow" className="linear-workflow linear-reveal">
+        <div>
+          <p className="linear-section-label">Built for fast creative research</p>
+          <h2>A simple system for finding, saving, and testing better ad angles.</h2>
         </div>
-        <div className="ray-workflow-grid">
-          {workflowSteps.map((step, index) => (
-            <article key={step.title} className="ray-workflow-card">
-              <span>{index + 1}</span>
-              <h3>{step.title}</h3>
-              <p>{step.body}</p>
+        <div className="linear-workflow-grid">
+          {workflow.map((item, index) => (
+            <article key={item}>
+              <span>{String(index + 1).padStart(2, "0")}</span>
+              <p>{item}</p>
             </article>
           ))}
         </div>
       </section>
 
-      <section className="ray-feature-stack">
-        {features.map((feature, index) => {
+      <section className="linear-product-strip linear-reveal">
+        <div><Gauge size={18} /><span>Dashboard</span></div>
+        <div><Bot size={18} /><span>AI analysis</span></div>
+        <div><Library size={18} /><span>Saved ads</span></div>
+        <div><Bell size={18} /><span>Notifications</span></div>
+        <div><Target size={18} /><span>Test ideas</span></div>
+      </section>
+
+      <section className="linear-stack">
+        {featureSections.map((feature, index) => {
           const Icon = feature.icon;
+          const mockup = feature.mockup as "ai" | "library" | "tracking" | "reports";
           return (
             <article
-              id={feature.id}
-              key={feature.id}
-              className={`ray-feature ray-reveal ${
-                index % 2 ? "ray-feature-reverse" : ""
-              } ${feature.dominant ? "ray-feature-dominant" : ""}`}
+              id={index === 0 ? "ai" : feature.mockup}
+              key={feature.title}
+              className={`linear-feature linear-reveal ${index % 2 ? "linear-feature-flip" : ""}`}
             >
-              <div className="ray-feature-copy">
-                <span className="ray-eyebrow">
-                  <Icon size={16} />
-                  {feature.eyebrow}
-                </span>
+              <div className="linear-feature-copy">
+                <span className="linear-section-label">{feature.kicker}</span>
                 <h2>{feature.title}</h2>
                 <p>{feature.body}</p>
-                <a href="/app" className="ray-button ray-button-secondary">
-                  {feature.cta}
-                  <ChevronRight size={17} />
-                </a>
+                <div className="linear-feature-stats">
+                  {feature.stats.map((stat) => (
+                    <span key={stat}>
+                      <CheckCircle2 size={14} />
+                      {stat}
+                    </span>
+                  ))}
+                </div>
               </div>
-              <Mockup type={feature.mockup} />
+              <UiShell type={mockup} />
+              <Icon className="linear-section-icon" size={22} />
             </article>
           );
         })}
       </section>
 
-      <section id="reports" className="ray-feature ray-feature-reverse ray-reveal">
-        <div className="ray-feature-copy">
-          <span className="ray-eyebrow">
-            <Sparkles size={16} />
-            Reports
-          </span>
-          <h2>Turn saved ads into weekly creative intelligence.</h2>
+      <section className="linear-dashboard linear-reveal">
+        <div className="linear-feature-copy">
+          <span className="linear-section-label">Command center</span>
+          <h2>Everything stays connected in one workspace.</h2>
           <p>
-            SpySave summarizes top hooks, winning scores, repeated angles, fatigue
-            risks, and what your team should test next.
+            Dashboard, saved ads, AI detail, tracking, notifications, reports,
+            help, and extension setup work together so the user always knows the
+            next step.
           </p>
-          <a href="/app/reports" className="ray-button ray-button-secondary">
-            See reports
-            <ChevronRight size={17} />
-          </a>
         </div>
-        <Mockup type="dashboard" />
+        <UiShell type="dashboard" />
       </section>
 
-      <section id="extension" className="ray-extension ray-reveal">
-        <div>
-          <span className="ray-eyebrow">
-            <Zap size={16} />
-            Browser extension
-          </span>
-          <h2>Save public ads without breaking your research flow.</h2>
-          <p>
-            The SpySave extension opens as a side panel, keeps the page clickable,
-            detects ad data, and sends it to your dashboard for analysis.
-          </p>
-        </div>
-        <div className="ray-extension-card">
-          <BrandMark size={44} />
-          <div>
-            <strong>SpySave Extension</strong>
-            <span>Meta, Facebook, and TikTok Creative Center support</span>
-          </div>
-          <a href="/app">Connect</a>
-        </div>
-      </section>
-
-      <section className="ray-beta ray-reveal">
-        <div>
-          <span className="ray-eyebrow">
-            <ShieldCheck size={16} />
-            Public beta
-          </span>
-          <h2>Start building a better swipe file today.</h2>
-          <p>
-            Save real competitor ads, analyze the strongest angles, and turn
-            research into creative tests faster.
-          </p>
-        </div>
-        <div className="ray-cta-row">
-          <a href="/app" className="ray-button ray-button-primary">
-            Join beta
-            <ChevronRight size={17} />
+      <section className="linear-cta linear-reveal">
+        <span className="linear-kicker">
+          <ShieldCheck size={14} />
+          Public beta
+        </span>
+        <h2>Research faster. Launch with better creative logic.</h2>
+        <p>
+          Start with the web app, connect the browser extension, and build your
+          first competitor swipe file.
+        </p>
+        <div className="linear-hero-actions">
+          <a href="/app" className="linear-primary linear-primary-big">
+            Try SpySave
+            <ChevronRight size={16} />
           </a>
-          <a href={DEMO_LINK} className="ray-button ray-button-secondary">
+          <a href="https://calendly.com/spysave/demo" className="linear-secondary">
             Book demo
           </a>
         </div>
       </section>
 
-      <footer className="ray-footer">
+      <footer className="linear-footer">
+        <div>
+          <BrandMark size={28} />
+          <span>SpySave</span>
+        </div>
         <span>AI ad research - Public beta</span>
-        <span>Dropshippers and small e-commerce teams</span>
-        <span>Minimal extension permissions</span>
+        <span>Built for dropshippers and small e-commerce teams</span>
       </footer>
     </main>
   );
