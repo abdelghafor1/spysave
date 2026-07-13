@@ -38,7 +38,7 @@ const productScreens = [
     description:
       "Overview dyal saved ads, AI scores, tracked brands, notifications, w quick actions f blasa wahda.",
     icon: Gauge,
-    accent: "#3157d5",
+    accent: "#2563eb",
     preview: "dashboard",
     screenshot: "/screenshots/dashboard.png",
   },
@@ -58,7 +58,7 @@ const productScreens = [
     description:
       "Hook, offer, CTA, pain point, audience, trust signals, weaknesses, test ideas, w rewrite suggestions.",
     icon: Bot,
-    accent: "#6d5dfc",
+    accent: "#7c3aed",
     preview: "ai",
     screenshot: "/screenshots/ai-detail.png",
   },
@@ -68,7 +68,7 @@ const productScreens = [
     description:
       "Zid competitor pages, organize niches, w khlli SpySave ijme3 lik updates f notifications page.",
     icon: Users,
-    accent: "#0ea5e9",
+    accent: "#06b6d4",
     preview: "tracking",
     screenshot: "/screenshots/tracking.png",
   },
@@ -78,7 +78,7 @@ const productScreens = [
     description:
       "Blasa n9iya katban fiha alerts mlli competitor li tracked kayban 3ndo ad jdida.",
     icon: Bell,
-    accent: "#d97706",
+    accent: "#f97316",
     preview: "notifications",
     screenshot: "/screenshots/notifications.png",
   },
@@ -88,7 +88,7 @@ const productScreens = [
     description:
       "Page katjme3 install steps, workflow, privacy, pricing info, w launch checklist bach demo ib9a wadeh.",
     icon: FileText,
-    accent: "#64748b",
+    accent: "#475569",
     preview: "help",
     screenshot: "/screenshots/help.png",
   },
@@ -129,9 +129,10 @@ export default function Home() {
             </span>
           </a>
 
-          <p className="hidden text-sm font-semibold text-[#4f635d] md:block">
-            Simple ad research workspace
-          </p>
+          <div className="hidden items-center gap-2 rounded-full border border-[#d8e8e1] bg-white/70 px-3 py-2 text-sm font-bold text-[#4f635d] md:flex">
+            <ShieldCheck size={15} className="text-[#0f9f7a]" />
+            Public ad research workspace
+          </div>
 
           <div className="flex items-center gap-2 rounded-lg border border-[#d8e8e1] bg-white/80 p-1 shadow-sm">
             <Languages size={16} className="ms-2 text-[#0f9f7a]" />
@@ -167,6 +168,23 @@ export default function Home() {
               Preview how SpySave helps you save ads, organize swipe files,
               analyze creative angles with AI, and track competitor activity.
             </p>
+            <div className="mx-auto mt-5 grid max-w-2xl gap-2 sm:grid-cols-3">
+              {[
+                ["AI score", "Hook, offer, fatigue risk"],
+                ["Swipe file", "Tags, notes, media preview"],
+                ["Tracking", "Competitor updates"],
+              ].map(([title, body]) => (
+                <div
+                  key={title}
+                  className="rounded-lg border border-[#d8e8e1] bg-white/75 px-3 py-3 text-left shadow-sm"
+                >
+                  <p className="text-sm font-bold text-[#13231f]">{title}</p>
+                  <p className="mt-1 text-xs font-semibold leading-5 text-[#4f635d]">
+                    {body}
+                  </p>
+                </div>
+              ))}
+            </div>
             <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <a
                 href="/app"
@@ -174,6 +192,12 @@ export default function Home() {
               >
                 Try for free
                 <ChevronRight size={17} />
+              </a>
+              <a
+                href="#product"
+                className="inline-flex h-12 items-center justify-center gap-2 rounded-lg border border-[#d8e8e1] bg-white px-6 text-sm font-bold text-[#13231f] shadow-sm"
+              >
+                See product
               </a>
             </div>
           </div>
