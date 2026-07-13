@@ -358,6 +358,10 @@ export default function Home() {
         <div className="ray-nav-actions">
           <a href="#workflow">Workflow</a>
           <a href="#ai-detail">AI Detail</a>
+          <a href="#saved-ads">Saved Ads</a>
+          <a href="#tracking">Tracking</a>
+          <a href="#reports">Reports</a>
+          <a href="#extension">Extension</a>
           <a href="/app">Login</a>
           <button
             type="button"
@@ -453,6 +457,47 @@ export default function Home() {
             </article>
           );
         })}
+      </section>
+
+      <section id="reports" className="ray-feature ray-feature-reverse ray-reveal">
+        <div className="ray-feature-copy">
+          <span className="ray-eyebrow">
+            <Sparkles size={16} />
+            Reports
+          </span>
+          <h2>Turn saved ads into weekly creative intelligence.</h2>
+          <p>
+            SpySave summarizes top hooks, winning scores, repeated angles, fatigue
+            risks, and what your team should test next.
+          </p>
+          <a href="/app/reports" className="ray-button ray-button-secondary">
+            See reports
+            <ChevronRight size={17} />
+          </a>
+        </div>
+        <Mockup type="dashboard" />
+      </section>
+
+      <section id="extension" className="ray-extension ray-reveal">
+        <div>
+          <span className="ray-eyebrow">
+            <Zap size={16} />
+            Browser extension
+          </span>
+          <h2>Save public ads without breaking your research flow.</h2>
+          <p>
+            The SpySave extension opens as a side panel, keeps the page clickable,
+            detects ad data, and sends it to your dashboard for analysis.
+          </p>
+        </div>
+        <div className="ray-extension-card">
+          <BrandMark size={44} />
+          <div>
+            <strong>SpySave Extension</strong>
+            <span>Meta, Facebook, and TikTok Creative Center support</span>
+          </div>
+          <a href="/app">Connect</a>
+        </div>
       </section>
 
       <section className="ray-beta ray-reveal">
