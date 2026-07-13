@@ -347,30 +347,39 @@ export default function Home() {
   return (
     <main className="ray-page" data-theme={theme}>
       <nav className="ray-nav">
-        <a href="#" className="ray-brand" aria-label="SpySave home">
-          <BrandMark size={38} />
-          <span>
-            <strong>SpySave</strong>
-            <small>AI creative research</small>
-          </span>
-        </a>
+        <div className="ray-nav-shell">
+          <a href="#" className="ray-brand" aria-label="SpySave home">
+            <BrandMark size={38} />
+            <span>
+              <strong>SpySave</strong>
+            </span>
+          </a>
 
-        <div className="ray-nav-actions">
-          <a href="#workflow">Workflow</a>
-          <a href="#ai-detail">AI Detail</a>
-          <a href="#saved-ads">Saved Ads</a>
-          <a href="#tracking">Tracking</a>
-          <a href="#reports">Reports</a>
-          <a href="#extension">Extension</a>
-          <a href="/app">Login</a>
-          <button
-            type="button"
-            className="ray-theme-toggle"
-            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            aria-label="Toggle theme"
-          >
-            {theme === "dark" ? <Sun size={17} /> : <Moon size={17} />}
-          </button>
+          <div className="ray-nav-links">
+            <a href="#workflow">Workflow</a>
+            <a href="#ai-detail">AI</a>
+            <a href="#saved-ads">Saved Ads</a>
+            <a href="#tracking">Tracking</a>
+            <a href="#reports">Reports</a>
+            <a href="#extension">Extension</a>
+          </div>
+
+          <div className="ray-nav-right">
+            <a href="/app" className="ray-login-link">
+              Log in
+            </a>
+            <a href="/app" className="ray-download-button">
+              Try for free
+            </a>
+            <button
+              type="button"
+              className="ray-theme-toggle"
+              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+              aria-label="Toggle theme"
+            >
+              {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
+            </button>
+          </div>
         </div>
       </nav>
 
