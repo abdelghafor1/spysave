@@ -23,23 +23,34 @@ import { BrandMark } from "@/components/BrandMark";
 
 type Locale = "en" | "ar" | "fr";
 
+const DEMO_LINK = "https://calendly.com/spysave/demo";
+
 const screenshots = [
+  { key: "aiDetail", icon: Bot, accent: "#7c3aed", screenshot: "/screenshots/ai-detail.png" },
   { key: "dashboard", icon: Gauge, accent: "#2563eb", screenshot: "/screenshots/dashboard.png" },
   { key: "savedAds", icon: BookmarkPlus, accent: "#f59e0b", screenshot: "/screenshots/saved-ads.png" },
-  { key: "aiDetail", icon: Bot, accent: "#7c3aed", screenshot: "/screenshots/ai-detail.png" },
   { key: "tracking", icon: Users, accent: "#06b6d4", screenshot: "/screenshots/tracking.png" },
   { key: "notifications", icon: Bell, accent: "#f97316", screenshot: "/screenshots/notifications.png" },
   { key: "help", icon: FileText, accent: "#475569", screenshot: "/screenshots/help.png" },
 ] as const;
 
+const screenActions = {
+  dashboard: "See your command center",
+  savedAds: "See a swipe file example",
+  aiDetail: "See a real ad breakdown",
+  tracking: "See competitor tracking",
+  notifications: "See notifications",
+  help: "See the setup guide",
+} as const;
+
 const translations = {
   en: {
     meta: "Meta ads research",
     navBadge: "Public ad research workspace",
-    heroBadge: "Ad intelligence workspace",
-    heroTitle: "Research competitor ads before you launch.",
+    heroBadge: "AI creative research, not just screenshots",
+    heroTitle: "Turn any competitor ad into your next winning creative.",
     heroBody:
-      "Preview how SpySave helps you save ads, organize swipe files, analyze creative angles with AI, and track competitor activity.",
+      "SpySave saves, scores, and breaks down competitor ads with AI — hook, offer, fatigue risk — so you skip the guesswork and launch faster.",
     tryFree: "Try for free",
     seeProduct: "See product",
     stats: [
@@ -85,9 +96,9 @@ const translations = {
     joinBeta: "Join beta",
     bookDemo: "Book demo",
     productCards: [
+      ["AI analysis", "Hook, offer, CTA, audience, ideas, and score."],
       ["Save ads", "Capture public Meta ads into your account."],
       ["Organize", "Tags, notes, folders, search, and CSV export."],
-      ["AI analysis", "Hook, offer, CTA, audience, ideas, and score."],
       ["Track competitors", "Save competitor pages and compare their ads."],
     ],
     workflowEyebrow: "Workflow",
@@ -102,8 +113,8 @@ const translations = {
     ],
     footerLeft: "Public ad research. Minimal extension permissions.",
     footerLang: "EN / AR / FR",
-    footerSwipe: "Swipe file SaaS",
-    footerMvp: "MVP ready",
+    footerSwipe: "AI ad research",
+    footerMvp: "Public beta",
   },
   ar: {
     meta: "بحث إعلانات ميتا",
@@ -250,6 +261,53 @@ const translations = {
   },
 } as const;
 
+const heroOverrides = {
+  en: {
+    badge: "AI creative research, not just screenshots",
+    title: "Turn any competitor ad into your next winning creative.",
+    body:
+      "SpySave saves, scores, and breaks down competitor ads with AI — hook, offer, fatigue risk — so you skip the guesswork and launch faster.",
+    footerSwipe: "AI ad research",
+    footerMvp: "Public beta",
+  },
+  ar: {
+    badge: "بحث إبداعي بالذكاء الاصطناعي، وليس مجرد screenshots",
+    title: "حوّل أي إعلان منافس إلى الكرياتيف الرابح القادم.",
+    body:
+      "SpySave يحفظ، يقيّم، ويحلل إعلانات المنافسين بالذكاء الاصطناعي — hook، العرض، وخطر fatigue — باش تنقص التخمين وتطلق أسرع.",
+    footerSwipe: "بحث إعلانات بالذكاء الاصطناعي",
+    footerMvp: "بيتا عامة",
+  },
+  fr: {
+    badge: "Recherche créative IA, pas seulement des screenshots",
+    title: "Transformez chaque pub concurrente en votre prochain créatif gagnant.",
+    body:
+      "SpySave sauvegarde, score et décompose les pubs concurrentes avec l'IA — hook, offre, fatigue risk — pour éviter les suppositions et lancer plus vite.",
+    footerSwipe: "Recherche pub IA",
+    footerMvp: "Bêta publique",
+  },
+} as const;
+
+const screenActionOverrides = {
+  en: screenActions,
+  ar: {
+    dashboard: "شاهد مركز التحكم",
+    savedAds: "شاهد مثال swipe file",
+    aiDetail: "شاهد تحليل إعلان حقيقي",
+    tracking: "شاهد تتبع المنافسين",
+    notifications: "شاهد التنبيهات",
+    help: "شاهد دليل الإعداد",
+  },
+  fr: {
+    dashboard: "Voir le centre de commande",
+    savedAds: "Voir un exemple de swipe file",
+    aiDetail: "Voir une vraie analyse de pub",
+    tracking: "Voir le suivi concurrent",
+    notifications: "Voir les notifications",
+    help: "Voir le guide de setup",
+  },
+} as const;
+
 function ProductScreenPreview({
   label,
   screenshot,
@@ -272,6 +330,7 @@ function ProductScreenPreview({
 export default function Home() {
   const [locale, setLocale] = useState<Locale>("en");
   const copy = translations[locale];
+  const hero = heroOverrides[locale];
   const dir = locale === "ar" ? "rtl" : "ltr";
 
   return (
@@ -314,13 +373,13 @@ export default function Home() {
           <div className="mx-auto max-w-4xl text-center">
             <span className="inline-flex items-center gap-2 rounded-full border border-[#d8e8e1] bg-white/80 px-4 py-2 text-sm font-bold text-[#29423a] shadow-sm backdrop-blur">
               <Sparkles size={16} className="text-[#0f9f7a]" />
-              {copy.heroBadge}
+              {hero.badge}
             </span>
             <h1 className="mt-5 text-4xl font-semibold leading-tight text-[#13231f] md:text-6xl">
-              {copy.heroTitle}
+              {hero.title}
             </h1>
             <p className="mx-auto mt-4 max-w-2xl text-base font-medium leading-7 text-[#4f635d]">
-              {copy.heroBody}
+              {hero.body}
             </p>
             <div className="mx-auto mt-5 grid max-w-2xl gap-2 sm:grid-cols-3">
               {copy.stats.map(([title, body]) => (
@@ -378,7 +437,7 @@ export default function Home() {
                       href="/app"
                       className="mt-5 inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-[#d8e8e1] bg-white px-4 text-sm font-bold text-[#13231f]"
                     >
-                      {copy.tryPage}
+                      {screenActionOverrides[locale][screen.key]}
                       <ChevronRight size={16} />
                     </a>
                   </div>
@@ -409,7 +468,9 @@ export default function Home() {
               {copy.joinBeta}
             </a>
             <a
-              href="mailto:hello@spysave.app?subject=SpySave%20demo"
+              href={DEMO_LINK}
+              target="_blank"
+              rel="noreferrer"
               className="inline-flex h-11 items-center rounded-lg border border-[#d8e8e1] bg-white px-4 text-sm font-bold text-[#13231f]"
             >
               {copy.bookDemo}
@@ -421,7 +482,7 @@ export default function Home() {
       <section id="product" className="border-y border-[#dbe7e2] bg-white/70">
         <div className="mx-auto grid max-w-7xl gap-3 px-5 py-8 md:grid-cols-4">
           {copy.productCards.map(([title, body], index) => {
-            const icons = [BookmarkPlus, Tags, Bot, Bell];
+            const icons = [Bot, BookmarkPlus, Tags, Bell];
             const IconComponent = icons[index];
             return (
               <article key={title} className="premium-panel rounded-lg p-4">
@@ -472,11 +533,11 @@ export default function Home() {
           </span>
           <span className="inline-flex items-center gap-2">
             <Library size={16} />
-            {copy.footerSwipe}
+            {hero.footerSwipe}
           </span>
           <span className="inline-flex items-center gap-2">
             <Layers3 size={16} />
-            {copy.footerMvp}
+            {hero.footerMvp}
           </span>
         </div>
       </footer>
