@@ -1,26 +1,22 @@
-<svg width="980" height="240" viewBox="0 0 980 240" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="980" height="240" rx="48" fill="none"/>
-  <g transform="translate(24 24) scale(.375)">
-    <rect width="512" height="512" rx="116" fill="#101413"/>
-    <path d="M92 331V171C92 137.863 118.863 111 152 111H360C393.137 111 420 137.863 420 171V331C420 364.137 393.137 391 360 391H152C118.863 391 92 364.137 92 331Z" fill="url(#panel)"/>
-    <path d="M150 258C179.2 208.4 214.533 183.6 256 183.6C297.467 183.6 332.8 208.4 362 258C332.8 307.6 297.467 332.4 256 332.4C214.533 332.4 179.2 307.6 150 258Z" fill="#F8FFF9"/>
-    <circle cx="256" cy="258" r="47" fill="#101413"/>
-    <circle cx="271" cy="241" r="14" fill="#DFFF7A"/>
-    <path d="M337 136V224L310 205L283 224V136H337Z" fill="#101413"/>
-    <path d="M165 371L165 303C165 291.954 173.954 283 185 283H229C240.046 283 249 291.954 249 303V371L207 343L165 371Z" fill="#FF7A59"/>
-    <path d="M145 152H253" stroke="#101413" stroke-width="22" stroke-linecap="round"/>
-    <path d="M145 190H213" stroke="#101413" stroke-width="22" stroke-linecap="round"/>
+<svg width="1120" height="300" viewBox="0 0 1120 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <g transform="translate(28 28) scale(0.4765625)">
+    <rect width="512" height="512" rx="112" fill="#050607"/>
+    <rect x="38" y="38" width="436" height="436" rx="88" fill="url(#tile)"/>
+    <rect x="90" y="88" width="332" height="336" rx="58" fill="#0B0D0E" stroke="#1F2A26" stroke-width="2"/>
+    <path d="M330 158C308 132 258 124 220 139C184 153 174 192 208 212C230 225 264 229 295 242C344 262 348 320 304 349C258 379 188 362 163 319" stroke="#F5F8F6" stroke-width="42" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M183 161C208 132 262 122 309 137" stroke="#10B981" stroke-width="18" stroke-linecap="round"/>
+    <path d="M333 97H394C404.493 97 413 105.507 413 116V219L363.5 184L314 219V116C314 105.507 322.507 97 333 97Z" fill="#10B981"/>
+    <circle cx="356" cy="148" r="12" fill="#07100D"/>
+    <path d="M151 399H232" stroke="#10B981" stroke-width="18" stroke-linecap="round"/>
   </g>
-  <path d="M284.82 84.68C283.54 73.68 274.32 67.28 259.72 67.28C246.15 67.28 237.7 72.91 237.7 82.39C237.7 91.87 246.91 96.48 260.49 99.55L280.45 104.16C308.11 110.56 323.48 124.39 323.48 149.24C323.48 181.76 298.11 200.7 260.49 200.7C222.1 200.7 197.24 181.25 195.96 148.22H230.79C232.58 164.36 243.84 172.81 261.77 172.81C278.42 172.81 288.92 165.64 288.92 153.87C288.92 143.37 281.22 138.25 264.57 134.41L242.56 129.29C216.94 123.41 203.36 108.8 203.36 85.19C203.36 56.26 226.91 38.58 260.74 38.58C294.54 38.58 317.06 56.77 319.11 84.68H284.82Z" fill="#101413"/>
-  <path d="M343.56 73.68H375.1V91.61H376.89C383.03 79.32 396.61 71.63 413.26 71.63C444.8 71.63 465.78 96.99 465.78 136.2C465.78 175.36 444.8 200.7 412.75 200.7C397.12 200.7 383.8 193.77 377.4 181.76H375.87V239.1H343.56V73.68ZM433.22 136.2C433.22 111.33 422.2 96.73 404.02 96.73C386.1 96.73 375.36 111.58 375.36 136.2C375.36 161.07 386.1 175.87 404.02 175.87C422.2 175.87 433.22 161.07 433.22 136.2Z" fill="#101413"/>
-  <path d="M485.58 73.68H517.64V200H485.58V73.68ZM485.07 38.58H518.15V64.2H485.07V38.58Z" fill="#101413"/>
-  <path d="M596.28 200H558.41L515.12 73.68H550.47L577.36 167.17H578.89L605.78 73.68H640.36L596.28 200Z" fill="#101413"/>
-  <path d="M703.96 200.7C666.6 200.7 642.25 175.36 642.25 136.2C642.25 97.25 666.86 71.63 703.45 71.63C739.55 71.63 762.84 96.48 762.84 133.9V144.14H674.05C675.58 165.64 686.6 177.66 704.73 177.66C719.33 177.66 728.03 171.52 731.36 160.51H761.31C756.44 185.12 734.43 200.7 703.96 200.7ZM674.31 122.64H730.78C730.01 105.48 719.25 94.22 703.45 94.22C687.31 94.22 676.61 105.99 674.31 122.64Z" fill="#101413"/>
+  <text x="310" y="151" fill="#050607" font-family="Inter, Arial, sans-serif" font-size="98" font-weight="850" letter-spacing="-4">SpySave</text>
+  <text x="316" y="203" fill="#64748B" font-family="Inter, Arial, sans-serif" font-size="26" font-weight="700" letter-spacing="1.4">AI CREATIVE RESEARCH</text>
+  <path d="M310 230H518" stroke="#10B981" stroke-width="10" stroke-linecap="round"/>
   <defs>
-    <linearGradient id="panel" x1="92" y1="111" x2="421.194" y2="389.589" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#13B98F"/>
-      <stop offset="0.53" stop-color="#DFFF7A"/>
-      <stop offset="1" stop-color="#FF7A59"/>
+    <linearGradient id="tile" x1="76" y1="42" x2="436" y2="454" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#111716"/>
+      <stop offset="0.55" stop-color="#080A0B"/>
+      <stop offset="1" stop-color="#101816"/>
     </linearGradient>
   </defs>
 </svg>
