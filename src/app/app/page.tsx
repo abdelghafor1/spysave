@@ -1388,6 +1388,7 @@ export default function SpySaveApp() {
                 ["Offer", selectedAd.analysis?.offer],
                 ["CTA", selectedAd.analysis?.cta],
                 ["Audience", selectedAd.analysis?.audienceGuess],
+                ["Ad fatigue risk", selectedAd.analysis?.adFatigueRisk],
               ].map(([label, value]) => (
                 <div key={label} className="rounded-lg border border-[#e0d7c8] p-4">
                   <p className="text-xs font-bold uppercase text-[#8a8478]">{label}</p>
@@ -1396,6 +1397,24 @@ export default function SpySaveApp() {
                   </p>
                 </div>
               ))}
+            </div>
+
+            <div className="mt-4 rounded-lg border border-[#e0d7c8] p-4">
+              <p className="text-xs font-bold uppercase text-[#8a8478]">
+                Objection handling
+              </p>
+              <div className="mt-3 grid gap-2">
+                {(
+                  selectedAd.analysis?.objectionHandling || ["Not analyzed yet"]
+                ).map((objection) => (
+                  <div
+                    key={objection}
+                    className="rounded-lg bg-[#eef3ff] px-3 py-2 text-sm font-medium text-[#3157d5]"
+                  >
+                    {objection}
+                  </div>
+                ))}
+              </div>
             </div>
 
             <div className="mt-4 rounded-lg border border-[#e0d7c8] p-4">

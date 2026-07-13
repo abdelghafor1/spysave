@@ -20,6 +20,12 @@ export const demoAds: SpySaveAd[] = [
       cta: "Shop today",
       niche: "Skincare / beauty",
       audienceGuess: "Women 18-34 looking for clearer skin",
+      objectionHandling: [
+        "Price concern handled with 30% off",
+        "Shipping concern handled with free shipping",
+      ],
+      adFatigueRisk:
+        "Low to medium risk: the acne pain point can be refreshed with new UGC and before/after variants.",
       whyItMayWork:
         "The ad names a clear insecurity, gives a simple solution, and adds a time-sensitive incentive.",
       ideasToTest: [
@@ -51,6 +57,12 @@ export const demoAds: SpySaveAd[] = [
       cta: "Order now",
       niche: "Fitness",
       audienceGuess: "Beginners who want easy home workouts",
+      objectionHandling: [
+        "Ease-of-use concern handled with beginner-friendly routines",
+        "Motivation concern handled with habit-focused framing",
+      ],
+      adFatigueRisk:
+        "Medium risk: the habit angle is strong but needs fresh creator demos to avoid repetition.",
       whyItMayWork:
         "It frames the product as a habit fix, not just equipment, which makes the promise more emotional.",
       ideasToTest: [
@@ -82,6 +94,12 @@ export const demoAds: SpySaveAd[] = [
       cta: "CTA not obvious",
       niche: "Home gadget",
       audienceGuess: "Busy home buyers who like simple tools",
+      objectionHandling: [
+        "Value concern handled with buy 2 get 1 free",
+        "Time concern handled with a 20-minute daily saving promise",
+      ],
+      adFatigueRisk:
+        "Medium risk: the simple benefit works, but repeated static demos may fatigue without new use cases.",
       whyItMayWork:
         "The benefit is easy to understand and the bundle gives a reason to buy more than one.",
       ideasToTest: [

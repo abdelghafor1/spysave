@@ -168,6 +168,7 @@ export default function AdDetailPage({
                   ["CTA", ad.analysis?.cta],
                   ["Audience", ad.analysis?.audienceGuess],
                   ["Pain point", ad.analysis?.painPoint],
+                  ["Ad fatigue risk", ad.analysis?.adFatigueRisk],
                 ].map(([label, value]) => (
                   <div key={label} className="rounded-lg bg-white p-4">
                     <p className="text-xs font-bold uppercase text-[#66736d]">{label}</p>
@@ -216,6 +217,24 @@ export default function AdDetailPage({
                           className="rounded-md bg-[#eef8f2] px-3 py-2 text-sm font-semibold"
                         >
                           {signal}
+                        </span>
+                      ),
+                    )}
+                  </div>
+                </div>
+
+                <div className="rounded-lg bg-white p-4">
+                  <p className="text-xs font-bold uppercase text-[#66736d]">
+                    Objection handling
+                  </p>
+                  <div className="mt-2 grid gap-2">
+                    {(ad.analysis?.objectionHandling || ["Not analyzed yet"]).map(
+                      (objection) => (
+                        <span
+                          key={objection}
+                          className="rounded-md bg-[#eef3ff] px-3 py-2 text-sm font-semibold text-[#3157d5]"
+                        >
+                          {objection}
                         </span>
                       ),
                     )}

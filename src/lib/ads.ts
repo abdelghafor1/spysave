@@ -49,6 +49,8 @@ export type SpySaveAnalysis = {
   audienceGuess: string;
   painPoint?: string;
   trustSignals?: string[];
+  objectionHandling?: string[];
+  adFatigueRisk?: string;
   weaknesses?: string[];
   whyItMayWork: string;
   ideasToTest: string[];

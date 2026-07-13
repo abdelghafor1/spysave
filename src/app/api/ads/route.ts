@@ -31,6 +31,8 @@ export type AdAnalysis = {
   audienceGuess: string;
   painPoint: string;
   trustSignals: string[];
+  objectionHandling: string[];
+  adFatigueRisk: string;
   weaknesses: string[];
   whyItMayWork: string;
   ideasToTest: string[];
@@ -152,6 +154,41 @@ function scoreAd(adText: string) {
   } satisfies Pick<AdAnalysis, "winningScore" | "verdict" | "scoreReasons">;
 }
 
+function detectObjectionHandling(adText = "") {
+  const objections: string[] = [];
+  if (/free shipping|shipping|delivery|fast delivery/i.test(adText)) {
+    objections.push("Shipping or delivery concern");
+  }
+  if (/guarantee|refund|return|risk[-\s]?free/i.test(adText)) {
+    objections.push("Risk reversal or refund concern");
+  }
+  if (/review|rated|stars|testimonial|before|after|results/i.test(adText)) {
+    objections.push("Trust and proof concern");
+  }
+  if (/discount|%|sale|bundle|buy\s?\d|get\s?\d|free/i.test(adText)) {
+    objections.push("Price or value concern");
+  }
+
+  return objections.length
+    ? objections.slice(0, 5)
+    : ["No clear objections handled. Add proof, guarantee, shipping, or value reasons."];
+}
+
+function detectAdFatigueRisk(adText = "") {
+  const text = adText.toLowerCase();
+  const hasFreshAngle = /story|i tried|before|after|challenge|day \d|routine|testimonial|creator|ugc/i.test(adText);
+  const isOfferHeavy = /discount|%|sale|limited|today|free shipping|buy now|shop now/i.test(text);
+  const isShortGeneric = adText.trim().length < 80 || /best product|must have|viral|limited offer/i.test(text);
+
+  if (isShortGeneric && isOfferHeavy) {
+    return "High risk: the ad leans on a generic offer/hook and may fatigue quickly without new creatives.";
+  }
+  if (hasFreshAngle) {
+    return "Low to medium risk: the ad has a story, demo, or proof angle that can be refreshed into variants.";
+  }
+  return "Medium risk: the core angle is usable, but it needs new hooks, thumbnails, or proof variations to avoid fatigue.";
+}
+
 function fallbackAnalysis(adText: string): AdAnalysis {
   const score = scoreAd(adText);
 
@@ -166,6 +203,8 @@ function fallbackAnalysis(adText: string): AdAnalysis {
     trustSignals: /review|rated|stars|before|after|guarantee|testimonial/i.test(adText)
       ? ["Contains a possible proof or trust element"]
       : ["No strong trust signal detected"],
+    objectionHandling: detectObjectionHandling(adText),
+    adFatigueRisk: detectAdFatigueRisk(adText),
     weaknesses: [
       detectOffer(adText) === "No clear offer detected"
         ? "Offer is not clear enough"
@@ -257,6 +296,11 @@ export function cleanAnalysis(value: Partial<AdAnalysis>, adText: string): AdAna
       Array.isArray(value.trustSignals) && value.trustSignals.length
         ? value.trustSignals.slice(0, 5)
         : fallback.trustSignals,
+    objectionHandling:
+      Array.isArray(value.objectionHandling) && value.objectionHandling.length
+        ? value.objectionHandling.slice(0, 5)
+        : fallback.objectionHandling,
+    adFatigueRisk: value.adFatigueRisk || fallback.adFatigueRisk,
     weaknesses:
       Array.isArray(value.weaknesses) && value.weaknesses.length
         ? value.weaknesses.slice(0, 5)
@@ -336,7 +380,7 @@ export async function analyzeWithNvidia(adText: string): Promise<AdAnalysis | nu
         {
           role: "system",
           content:
-            "You analyze ecommerce Meta/Facebook ads for dropshippers. Return only JSON with keys: hook, offer, cta, niche, audienceGuess, painPoint, trustSignals, weaknesses, whyItMayWork, ideasToTest, rewriteSuggestions, scoreBreakdown, winningScore, verdict, scoreReasons. trustSignals and weaknesses are arrays of short strings. ideasToTest must be exactly 3 short strings. rewriteSuggestions has hook, cta, adCopy. scoreBreakdown has hook, offer, cta, trust, audienceFit as 0-25 numbers. winningScore is 0-100. verdict is Weak, Good, or Possible Winner. scoreReasons is 2-4 short strings explaining the score.",
+            "You analyze ecommerce Meta/Facebook ads for dropshippers. Return only JSON with keys: hook, offer, cta, niche, audienceGuess, painPoint, trustSignals, objectionHandling, adFatigueRisk, weaknesses, whyItMayWork, ideasToTest, rewriteSuggestions, scoreBreakdown, winningScore, verdict, scoreReasons. trustSignals, objectionHandling, and weaknesses are arrays of short strings. adFatigueRisk is one short practical sentence: Low, Medium, or High risk plus why. ideasToTest must be exactly 3 short strings. rewriteSuggestions has hook, cta, adCopy. scoreBreakdown has hook, offer, cta, trust, audienceFit as 0-25 numbers. winningScore is 0-100. verdict is Weak, Good, or Possible Winner. scoreReasons is 2-4 short strings explaining the score.",
         },
         {
           role: "user",
@@ -381,7 +425,7 @@ export async function analyzeWithOpenAI(adText: string): Promise<AdAnalysis | nu
         {
           role: "system",
           content:
-            "You analyze ecommerce social ads. Return only valid JSON with keys: hook, offer, cta, niche, audienceGuess, painPoint, trustSignals, weaknesses, whyItMayWork, ideasToTest, rewriteSuggestions, scoreBreakdown, winningScore, verdict, scoreReasons. trustSignals and weaknesses are arrays of short strings. ideasToTest must be exactly 3 short strings. rewriteSuggestions has hook, cta, adCopy. scoreBreakdown has hook, offer, cta, trust, audienceFit as 0-25 numbers. winningScore is 0-100. verdict is Weak, Good, or Possible Winner. scoreReasons is 2-4 short strings.",
+            "You analyze ecommerce social ads. Return only valid JSON with keys: hook, offer, cta, niche, audienceGuess, painPoint, trustSignals, objectionHandling, adFatigueRisk, weaknesses, whyItMayWork, ideasToTest, rewriteSuggestions, scoreBreakdown, winningScore, verdict, scoreReasons. trustSignals, objectionHandling, and weaknesses are arrays of short strings. adFatigueRisk is one short practical sentence: Low, Medium, or High risk plus why. ideasToTest must be exactly 3 short strings. rewriteSuggestions has hook, cta, adCopy. scoreBreakdown has hook, offer, cta, trust, audienceFit as 0-25 numbers. winningScore is 0-100. verdict is Weak, Good, or Possible Winner. scoreReasons is 2-4 short strings.",
         },
         {
           role: "user",
