@@ -5,7 +5,6 @@ import {
   BookmarkPlus,
   Bot,
   ChevronRight,
-  FileText,
   Gauge,
   Globe2,
   Languages,
@@ -13,7 +12,6 @@ import {
   Library,
   ShieldCheck,
   Sparkles,
-  Tags,
   Users,
 } from "lucide-react";
 import Image from "next/image";
@@ -27,11 +25,10 @@ const DEMO_LINK = "https://calendly.com/spysave/demo";
 
 const screenshots = [
   { key: "aiDetail", icon: Bot, accent: "#7c3aed", screenshot: "/screenshots/ai-detail.png" },
-  { key: "dashboard", icon: Gauge, accent: "#2563eb", screenshot: "/screenshots/dashboard.png" },
   { key: "savedAds", icon: BookmarkPlus, accent: "#f59e0b", screenshot: "/screenshots/saved-ads.png" },
   { key: "tracking", icon: Users, accent: "#06b6d4", screenshot: "/screenshots/tracking.png" },
   { key: "notifications", icon: Bell, accent: "#f97316", screenshot: "/screenshots/notifications.png" },
-  { key: "help", icon: FileText, accent: "#475569", screenshot: "/screenshots/help.png" },
+  { key: "dashboard", icon: Gauge, accent: "#2563eb", screenshot: "/screenshots/dashboard.png" },
 ] as const;
 
 const screenActions = {
@@ -411,14 +408,45 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="vertical-screens mt-8" aria-label="SpySave page previews">
+        </div>
+      </section>
+
+      <section id="workflow" className="mx-auto max-w-7xl px-5 py-9">
+        <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <p className="text-sm font-bold uppercase text-[#08775d]">
+              {copy.workflowEyebrow}
+            </p>
+            <h2 className="mt-2 text-3xl font-semibold">{copy.workflowTitle}</h2>
+          </div>
+          <p className="max-w-md text-sm leading-6 text-[#66736d]">
+            {copy.workflowBody}
+          </p>
+        </div>
+
+        <div className="grid gap-3 md:grid-cols-4">
+          {copy.workflow.map(([title, body], index) => (
+            <article key={title} className="premium-panel rounded-lg p-4">
+              <span className="brand-gradient grid size-9 place-items-center rounded-lg text-sm font-bold">
+                {index + 1}
+              </span>
+              <h3 className="mt-5 font-semibold">{title}</h3>
+              <p className="mt-2 text-sm leading-6 text-[#66736d]">{body}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section id="product" className="border-y border-[#dbe7e2] bg-white/70">
+        <div className="mx-auto max-w-7xl px-5 py-9">
+          <div className="vertical-screens" aria-label="SpySave page previews">
             {screenshots.map((screen) => {
               const Icon = screen.icon;
               const [label, title, description] = copy.screens[screen.key];
 
               return (
                 <article
-                  key={`first-${screen.key}`}
+                  key={screen.key}
                   className="screen-card screen-card-vertical hover-glow"
                   style={{ "--screen-accent": screen.accent } as CSSProperties}
                 >
@@ -452,7 +480,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-5 pb-6">
+      <section className="mx-auto max-w-7xl px-5 py-9">
         <div className="premium-panel flex flex-wrap items-center justify-between gap-3 rounded-xl p-4">
           <div>
             <p className="text-sm font-bold uppercase text-[#08775d]">
@@ -476,48 +504,6 @@ export default function Home() {
               {copy.bookDemo}
             </a>
           </div>
-        </div>
-      </section>
-
-      <section id="product" className="border-y border-[#dbe7e2] bg-white/70">
-        <div className="mx-auto grid max-w-7xl gap-3 px-5 py-8 md:grid-cols-4">
-          {copy.productCards.map(([title, body], index) => {
-            const icons = [Bot, BookmarkPlus, Tags, Bell];
-            const IconComponent = icons[index];
-            return (
-              <article key={title} className="premium-panel rounded-lg p-4">
-                <IconComponent size={22} className="text-[#07966f]" />
-                <h3 className="mt-4 text-lg font-semibold">{title}</h3>
-                <p className="mt-2 text-sm leading-6 text-[#66736d]">{body}</p>
-              </article>
-            );
-          })}
-        </div>
-      </section>
-
-      <section id="workflow" className="mx-auto max-w-7xl px-5 py-9">
-        <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
-          <div>
-            <p className="text-sm font-bold uppercase text-[#07966f]">
-              {copy.workflowEyebrow}
-            </p>
-            <h2 className="mt-2 text-3xl font-semibold">{copy.workflowTitle}</h2>
-          </div>
-          <p className="max-w-md text-sm leading-6 text-[#66736d]">
-            {copy.workflowBody}
-          </p>
-        </div>
-
-        <div className="grid gap-3 md:grid-cols-4">
-          {copy.workflow.map(([title, body], index) => (
-            <article key={title} className="premium-panel rounded-lg p-4">
-              <span className="brand-gradient grid size-9 place-items-center rounded-lg text-sm font-bold">
-                {index + 1}
-              </span>
-              <h3 className="mt-5 font-semibold">{title}</h3>
-              <p className="mt-2 text-sm leading-6 text-[#66736d]">{body}</p>
-            </article>
-          ))}
         </div>
       </section>
 
