@@ -2066,8 +2066,8 @@ article:hover {
 
 /* Header and product-fit sections refinement */
 .ray-nav {
-  width: min(1760px, calc(100% - 42px));
-  padding: 26px 0 18px;
+  width: min(1180px, calc(100% - 42px));
+  padding: 24px 0 12px;
   margin-inline: auto;
 }
 
@@ -2077,17 +2077,17 @@ article:hover {
 
 .ray-nav-shell {
   display: grid;
-  grid-template-columns: 260px minmax(520px, 1fr) 320px;
+  grid-template-columns: minmax(180px, 0.8fr) minmax(360px, 1.1fr) minmax(280px, 0.85fr);
   align-items: center;
-  gap: 22px;
-  min-height: 110px;
+  gap: 18px;
+  min-height: 86px;
   border: 1px solid rgba(255, 255, 255, 0.11);
-  border-radius: 26px;
+  border-radius: 24px;
   background:
     radial-gradient(circle at 88% 0%, rgba(255, 255, 255, 0.075), transparent 28%),
     linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.018)),
     rgba(9, 10, 10, 0.92);
-  padding: 0 46px;
+  padding: 0 30px;
   box-shadow:
     0 22px 70px rgba(0, 0, 0, 0.44),
     0 0 0 1px rgba(255, 255, 255, 0.025) inset;
@@ -2198,18 +2198,18 @@ article:hover {
 
 @media (min-width: 1500px) {
   .ray-nav-shell {
-    grid-template-columns: 300px minmax(700px, 1fr) 360px;
+    grid-template-columns: minmax(200px, 0.8fr) minmax(420px, 1.1fr) minmax(300px, 0.85fr);
   }
 }
 
 @media (max-width: 1500px) {
   .ray-nav-shell {
-    grid-template-columns: 235px minmax(420px, 1fr) 300px;
-    padding-inline: 34px;
+    grid-template-columns: minmax(180px, 0.8fr) minmax(360px, 1.1fr) minmax(280px, 0.85fr);
+    padding-inline: 28px;
   }
 
   .ray-nav-links {
-    gap: 28px;
+    gap: 24px;
   }
 }
 
