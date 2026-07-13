@@ -5,7 +5,6 @@ import {
   BookmarkPlus,
   Bot,
   ChevronRight,
-  CircleDollarSign,
   FileText,
   Gauge,
   Globe2,
@@ -311,39 +310,6 @@ export default function Home() {
               <p className="mt-2 text-sm leading-6 text-[#66736d]">{body}</p>
             </article>
           ))}
-        </div>
-      </section>
-
-      <section id="pricing" className="premium-dark px-5 py-9 text-[#13231f]">
-        <div className="mx-auto max-w-7xl">
-          <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
-            <div>
-              <p className="text-sm font-bold uppercase text-[#08775d]">Pricing</p>
-              <h2 className="mt-2 text-3xl font-semibold">Ready for beta testing.</h2>
-            </div>
-            <a
-              href="/app"
-              className="brand-gradient inline-flex h-11 items-center gap-2 rounded-lg px-4 text-sm font-bold"
-            >
-              Start now
-              <ChevronRight size={16} />
-            </a>
-          </div>
-
-          <div className="grid gap-3 md:grid-cols-3">
-            {[
-              ["Free beta", "$0", "50 saved ads, manual save, basic AI."],
-              ["Pro", "$19-$29", "Unlimited saves, deep AI, competitor alerts."],
-              ["Agency", "$79-$99", "Workspaces, teams, PDF/CSV reports."],
-            ].map(([name, price, body]) => (
-              <article key={name} className="premium-panel rounded-lg p-5">
-                <CircleDollarSign size={22} className="text-[#0f9f7a]" />
-                <p className="mt-5 text-sm font-bold uppercase text-[#4f635d]">{name}</p>
-                <p className="mt-3 text-4xl font-semibold">{price}</p>
-                <p className="mt-4 leading-7 text-[#4f635d]">{body}</p>
-              </article>
-            ))}
-          </div>
         </div>
       </section>
 

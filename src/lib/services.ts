@@ -55,20 +55,6 @@ export const services = [
     ],
     stats: ["CSV", "Weekly view", "Client ready"],
   },
-  {
-    slug: "pricing",
-    title: "Pricing",
-    menuLabel: "Pricing",
-    eyebrow: "Beta plans",
-    description:
-      "Start with a simple free beta and grow into Pro and Agency plans when users validate the product.",
-    bullets: [
-      "Free beta for early users and demos.",
-      "Pro for unlimited saves, deep AI, and competitor alerts.",
-      "Agency for workspaces, teams, and client reports.",
-    ],
-    stats: ["Free", "Pro", "Agency"],
-  },
 ];
 
 export const serviceMenu = [
