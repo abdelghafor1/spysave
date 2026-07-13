@@ -47,6 +47,23 @@ export type AdAnalysis = {
     script: string;
     visualDirection: string;
   };
+  actionPlan: {
+    bestNextMove: string;
+    recommendedFormat: string;
+    hookToTest: string;
+    ctaToTest: string;
+    audienceToTarget: string;
+    platformRecommendation: string;
+    scriptLength: string;
+  };
+  generatedCreatives: {
+    hooks: string[];
+    ugcScripts: string[];
+    tiktokRewrite: string;
+    metaRewrite: string;
+    imagePrompts: string[];
+    videoPrompt: string;
+  };
   testPlan: string[];
   scoreBreakdown: {
     hook: number;
@@ -245,6 +262,45 @@ function fallbackAnalysis(adText: string): AdAnalysis {
       visualDirection:
         "Use clear product close-ups, simple captions, one proof moment, and a final offer screen.",
     },
+    actionPlan: {
+      bestNextMove:
+        "Build a short UGC test that opens with the strongest pain point and closes with one clear offer.",
+      recommendedFormat: "UGC product demo",
+      hookToTest: `Test this hook: ${extractHook(adText)}`,
+      ctaToTest:
+        detectCta(adText) === "CTA not obvious"
+          ? "Add urgency: Shop the offer today."
+          : `Make the CTA more direct: ${detectCta(adText)} today.`,
+      audienceToTarget: "Warm ecommerce buyers and lookalike audiences based on recent purchasers.",
+      platformRecommendation:
+        "Test TikTok/Reels first for UGC validation, then adapt the winner for Meta.",
+      scriptLength: "15 seconds",
+    },
+    generatedCreatives: {
+      hooks: [
+        `Why ${extractHook(adText).toLowerCase()}`,
+        "Nobody tells you this before buying.",
+        "If this problem sounds familiar, watch this.",
+        "I tested this so you do not have to.",
+        "The simple fix most people miss.",
+      ],
+      ugcScripts: [
+        "Show the problem in the first 2 seconds, demonstrate the product, then show the result with a direct CTA.",
+        "Start with a creator confession, explain the pain point, show product use, and close with the offer.",
+        "Use a before/after structure: messy problem, product demo, clean result, offer screen.",
+      ],
+      tiktokRewrite:
+        "Make this TikTok-first: open with a curiosity hook, use fast captions, show the product in use, and end with a simple action.",
+      metaRewrite:
+        "Make this Meta-first: lead with the main benefit, add proof or guarantee, show the offer, and use a direct CTA.",
+      imagePrompts: [
+        "Clean product close-up with bold problem/solution caption and ecommerce-style offer badge.",
+        "UGC-style creator holding the product in a natural home setting with simple benefit text overlay.",
+        "Before/after split image showing the customer problem on the left and the product result on the right.",
+      ],
+      videoPrompt:
+        "Create a 15-second vertical UGC ad: problem hook, product demo, proof/result moment, and final offer CTA.",
+    },
     testPlan: [
       "Test the current hook against a stronger pain-point hook.",
       "Test proof-first creative against offer-first creative.",
@@ -345,6 +401,49 @@ export function cleanAnalysis(value: Partial<AdAnalysis>, adText: string): AdAna
         value.creativeBrief?.visualDirection ||
         fallback.creativeBrief.visualDirection,
     },
+    actionPlan: {
+      bestNextMove:
+        value.actionPlan?.bestNextMove || fallback.actionPlan.bestNextMove,
+      recommendedFormat:
+        value.actionPlan?.recommendedFormat ||
+        fallback.actionPlan.recommendedFormat,
+      hookToTest: value.actionPlan?.hookToTest || fallback.actionPlan.hookToTest,
+      ctaToTest: value.actionPlan?.ctaToTest || fallback.actionPlan.ctaToTest,
+      audienceToTarget:
+        value.actionPlan?.audienceToTarget ||
+        fallback.actionPlan.audienceToTarget,
+      platformRecommendation:
+        value.actionPlan?.platformRecommendation ||
+        fallback.actionPlan.platformRecommendation,
+      scriptLength:
+        value.actionPlan?.scriptLength || fallback.actionPlan.scriptLength,
+    },
+    generatedCreatives: {
+      hooks:
+        Array.isArray(value.generatedCreatives?.hooks) &&
+        value.generatedCreatives.hooks.length
+          ? value.generatedCreatives.hooks.slice(0, 5)
+          : fallback.generatedCreatives.hooks,
+      ugcScripts:
+        Array.isArray(value.generatedCreatives?.ugcScripts) &&
+        value.generatedCreatives.ugcScripts.length
+          ? value.generatedCreatives.ugcScripts.slice(0, 3)
+          : fallback.generatedCreatives.ugcScripts,
+      tiktokRewrite:
+        value.generatedCreatives?.tiktokRewrite ||
+        fallback.generatedCreatives.tiktokRewrite,
+      metaRewrite:
+        value.generatedCreatives?.metaRewrite ||
+        fallback.generatedCreatives.metaRewrite,
+      imagePrompts:
+        Array.isArray(value.generatedCreatives?.imagePrompts) &&
+        value.generatedCreatives.imagePrompts.length
+          ? value.generatedCreatives.imagePrompts.slice(0, 3)
+          : fallback.generatedCreatives.imagePrompts,
+      videoPrompt:
+        value.generatedCreatives?.videoPrompt ||
+        fallback.generatedCreatives.videoPrompt,
+    },
     testPlan:
       Array.isArray(value.testPlan) && value.testPlan.length
         ? value.testPlan.slice(0, 5)
@@ -413,7 +512,7 @@ export async function analyzeWithNvidia(adText: string): Promise<AdAnalysis | nu
         {
           role: "system",
           content:
-            "You analyze ecommerce Meta/Facebook ads for dropshippers. Return only JSON with keys: hook, offer, cta, niche, audienceGuess, painPoint, trustSignals, objectionHandling, adFatigueRisk, weaknesses, whyItMayWork, ideasToTest, rewriteSuggestions, creativeBrief, testPlan, scoreBreakdown, winningScore, verdict, scoreReasons. trustSignals, objectionHandling, weaknesses, and testPlan are arrays of short strings. adFatigueRisk is one short practical sentence: Low, Medium, or High risk plus why. ideasToTest must be exactly 3 short strings. rewriteSuggestions has hook, cta, adCopy. creativeBrief has angle, concept, script, visualDirection. scoreBreakdown has hook, offer, cta, trust, audienceFit as 0-25 numbers. winningScore is 0-100. verdict is Weak, Good, or Possible Winner. scoreReasons is 2-4 short strings explaining the score.",
+            "You are a senior ecommerce creative strategist. Analyze the ad and tell the user what to do next. Return only JSON with keys: hook, offer, cta, niche, audienceGuess, painPoint, trustSignals, objectionHandling, adFatigueRisk, weaknesses, whyItMayWork, ideasToTest, rewriteSuggestions, creativeBrief, actionPlan, generatedCreatives, testPlan, scoreBreakdown, winningScore, verdict, scoreReasons. trustSignals, objectionHandling, weaknesses, and testPlan are arrays. ideasToTest must be exactly 3 short strings. rewriteSuggestions has hook, cta, adCopy. creativeBrief has angle, concept, script, visualDirection. actionPlan has bestNextMove, recommendedFormat, hookToTest, ctaToTest, audienceToTarget, platformRecommendation, scriptLength. generatedCreatives has hooks array of 5 strings, ugcScripts array of 3 strings, tiktokRewrite, metaRewrite, imagePrompts array of 3 strings, videoPrompt. scoreBreakdown has hook, offer, cta, trust, audienceFit as 0-25 numbers. winningScore is 0-100. verdict is Weak, Good, or Possible Winner.",
         },
         {
           role: "user",
@@ -458,7 +557,7 @@ export async function analyzeWithOpenAI(adText: string): Promise<AdAnalysis | nu
         {
           role: "system",
           content:
-            "You analyze ecommerce social ads. Return only valid JSON with keys: hook, offer, cta, niche, audienceGuess, painPoint, trustSignals, objectionHandling, adFatigueRisk, weaknesses, whyItMayWork, ideasToTest, rewriteSuggestions, creativeBrief, testPlan, scoreBreakdown, winningScore, verdict, scoreReasons. trustSignals, objectionHandling, weaknesses, and testPlan are arrays of short strings. adFatigueRisk is one short practical sentence: Low, Medium, or High risk plus why. ideasToTest must be exactly 3 short strings. rewriteSuggestions has hook, cta, adCopy. creativeBrief has angle, concept, script, visualDirection. scoreBreakdown has hook, offer, cta, trust, audienceFit as 0-25 numbers. winningScore is 0-100. verdict is Weak, Good, or Possible Winner. scoreReasons is 2-4 short strings.",
+            "You are a senior ecommerce creative strategist. Analyze the ad and tell the user what to do next. Return only valid JSON with keys: hook, offer, cta, niche, audienceGuess, painPoint, trustSignals, objectionHandling, adFatigueRisk, weaknesses, whyItMayWork, ideasToTest, rewriteSuggestions, creativeBrief, actionPlan, generatedCreatives, testPlan, scoreBreakdown, winningScore, verdict, scoreReasons. trustSignals, objectionHandling, weaknesses, and testPlan are arrays. ideasToTest must be exactly 3 short strings. rewriteSuggestions has hook, cta, adCopy. creativeBrief has angle, concept, script, visualDirection. actionPlan has bestNextMove, recommendedFormat, hookToTest, ctaToTest, audienceToTarget, platformRecommendation, scriptLength. generatedCreatives has hooks array of 5 strings, ugcScripts array of 3 strings, tiktokRewrite, metaRewrite, imagePrompts array of 3 strings, videoPrompt. scoreBreakdown has hook, offer, cta, trust, audienceFit as 0-25 numbers. winningScore is 0-100. verdict is Weak, Good, or Possible Winner.",
         },
         {
           role: "user",

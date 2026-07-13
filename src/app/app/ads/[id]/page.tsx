@@ -164,6 +164,41 @@ export default function AdDetailPage({
               </div>
 
               <div className="mt-4 grid gap-3">
+                <div className="rounded-lg border-2 border-[#3157d5] bg-[#eff6ff] p-4">
+                  <p className="text-xs font-bold uppercase text-[#3157d5]">
+                    Recommended next test
+                  </p>
+                  <h3 className="mt-2 text-xl font-semibold">
+                    {ad.analysis?.actionPlan?.bestNextMove || "Analyze this ad to get an action plan."}
+                  </h3>
+                  <div className="mt-3 grid gap-2 text-sm font-semibold leading-6 md:grid-cols-2">
+                    <p>
+                      <span className="text-[#66736d]">Format: </span>
+                      {ad.analysis?.actionPlan?.recommendedFormat || "--"}
+                    </p>
+                    <p>
+                      <span className="text-[#66736d]">Length: </span>
+                      {ad.analysis?.actionPlan?.scriptLength || "--"}
+                    </p>
+                    <p>
+                      <span className="text-[#66736d]">Hook: </span>
+                      {ad.analysis?.actionPlan?.hookToTest || "--"}
+                    </p>
+                    <p>
+                      <span className="text-[#66736d]">CTA: </span>
+                      {ad.analysis?.actionPlan?.ctaToTest || "--"}
+                    </p>
+                    <p className="md:col-span-2">
+                      <span className="text-[#66736d]">Audience: </span>
+                      {ad.analysis?.actionPlan?.audienceToTarget || "--"}
+                    </p>
+                    <p className="md:col-span-2">
+                      <span className="text-[#66736d]">Platform: </span>
+                      {ad.analysis?.actionPlan?.platformRecommendation || "--"}
+                    </p>
+                  </div>
+                </div>
+
                 {[
                   ["Hook", ad.analysis?.hook],
                   ["Offer", ad.analysis?.offer],
@@ -300,6 +335,85 @@ export default function AdDetailPage({
                     {ad.analysis?.creativeBrief?.visualDirection ||
                       "Not analyzed yet"}
                   </p>
+                </div>
+              </div>
+
+              <div className="mt-4 rounded-lg bg-white p-4">
+                <p className="text-xs font-bold uppercase text-[#66736d]">
+                  Generate hooks
+                </p>
+                <div className="mt-2 grid gap-2">
+                  {(ad.analysis?.generatedCreatives?.hooks || ["Not analyzed yet"]).map(
+                    (hook) => (
+                      <div
+                        key={hook}
+                        className="rounded-md bg-[#eef8f2] px-3 py-2 text-sm font-semibold"
+                      >
+                        {hook}
+                      </div>
+                    ),
+                  )}
+                </div>
+              </div>
+
+              <div className="mt-4 rounded-lg bg-white p-4">
+                <p className="text-xs font-bold uppercase text-[#66736d]">
+                  UGC scripts
+                </p>
+                <div className="mt-2 grid gap-2">
+                  {(ad.analysis?.generatedCreatives?.ugcScripts || [
+                    "Not analyzed yet",
+                  ]).map((script) => (
+                    <div
+                      key={script}
+                      className="rounded-md bg-[#fff7ed] px-3 py-2 text-sm font-semibold text-[#9a3412]"
+                    >
+                      {script}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="mt-4 grid gap-3 md:grid-cols-2">
+                <div className="rounded-lg bg-white p-4">
+                  <p className="text-xs font-bold uppercase text-[#66736d]">
+                    Rewrite for TikTok
+                  </p>
+                  <p className="mt-2 text-sm font-semibold leading-6">
+                    {ad.analysis?.generatedCreatives?.tiktokRewrite ||
+                      "Not analyzed yet"}
+                  </p>
+                </div>
+                <div className="rounded-lg bg-white p-4">
+                  <p className="text-xs font-bold uppercase text-[#66736d]">
+                    Rewrite for Meta
+                  </p>
+                  <p className="mt-2 text-sm font-semibold leading-6">
+                    {ad.analysis?.generatedCreatives?.metaRewrite ||
+                      "Not analyzed yet"}
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-4 rounded-lg bg-white p-4">
+                <p className="text-xs font-bold uppercase text-[#66736d]">
+                  Image and video prompts
+                </p>
+                <div className="mt-2 grid gap-2">
+                  {(ad.analysis?.generatedCreatives?.imagePrompts || [
+                    "Not analyzed yet",
+                  ]).map((prompt) => (
+                    <div
+                      key={prompt}
+                      className="rounded-md bg-[#eef3ff] px-3 py-2 text-sm font-semibold text-[#3157d5]"
+                    >
+                      {prompt}
+                    </div>
+                  ))}
+                  <div className="rounded-md bg-[#eef3ff] px-3 py-2 text-sm font-semibold text-[#3157d5]">
+                    {ad.analysis?.generatedCreatives?.videoPrompt ||
+                      "Not analyzed yet"}
+                  </div>
                 </div>
               </div>
 

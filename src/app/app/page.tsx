@@ -1428,6 +1428,30 @@ export default function SpySaveApp() {
             <SavedAdMedia mediaUrl={selectedAd.mediaUrl} label="Product creative" />
 
             <div className="mt-4 grid gap-4 md:grid-cols-2">
+              <div className="rounded-lg border-2 border-[#3157d5] bg-[#eff6ff] p-4 md:col-span-2">
+                <p className="text-xs font-bold uppercase text-[#3157d5]">
+                  Recommended next test
+                </p>
+                <h3 className="mt-2 text-xl font-semibold">
+                  {selectedAd.analysis?.actionPlan?.bestNextMove ||
+                    "Re-analyze this ad to get an action plan."}
+                </h3>
+                <div className="mt-3 grid gap-2 text-sm font-semibold leading-6 md:grid-cols-2">
+                  <p>
+                    <span className="text-[#66736d]">Format: </span>
+                    {selectedAd.analysis?.actionPlan?.recommendedFormat || "--"}
+                  </p>
+                  <p>
+                    <span className="text-[#66736d]">Length: </span>
+                    {selectedAd.analysis?.actionPlan?.scriptLength || "--"}
+                  </p>
+                  <p className="md:col-span-2">
+                    <span className="text-[#66736d]">Audience: </span>
+                    {selectedAd.analysis?.actionPlan?.audienceToTarget || "--"}
+                  </p>
+                </div>
+              </div>
+
               {[
                 ["Hook", selectedAd.analysis?.hook],
                 ["Offer", selectedAd.analysis?.offer],
@@ -1486,6 +1510,48 @@ export default function SpySaveApp() {
                     </div>
                   ),
                 )}
+              </div>
+            </div>
+
+            <div className="mt-4 grid gap-4 md:grid-cols-2">
+              <div className="rounded-lg border border-[#e0d7c8] p-4">
+                <p className="text-xs font-bold uppercase text-[#8a8478]">
+                  Generated hooks
+                </p>
+                <div className="mt-3 grid gap-2">
+                  {(
+                    selectedAd.analysis?.generatedCreatives?.hooks || [
+                      "Re-analyze this ad",
+                    ]
+                  ).map((hook) => (
+                    <div
+                      key={hook}
+                      className="rounded-lg bg-[#eef8f2] px-3 py-2 text-sm font-medium"
+                    >
+                      {hook}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="rounded-lg border border-[#e0d7c8] p-4">
+                <p className="text-xs font-bold uppercase text-[#8a8478]">
+                  UGC scripts
+                </p>
+                <div className="mt-3 grid gap-2">
+                  {(
+                    selectedAd.analysis?.generatedCreatives?.ugcScripts || [
+                      "Re-analyze this ad",
+                    ]
+                  ).map((script) => (
+                    <div
+                      key={script}
+                      className="rounded-lg bg-[#fff7ed] px-3 py-2 text-sm font-medium text-[#9a3412]"
+                    >
+                      {script}
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </section>

@@ -65,6 +65,23 @@ export type SpySaveAnalysis = {
     script?: string;
     visualDirection?: string;
   };
+  actionPlan?: {
+    bestNextMove?: string;
+    recommendedFormat?: string;
+    hookToTest?: string;
+    ctaToTest?: string;
+    audienceToTarget?: string;
+    platformRecommendation?: string;
+    scriptLength?: string;
+  };
+  generatedCreatives?: {
+    hooks?: string[];
+    ugcScripts?: string[];
+    tiktokRewrite?: string;
+    metaRewrite?: string;
+    imagePrompts?: string[];
+    videoPrompt?: string;
+  };
   testPlan?: string[];
   scoreBreakdown?: {
     hook?: number;
