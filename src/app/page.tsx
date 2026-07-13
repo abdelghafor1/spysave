@@ -4,16 +4,13 @@ import {
   ArrowRight,
   Bell,
   Bot,
-  CheckCircle2,
   ChevronRight,
-  FileText,
   Gauge,
   Library,
   Search,
   ShieldCheck,
   Sparkles,
   Target,
-  Users,
 } from "lucide-react";
 import { useEffect } from "react";
 import { BrandMark } from "@/components/BrandMark";
@@ -25,37 +22,58 @@ const workflow = [
   "Turn analysis into hooks, scripts, rewrites, and test plans.",
 ];
 
-const featureSections = [
+const pillars = [
   {
+    figure: "FIG 0.2",
+    title: "Built for ad research",
+    body: "Purpose-built for public competitor ads, not random screenshots in folders.",
+    variant: "stack",
+  },
+  {
+    figure: "FIG 0.3",
+    title: "Powered by AI analysis",
+    body: "Breaks down hooks, offers, fatigue risk, objections, and test ideas.",
+    variant: "cubes",
+  },
+  {
+    figure: "FIG 0.4",
+    title: "Designed for speed",
+    body: "Save, score, review, and rewrite creative angles without losing momentum.",
+    variant: "cards",
+  },
+];
+
+const storySections = [
+  {
+    number: "1.0",
+    slug: "Analyze",
     kicker: "AI creative strategist",
     title: "Know what to do after you save the ad.",
     body: "SpySave does not just describe a competitor ad. It gives you the hook, offer, CTA, audience, pain point, trust signals, fatigue risk, objection handling, weaknesses, and concrete test ideas.",
-    stats: ["91/100 winning score", "7 strategy fields", "5 rewrite ideas"],
-    icon: Bot,
     mockup: "ai",
   },
   {
+    number: "2.0",
+    slug: "Library",
     kicker: "Swipe file system",
     title: "Build a searchable library of competitor creatives.",
     body: "Every saved ad stays connected to the page name, source link, media, landing page, folder, notes, tags, and AI score. Your team stops losing ideas in screenshots and browser tabs.",
-    stats: ["248 saved ads", "42 tags", "CSV export"],
-    icon: Library,
     mockup: "library",
   },
   {
+    number: "3.0",
+    slug: "Track",
     kicker: "Competitor tracking",
     title: "See which brands are moving before they become obvious.",
     body: "Track competitor pages, monitor saved activity, compare scores, and review changes from one clean workspace. The goal is simple: know which creative angles are worth copying, avoiding, or improving.",
-    stats: ["18 brands", "4 new ads", "2 possible winners"],
-    icon: Users,
     mockup: "tracking",
   },
   {
+    number: "4.0",
+    slug: "Report",
     kicker: "Reports and signals",
     title: "Turn research into weekly creative intelligence.",
     body: "SpySave surfaces repeated hooks, strong offers, fatigue risks, and top-performing patterns so dropshippers and small e-commerce teams know what to test next.",
-    stats: ["14 top hooks", "72% curiosity angle", "3 fatigue alerts"],
-    icon: FileText,
     mockup: "reports",
   },
 ];
@@ -226,6 +244,35 @@ function DashboardUi() {
   );
 }
 
+function LineArt({ variant }: { variant: string }) {
+  return (
+    <div className={`linear-art linear-art-${variant}`}>
+      <span />
+      <span />
+      <span />
+      <span />
+      <span />
+    </div>
+  );
+}
+
+function StoryScene({
+  type,
+}: {
+  type: "ai" | "library" | "tracking" | "reports" | "dashboard";
+}) {
+  return (
+    <div className={`linear-scene linear-scene-${type}`}>
+      <div className="linear-scene-fade" />
+      {type === "ai" && <AiUi />}
+      {type === "library" && <LibraryUi />}
+      {type === "tracking" && <TrackingUi />}
+      {type === "reports" && <ReportsUi />}
+      {type === "dashboard" && <DashboardUi />}
+    </div>
+  );
+}
+
 export default function Home() {
   useReveal();
 
@@ -297,47 +344,101 @@ export default function Home() {
         <div><Target size={18} /><span>Test ideas</span></div>
       </section>
 
-      <section className="linear-stack">
-        {featureSections.map((feature, index) => {
-          const Icon = feature.icon;
-          const mockup = feature.mockup as "ai" | "library" | "tracking" | "reports";
-          return (
-            <article
-              id={index === 0 ? "ai" : feature.mockup}
-              key={feature.title}
-              className={`linear-feature linear-reveal ${index % 2 ? "linear-feature-flip" : ""}`}
-            >
-              <div className="linear-feature-copy">
-                <span className="linear-section-label">{feature.kicker}</span>
-                <h2>{feature.title}</h2>
-                <p>{feature.body}</p>
-                <div className="linear-feature-stats">
-                  {feature.stats.map((stat) => (
-                    <span key={stat}>
-                      <CheckCircle2 size={14} />
-                      {stat}
-                    </span>
-                  ))}
-                </div>
-              </div>
-              <UiShell type={mockup} />
-              <Icon className="linear-section-icon" size={22} />
+      <section className="linear-manifesto linear-reveal">
+        <h2>
+          <span>A new species of ad research tool.</span> Purpose-built for
+          e-commerce teams with AI creative workflows at its core, SpySave sets
+          a cleaner standard for planning and launching ads.
+        </h2>
+        <div className="linear-pillar-grid">
+          {pillars.map((pillar) => (
+            <article key={pillar.title}>
+              <small>{pillar.figure}</small>
+              <LineArt variant={pillar.variant} />
+              <h3>{pillar.title}</h3>
+              <p>{pillar.body}</p>
             </article>
-          );
-        })}
+          ))}
+        </div>
       </section>
 
-      <section className="linear-dashboard linear-reveal">
-        <div className="linear-feature-copy">
-          <span className="linear-section-label">Command center</span>
+      <section className="linear-story-stack">
+        {storySections.map((feature) => (
+          <article
+            id={feature.mockup === "ai" ? "ai" : feature.mockup}
+            key={feature.title}
+            className="linear-story linear-reveal"
+          >
+            <div className="linear-story-heading">
+              <h2>{feature.title}</h2>
+              <div>
+                <p>{feature.body}</p>
+                <span>
+                  {feature.number} {feature.slug} <ChevronRight size={20} />
+                </span>
+              </div>
+            </div>
+            <StoryScene type={feature.mockup as "ai" | "library" | "tracking" | "reports"} />
+          </article>
+        ))}
+      </section>
+
+      <section className="linear-story linear-dashboard-story linear-reveal">
+        <div className="linear-story-heading">
           <h2>Everything stays connected in one workspace.</h2>
-          <p>
-            Dashboard, saved ads, AI detail, tracking, notifications, reports,
-            help, and extension setup work together so the user always knows the
-            next step.
-          </p>
+          <div>
+            <p>
+              Dashboard, saved ads, AI detail, tracking, notifications, reports,
+              help, and extension setup work together so the user always knows the
+              next step.
+            </p>
+            <span>
+              5.0 Workspace <ChevronRight size={20} />
+            </span>
+          </div>
         </div>
-        <UiShell type="dashboard" />
+        <StoryScene type="dashboard" />
+      </section>
+
+      <section className="linear-changelog linear-reveal">
+        <h2>Creative intelligence log</h2>
+        <div>
+          <article>
+            <span />
+            <h3>AI action plans</h3>
+            <p>Saved ads now turn into concrete next steps, hooks, and rewrites.</p>
+            <small>JUL 14, 2026</small>
+          </article>
+          <article>
+            <span />
+            <h3>Competitor tracking</h3>
+            <p>Track brands and review new saved ads in a focused notification flow.</p>
+            <small>JUL 13, 2026</small>
+          </article>
+          <article>
+            <span />
+            <h3>Extension side panel</h3>
+            <p>Save Meta, Facebook, and TikTok Creative Center ads while browsing.</p>
+            <small>JUL 12, 2026</small>
+          </article>
+        </div>
+      </section>
+
+      <section className="linear-quotes linear-reveal">
+        <article>
+          <p>
+            &quot;SpySave gives small teams the creative research discipline they
+            usually only see inside bigger media buying teams.&quot;
+          </p>
+          <span>Beta user - e-commerce founder</span>
+        </article>
+        <article>
+          <p>
+            &quot;The value is not saving ads. The value is knowing what angle to
+            test next.&quot;
+          </p>
+          <span>SpySave positioning</span>
+        </article>
       </section>
 
       <section className="linear-cta linear-reveal">
