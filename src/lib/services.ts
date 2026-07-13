@@ -62,5 +62,6 @@ export const serviceMenu = [
   { label: "Dashboard", href: "/app" },
   { label: "Saved Ads", href: "/app/ads" },
   { label: "Tracking", href: "/app/competitors" },
+  { label: "Reports", href: "/app/reports" },
   { label: "Help", href: "/help" },
 ];

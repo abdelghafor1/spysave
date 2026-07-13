@@ -45,6 +45,7 @@ import {
   watchUserNotifications,
   watchUserAds,
 } from "@/lib/ads";
+import { demoAds } from "@/lib/demoAds";
 
 type AdForm = {
   pageName: string;
@@ -803,7 +804,7 @@ export default function SpySaveApp() {
         </div>
         )}
 
-        <section className="hidden">
+        <section className="premium-panel rounded-xl p-4 lg:col-span-2">
           <div className="grid gap-3 md:grid-cols-[0.9fr_1.1fr] md:items-center">
             <div>
               <p className="text-sm font-bold uppercase text-[#07966f]">
@@ -811,8 +812,8 @@ export default function SpySaveApp() {
               </p>
               <h2 className="mt-1 text-2xl font-semibold">Start in 3 steps</h2>
               <p className="mt-2 text-sm leading-6 text-[#4f635d]">
-                This keeps the beta demo clear: connect extension, save one ad,
-                then open AI detail.
+                Connect the extension, save one ad, then run AI analysis from the
+                ad detail page.
               </p>
             </div>
             <div className="grid gap-2 md:grid-cols-3">
@@ -831,6 +832,65 @@ export default function SpySaveApp() {
             </div>
           </div>
         </section>
+
+        {ads.length === 0 ? (
+          <section className="premium-panel rounded-xl p-4 lg:col-span-2">
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <p className="text-sm font-bold uppercase text-[#3157d5]">
+                  Demo swipe file
+                </p>
+                <h2 className="mt-1 text-2xl font-semibold">
+                  See what SpySave gives users after the first save
+                </h2>
+                <p className="mt-1 max-w-2xl text-sm leading-6 text-[#4f635d]">
+                  These examples are not saved to your account. Use one to fill the
+                  form or open Reports to preview the output.
+                </p>
+              </div>
+              <Link
+                href="/app/reports"
+                className="brand-gradient inline-flex h-10 items-center rounded-lg px-4 text-sm font-bold"
+              >
+                Preview reports
+              </Link>
+            </div>
+            <div className="mt-4 grid gap-3 md:grid-cols-2">
+              {demoAds.map((demoAd) => (
+                <article
+                  key={demoAd.id}
+                  className="rounded-lg border border-[#d8e8e1] bg-white p-4"
+                >
+                  <div className="flex flex-wrap items-start justify-between gap-3">
+                    <div>
+                      <p className="text-lg font-semibold">{demoAd.pageName}</p>
+                      <p className="mt-1 text-sm font-bold text-[#08775d]">
+                        {demoAd.analysis?.winningScore}/100{" "}
+                        {demoAd.analysis?.verdict}
+                      </p>
+                    </div>
+                    <span className="rounded-md bg-[#eff6ff] px-2 py-1 text-xs font-bold text-[#3157d5]">
+                      Demo
+                    </span>
+                  </div>
+                  <p className="mt-3 text-sm leading-6 text-[#4f635d]">
+                    {demoAd.analysis?.hook}
+                  </p>
+                  <p className="mt-2 text-sm font-semibold leading-6">
+                    Next test: {demoAd.analysis?.testPlan?.[0]}
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => loadAdIntoForm(demoAd)}
+                    className="mt-4 inline-flex h-10 items-center rounded-lg border border-[#d8e8e1] bg-white px-4 text-sm font-bold text-[#13231f]"
+                  >
+                    Use this example
+                  </button>
+                </article>
+              ))}
+            </div>
+          </section>
+        ) : null}
 
         <section
           className="premium-panel rounded-xl p-4 lg:col-start-1 lg:row-start-3"
@@ -973,6 +1033,28 @@ export default function SpySaveApp() {
               className="brand-gradient inline-flex h-11 items-center rounded-lg px-4 text-sm font-bold"
             >
               Manage competitors
+            </Link>
+          </div>
+        </section>
+
+        <section className="premium-panel order-last rounded-xl p-4 lg:col-span-2">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <p className="text-sm font-bold uppercase text-[#07966f]">
+                Reports
+              </p>
+              <h2 className="mt-1 text-2xl font-semibold">
+                Turn saved ads into research summaries
+              </h2>
+              <p className="mt-1 text-sm text-[#4f635d]">
+                Review top ads, hooks, niches, offers, and next test ideas.
+              </p>
+            </div>
+            <Link
+              href="/app/reports"
+              className="brand-gradient inline-flex h-11 items-center rounded-lg px-4 text-sm font-bold"
+            >
+              Open reports
             </Link>
           </div>
         </section>

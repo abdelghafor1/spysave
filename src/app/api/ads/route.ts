@@ -41,6 +41,13 @@ export type AdAnalysis = {
     cta: string;
     adCopy: string;
   };
+  creativeBrief: {
+    angle: string;
+    concept: string;
+    script: string;
+    visualDirection: string;
+  };
+  testPlan: string[];
   scoreBreakdown: {
     hook: number;
     offer: number;
@@ -229,6 +236,20 @@ function fallbackAnalysis(adText: string): AdAnalysis {
       adCopy:
         "Rewrite the ad with one clear pain point, one proof element, one simple offer, and one CTA.",
     },
+    creativeBrief: {
+      angle: detectNiche(adText) === "General e-commerce" ? "Problem to result" : `${detectNiche(adText)} problem-solution`,
+      concept:
+        "Create a short UGC-style ad that opens with the pain point, demonstrates the product, then closes with the offer.",
+      script:
+        "0-3s: show the problem. 3-8s: demonstrate the product. 8-13s: show the result. 13-15s: show offer and CTA.",
+      visualDirection:
+        "Use clear product close-ups, simple captions, one proof moment, and a final offer screen.",
+    },
+    testPlan: [
+      "Test the current hook against a stronger pain-point hook.",
+      "Test proof-first creative against offer-first creative.",
+      "Test the same angle with product demo, UGC testimonial, and before/after formats.",
+    ],
     scoreBreakdown: {
       hook: extractHook(adText).length >= 18 ? 20 : 10,
       offer: detectOffer(adText) !== "No clear offer detected" ? 18 : 8,
@@ -316,6 +337,18 @@ export function cleanAnalysis(value: Partial<AdAnalysis>, adText: string): AdAna
       adCopy:
         value.rewriteSuggestions?.adCopy || fallback.rewriteSuggestions.adCopy,
     },
+    creativeBrief: {
+      angle: value.creativeBrief?.angle || fallback.creativeBrief.angle,
+      concept: value.creativeBrief?.concept || fallback.creativeBrief.concept,
+      script: value.creativeBrief?.script || fallback.creativeBrief.script,
+      visualDirection:
+        value.creativeBrief?.visualDirection ||
+        fallback.creativeBrief.visualDirection,
+    },
+    testPlan:
+      Array.isArray(value.testPlan) && value.testPlan.length
+        ? value.testPlan.slice(0, 5)
+        : fallback.testPlan,
     scoreBreakdown: {
       hook:
         typeof value.scoreBreakdown?.hook === "number"
@@ -380,7 +413,7 @@ export async function analyzeWithNvidia(adText: string): Promise<AdAnalysis | nu
         {
           role: "system",
           content:
-            "You analyze ecommerce Meta/Facebook ads for dropshippers. Return only JSON with keys: hook, offer, cta, niche, audienceGuess, painPoint, trustSignals, objectionHandling, adFatigueRisk, weaknesses, whyItMayWork, ideasToTest, rewriteSuggestions, scoreBreakdown, winningScore, verdict, scoreReasons. trustSignals, objectionHandling, and weaknesses are arrays of short strings. adFatigueRisk is one short practical sentence: Low, Medium, or High risk plus why. ideasToTest must be exactly 3 short strings. rewriteSuggestions has hook, cta, adCopy. scoreBreakdown has hook, offer, cta, trust, audienceFit as 0-25 numbers. winningScore is 0-100. verdict is Weak, Good, or Possible Winner. scoreReasons is 2-4 short strings explaining the score.",
+            "You analyze ecommerce Meta/Facebook ads for dropshippers. Return only JSON with keys: hook, offer, cta, niche, audienceGuess, painPoint, trustSignals, objectionHandling, adFatigueRisk, weaknesses, whyItMayWork, ideasToTest, rewriteSuggestions, creativeBrief, testPlan, scoreBreakdown, winningScore, verdict, scoreReasons. trustSignals, objectionHandling, weaknesses, and testPlan are arrays of short strings. adFatigueRisk is one short practical sentence: Low, Medium, or High risk plus why. ideasToTest must be exactly 3 short strings. rewriteSuggestions has hook, cta, adCopy. creativeBrief has angle, concept, script, visualDirection. scoreBreakdown has hook, offer, cta, trust, audienceFit as 0-25 numbers. winningScore is 0-100. verdict is Weak, Good, or Possible Winner. scoreReasons is 2-4 short strings explaining the score.",
         },
         {
           role: "user",
@@ -425,7 +458,7 @@ export async function analyzeWithOpenAI(adText: string): Promise<AdAnalysis | nu
         {
           role: "system",
           content:
-            "You analyze ecommerce social ads. Return only valid JSON with keys: hook, offer, cta, niche, audienceGuess, painPoint, trustSignals, objectionHandling, adFatigueRisk, weaknesses, whyItMayWork, ideasToTest, rewriteSuggestions, scoreBreakdown, winningScore, verdict, scoreReasons. trustSignals, objectionHandling, and weaknesses are arrays of short strings. adFatigueRisk is one short practical sentence: Low, Medium, or High risk plus why. ideasToTest must be exactly 3 short strings. rewriteSuggestions has hook, cta, adCopy. scoreBreakdown has hook, offer, cta, trust, audienceFit as 0-25 numbers. winningScore is 0-100. verdict is Weak, Good, or Possible Winner. scoreReasons is 2-4 short strings.",
+            "You analyze ecommerce social ads. Return only valid JSON with keys: hook, offer, cta, niche, audienceGuess, painPoint, trustSignals, objectionHandling, adFatigueRisk, weaknesses, whyItMayWork, ideasToTest, rewriteSuggestions, creativeBrief, testPlan, scoreBreakdown, winningScore, verdict, scoreReasons. trustSignals, objectionHandling, weaknesses, and testPlan are arrays of short strings. adFatigueRisk is one short practical sentence: Low, Medium, or High risk plus why. ideasToTest must be exactly 3 short strings. rewriteSuggestions has hook, cta, adCopy. creativeBrief has angle, concept, script, visualDirection. scoreBreakdown has hook, offer, cta, trust, audienceFit as 0-25 numbers. winningScore is 0-100. verdict is Weak, Good, or Possible Winner. scoreReasons is 2-4 short strings.",
         },
         {
           role: "user",

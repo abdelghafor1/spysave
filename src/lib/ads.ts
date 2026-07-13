@@ -59,6 +59,13 @@ export type SpySaveAnalysis = {
     cta?: string;
     adCopy?: string;
   };
+  creativeBrief?: {
+    angle?: string;
+    concept?: string;
+    script?: string;
+    visualDirection?: string;
+  };
+  testPlan?: string[];
   scoreBreakdown?: {
     hook?: number;
     offer?: number;

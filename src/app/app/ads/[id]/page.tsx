@@ -280,6 +280,47 @@ export default function AdDetailPage({
 
               <div className="mt-4 rounded-lg bg-white p-4">
                 <p className="text-xs font-bold uppercase text-[#66736d]">
+                  Creative brief
+                </p>
+                <div className="mt-2 grid gap-2 text-sm font-semibold leading-6">
+                  <p>
+                    <span className="text-[#66736d]">Angle: </span>
+                    {ad.analysis?.creativeBrief?.angle || "Not analyzed yet"}
+                  </p>
+                  <p>
+                    <span className="text-[#66736d]">Concept: </span>
+                    {ad.analysis?.creativeBrief?.concept || "Not analyzed yet"}
+                  </p>
+                  <p>
+                    <span className="text-[#66736d]">Script: </span>
+                    {ad.analysis?.creativeBrief?.script || "Not analyzed yet"}
+                  </p>
+                  <p>
+                    <span className="text-[#66736d]">Visual direction: </span>
+                    {ad.analysis?.creativeBrief?.visualDirection ||
+                      "Not analyzed yet"}
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-4 rounded-lg bg-white p-4">
+                <p className="text-xs font-bold uppercase text-[#66736d]">
+                  Test plan
+                </p>
+                <div className="mt-2 grid gap-2">
+                  {(ad.analysis?.testPlan || ["Not analyzed yet"]).map((step) => (
+                    <div
+                      key={step}
+                      className="rounded-md bg-[#eff6ff] px-3 py-2 text-sm font-semibold text-[#3157d5]"
+                    >
+                      {step}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="mt-4 rounded-lg bg-white p-4">
+                <p className="text-xs font-bold uppercase text-[#66736d]">
                   Rewrite suggestions
                 </p>
                 <div className="mt-2 grid gap-2 text-sm font-semibold leading-6">
