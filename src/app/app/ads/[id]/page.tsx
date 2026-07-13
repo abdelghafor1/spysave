@@ -1,6 +1,6 @@
 "use client";
 
-import { Bot, ChevronLeft, Gauge, RefreshCw, Trash2 } from "lucide-react";
+import { Bot, ChevronLeft, Gauge, RefreshCw, Trash2, Wand2 } from "lucide-react";
 import { onAuthStateChanged, User } from "firebase/auth";
 import Link from "next/link";
 import { use, useEffect, useState } from "react";
@@ -8,9 +8,13 @@ import { SavedAdMedia } from "@/components/SavedAdMedia";
 import {
   SpySaveAd,
   SpySaveAnalysis,
+  SpySaveLandingPageAnalysis,
+  SpySaveMediaStatus,
   deleteAdWithFallback,
   getAd,
   saveAnalysis,
+  saveLandingPageAnalysis,
+  saveMediaStatus,
 } from "@/lib/ads";
 import { auth } from "@/lib/firebase";
 
@@ -32,6 +36,37 @@ async function analyzeAd(ad: SpySaveAd) {
   return data.analysis;
 }
 
+type GenerateMode = "hooks" | "ugc" | "tiktok" | "meta" | "image" | "video";
+
+function diagnoseMedia(ad: SpySaveAd): SpySaveMediaStatus {
+  if (!ad.mediaUrl?.trim()) {
+    return {
+      source: "missing",
+      status: "missing",
+      recommendation:
+        "No media URL is saved. Use the extension picker or paste the product image/video URL.",
+    };
+  }
+
+  const socialCdn = /fbcdn|tiktokcdn|byteoversea|akamaized/i.test(ad.mediaUrl);
+  if (socialCdn) {
+    return {
+      mediaUrl: ad.mediaUrl,
+      source: "detected-url",
+      status: "external-preview-risk",
+      recommendation:
+        "This media is hosted on a social CDN and may expire. Keep the source URL and capture a backup screenshot before using it in reports.",
+    };
+  }
+
+  return {
+    mediaUrl: ad.mediaUrl,
+    source: "manual-url",
+    status: "ready",
+    recommendation: "Media URL is available for preview and research.",
+  };
+}
+
 export default function AdDetailPage({
   params,
 }: {
@@ -44,6 +79,10 @@ export default function AdDetailPage({
   const [error, setError] = useState("");
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isCheckingLanding, setIsCheckingLanding] = useState(false);
+  const [isCheckingMedia, setIsCheckingMedia] = useState(false);
+  const [generatingMode, setGeneratingMode] = useState<GenerateMode | null>(null);
+  const [generatedOutput, setGeneratedOutput] = useState<string[]>([]);
 
   useEffect(() => {
     return onAuthStateChanged(auth, setUser);
@@ -110,6 +149,86 @@ export default function AdDetailPage({
     }
   }
 
+  async function checkLandingPage() {
+    if (!ad?.id || !ad.landingPageUrl) return;
+    setIsCheckingLanding(true);
+    setError("");
+
+    try {
+      const response = await fetch("/api/landing-page", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          url: ad.landingPageUrl,
+          adText: ad.adText,
+        }),
+      });
+      const data = (await response.json()) as {
+        analysis?: SpySaveLandingPageAnalysis;
+        error?: string;
+      };
+      if (!response.ok || !data.analysis) {
+        throw new Error(data.error || "Landing page check failed");
+      }
+      await saveLandingPageAnalysis(ad.id, data.analysis);
+      setAd({ ...ad, landingPageAnalysis: data.analysis });
+      setStatus("Landing page intelligence saved.");
+    } catch (landingError) {
+      setError(
+        landingError instanceof Error
+          ? landingError.message
+          : "Could not check landing page",
+      );
+    } finally {
+      setIsCheckingLanding(false);
+    }
+  }
+
+  async function checkMedia() {
+    if (!ad?.id) return;
+    setIsCheckingMedia(true);
+    setError("");
+
+    try {
+      const mediaStatus = diagnoseMedia(ad);
+      await saveMediaStatus(ad.id, mediaStatus);
+      setAd({ ...ad, mediaStatus });
+      setStatus("Media check saved.");
+    } catch (mediaError) {
+      setError(
+        mediaError instanceof Error ? mediaError.message : "Could not check media",
+      );
+    } finally {
+      setIsCheckingMedia(false);
+    }
+  }
+
+  async function generateCreative(mode: GenerateMode) {
+    if (!ad?.adText) return;
+    setGeneratingMode(mode);
+    setGeneratedOutput([]);
+    setError("");
+
+    try {
+      const response = await fetch("/api/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ mode, adText: ad.adText }),
+      });
+      const data = (await response.json()) as { output?: string[]; error?: string };
+      if (!response.ok) throw new Error(data.error || "Generation failed");
+      setGeneratedOutput((data.output || []).filter(Boolean));
+    } catch (generateError) {
+      setError(
+        generateError instanceof Error
+          ? generateError.message
+          : "Could not generate creative",
+      );
+    } finally {
+      setGeneratingMode(null);
+    }
+  }
+
   return (
     <main className="aurora-page min-h-screen px-5 py-6 text-[#13231f]">
       <section className="mx-auto max-w-6xl">
@@ -131,6 +250,33 @@ export default function AdDetailPage({
               <h1 className="mt-2 text-4xl font-semibold">{ad.pageName}</h1>
               <p className="mt-3 text-sm leading-7 text-[#4f635d]">{ad.adText}</p>
               <SavedAdMedia mediaUrl={ad.mediaUrl} label="Product creative" />
+
+              <div className="mt-4 rounded-lg border border-[#d8e8e1] bg-white p-4">
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <div>
+                    <p className="text-xs font-bold uppercase text-[#66736d]">
+                      Media capture
+                    </p>
+                    <p className="mt-2 text-sm font-semibold leading-6">
+                      {ad.mediaStatus?.recommendation ||
+                        "Check if the saved media URL is usable or risky."}
+                    </p>
+                  </div>
+                  <button
+                    onClick={checkMedia}
+                    disabled={isCheckingMedia}
+                    className="inline-flex h-10 items-center gap-2 rounded-lg border border-[#bfdbfe] bg-[#eff6ff] px-4 text-sm font-bold text-[#3157d5] disabled:opacity-60"
+                  >
+                    <RefreshCw size={16} />
+                    {isCheckingMedia ? "Checking..." : "Check media"}
+                  </button>
+                </div>
+                {ad.mediaStatus ? (
+                  <p className="mt-3 rounded-md bg-[#eef8f2] px-3 py-2 text-sm font-bold text-[#08775d]">
+                    Status: {ad.mediaStatus.status}
+                  </p>
+                ) : null}
+              </div>
 
               <div className="mt-5 grid gap-3 md:grid-cols-2">
                 {[
@@ -356,6 +502,44 @@ export default function AdDetailPage({
                 </div>
               </div>
 
+              <div className="mt-4 rounded-lg border-2 border-[#3157d5] bg-[#eff6ff] p-4">
+                <p className="text-xs font-bold uppercase text-[#3157d5]">
+                  One-click creative generation
+                </p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {[
+                    ["hooks", "Generate hooks"],
+                    ["ugc", "UGC scripts"],
+                    ["tiktok", "TikTok rewrite"],
+                    ["meta", "Meta rewrite"],
+                    ["image", "Image prompts"],
+                    ["video", "Video prompt"],
+                  ].map(([mode, label]) => (
+                    <button
+                      key={mode}
+                      onClick={() => generateCreative(mode as GenerateMode)}
+                      disabled={generatingMode === mode}
+                      className="inline-flex h-9 items-center gap-2 rounded-lg bg-white px-3 text-sm font-bold text-[#3157d5] disabled:opacity-60"
+                    >
+                      <Wand2 size={15} />
+                      {generatingMode === mode ? "Generating..." : label}
+                    </button>
+                  ))}
+                </div>
+                {generatedOutput.length ? (
+                  <div className="mt-3 grid gap-2">
+                    {generatedOutput.map((item) => (
+                      <p
+                        key={item}
+                        className="rounded-md bg-white px-3 py-2 text-sm font-semibold leading-6"
+                      >
+                        {item}
+                      </p>
+                    ))}
+                  </div>
+                ) : null}
+              </div>
+
               <div className="mt-4 rounded-lg bg-white p-4">
                 <p className="text-xs font-bold uppercase text-[#66736d]">
                   UGC scripts
@@ -431,6 +615,61 @@ export default function AdDetailPage({
                     </div>
                   ))}
                 </div>
+              </div>
+
+              <div className="mt-4 rounded-lg bg-white p-4">
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <div>
+                    <p className="text-xs font-bold uppercase text-[#66736d]">
+                      Landing page intelligence
+                    </p>
+                    <p className="mt-2 text-sm font-semibold text-[#4f635d]">
+                      Check message match, offer, price, and CTA from the landing page.
+                    </p>
+                  </div>
+                  <button
+                    onClick={checkLandingPage}
+                    disabled={isCheckingLanding || !ad.landingPageUrl}
+                    className="inline-flex h-10 items-center gap-2 rounded-lg border border-[#bfdbfe] bg-[#eff6ff] px-4 text-sm font-bold text-[#3157d5] disabled:opacity-60"
+                  >
+                    <RefreshCw size={16} />
+                    {isCheckingLanding ? "Checking..." : "Check landing page"}
+                  </button>
+                </div>
+                {ad.landingPageAnalysis ? (
+                  <div className="mt-3 grid gap-2 text-sm font-semibold leading-6">
+                    <p>
+                      <span className="text-[#66736d]">Title: </span>
+                      {ad.landingPageAnalysis.title}
+                    </p>
+                    <p>
+                      <span className="text-[#66736d]">Offer: </span>
+                      {ad.landingPageAnalysis.offerGuess}
+                    </p>
+                    <p>
+                      <span className="text-[#66736d]">Price: </span>
+                      {ad.landingPageAnalysis.priceGuess}
+                    </p>
+                    <p>
+                      <span className="text-[#66736d]">CTA: </span>
+                      {ad.landingPageAnalysis.ctaGuess}
+                    </p>
+                    <p>
+                      <span className="text-[#66736d]">Ad match: </span>
+                      {ad.landingPageAnalysis.adMatchScore}/100
+                    </p>
+                    <div className="grid gap-2">
+                      {ad.landingPageAnalysis.recommendations.map((recommendation) => (
+                        <span
+                          key={recommendation}
+                          className="rounded-md bg-[#fff7ed] px-3 py-2 text-sm font-semibold text-[#9a3412]"
+                        >
+                          {recommendation}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                ) : null}
               </div>
 
               <div className="mt-4 rounded-lg bg-white p-4">

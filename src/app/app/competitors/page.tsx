@@ -1,6 +1,6 @@
 "use client";
 
-import { Building2, ChevronLeft, Plus, Trash2 } from "lucide-react";
+import { Building2, ChevronLeft, Plus, RefreshCw, Trash2 } from "lucide-react";
 import { User, onAuthStateChanged } from "firebase/auth";
 import Link from "next/link";
 import { FormEvent, useEffect, useMemo, useState } from "react";
@@ -8,8 +8,10 @@ import { ServiceMenu } from "@/components/ServiceMenu";
 import {
   SpySaveAd,
   SpySaveCompetitor,
+  createNotification,
   deleteCompetitor,
   saveCompetitor,
+  updateCompetitorCheck,
   watchUserAds,
   watchUserCompetitors,
 } from "@/lib/ads";
@@ -37,6 +39,7 @@ export default function CompetitorsPage() {
     useState<CompetitorForm>(emptyCompetitorForm);
   const [status, setStatus] = useState("");
   const [error, setError] = useState("");
+  const [checkingId, setCheckingId] = useState<string | null>(null);
 
   useEffect(() => {
     return onAuthStateChanged(auth, (currentUser) => {
@@ -115,6 +118,44 @@ export default function CompetitorsPage() {
           : "Competitor save failed",
       );
       setStatus("");
+    }
+  }
+
+  async function checkCompetitor(competitor: SpySaveCompetitor, adsCount: number) {
+    if (!user || !competitor.id) return;
+
+    setCheckingId(competitor.id);
+    setError("");
+
+    try {
+      const previousCount = competitor.trackedAdsCount || 0;
+      const newAds = Math.max(0, adsCount - previousCount);
+      const summary =
+        newAds > 0
+          ? `${newAds} new saved ad${newAds > 1 ? "s" : ""} found for ${competitor.name}.`
+          : `No new saved ads found for ${competitor.name}.`;
+
+      await updateCompetitorCheck(competitor.id, {
+        trackedAdsCount: adsCount,
+        lastCheckSummary: summary,
+      });
+      await createNotification({
+        userId: user.uid,
+        competitorName: competitor.name,
+        title: newAds > 0 ? "Competitor has new saved ads" : "Competitor check complete",
+        message: summary,
+        read: false,
+      });
+
+      setStatus(summary);
+    } catch (checkError) {
+      setError(
+        checkError instanceof Error
+          ? checkError.message
+          : "Competitor check failed",
+      );
+    } finally {
+      setCheckingId(null);
     }
   }
 
@@ -272,6 +313,12 @@ export default function CompetitorsPage() {
                     ))}
                   </div>
 
+                  {competitor.lastCheckSummary ? (
+                    <p className="mt-3 rounded-lg bg-[#eef3ff] p-3 text-sm font-semibold leading-6 text-[#3157d5]">
+                      {competitor.lastCheckSummary}
+                    </p>
+                  ) : null}
+
                   {competitor.notes ? (
                     <p className="mt-3 text-sm leading-6 text-[#625d53]">
                       {competitor.notes}
@@ -279,6 +326,17 @@ export default function CompetitorsPage() {
                   ) : null}
 
                   <div className="mt-4 flex flex-wrap gap-2">
+                    {competitor.id ? (
+                      <button
+                        type="button"
+                        onClick={() => checkCompetitor(competitor, adsCount)}
+                        disabled={checkingId === competitor.id}
+                        className="inline-flex h-9 items-center gap-2 rounded-lg border border-[#bfdbfe] bg-white px-3 text-sm font-bold text-[#3157d5] disabled:opacity-60"
+                      >
+                        <RefreshCw size={15} />
+                        {checkingId === competitor.id ? "Checking..." : "Check updates"}
+                      </button>
+                    ) : null}
                     {competitor.libraryUrl ? (
                       <a
                         href={competitor.libraryUrl}

@@ -27,6 +27,15 @@ function listValues(ads: SpySaveAd[], getter: (ad: SpySaveAd) => string | undefi
     .slice(0, 6);
 }
 
+function classifyHook(text = "") {
+  const value = text.toLowerCase();
+  if (/why|how|secret|nobody|this is why|what happens/i.test(value)) return "Curiosity";
+  if (/tired|struggle|problem|stop|wasting|hate|without/i.test(value)) return "Problem";
+  if (/review|rated|proof|results|before|after|customers/i.test(value)) return "Proof";
+  if (/free|discount|%|sale|bundle|offer/i.test(value)) return "Offer";
+  return "General";
+}
+
 export default function ReportsPage() {
   const [user, setUser] = useState<User | null>(null);
   const [ads, setAds] = useState<SpySaveAd[]>([]);
@@ -63,6 +72,31 @@ export default function ReportsPage() {
     const testIdeas = reportAds
       .flatMap((ad) => ad.analysis?.ideasToTest || [])
       .slice(0, 6);
+    const highScoring = reportAds.filter((ad) => score(ad) >= 70);
+    const hookTypes = highScoring.map((ad) => classifyHook(ad.analysis?.hook || ad.adText));
+    const curiosityOrProblem = hookTypes.filter((type) =>
+      ["Curiosity", "Problem"].includes(type),
+    ).length;
+    const discountHeavy = reportAds.filter((ad) =>
+      /discount|%|sale|free shipping|bundle/i.test(ad.analysis?.offer || ad.adText),
+    ).length;
+    const proofAngles = reportAds.filter((ad) =>
+      /review|rated|proof|results|before|after|testimonial/i.test(
+        `${ad.analysis?.hook || ""} ${ad.analysis?.trustSignals?.join(" ") || ""} ${ad.adText}`,
+      ),
+    ).length;
+    const insights = [
+      highScoring.length
+        ? `${Math.round((curiosityOrProblem / highScoring.length) * 100)}% of high-scoring ads use curiosity or problem hooks.`
+        : "Analyze more ads to detect hook patterns.",
+      discountHeavy > reportAds.length / 2
+        ? "Your saved ads lean heavily on discounts. Add proof and problem-solution angles to avoid weak testing."
+        : "Discount usage is balanced. Keep testing offer-led ads against proof-led ads.",
+      proofAngles
+        ? `${proofAngles} saved ad${proofAngles > 1 ? "s" : ""} include proof signals. Use those as creative references.`
+        : "No strong proof angle detected yet. Save or create ads with reviews, before/after, or testimonials.",
+      testIdeas[0] || "Run AI analysis on saved ads to generate next tests.",
+    ];
 
     return {
       analyzed: analyzed.length,
@@ -73,6 +107,7 @@ export default function ReportsPage() {
       niches,
       offers,
       testIdeas,
+      insights,
     };
   }, [reportAds]);
 
@@ -194,6 +229,20 @@ export default function ReportsPage() {
           </section>
 
           <aside className="grid gap-4">
+            <section className="premium-panel rounded-xl p-4">
+              <p className="text-sm font-bold uppercase text-[#3157d5]">Trend intelligence</p>
+              <div className="mt-3 grid gap-2">
+                {report.insights.map((insight) => (
+                  <p
+                    key={insight}
+                    className="rounded-lg bg-[#eff6ff] p-3 text-sm font-semibold leading-6 text-[#3157d5]"
+                  >
+                    {insight}
+                  </p>
+                ))}
+              </div>
+            </section>
+
             <section className="premium-panel rounded-xl p-4">
               <p className="text-sm font-bold uppercase text-[#07966f]">Top hooks</p>
               <div className="mt-3 grid gap-2">

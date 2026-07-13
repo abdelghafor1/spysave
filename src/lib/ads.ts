@@ -28,6 +28,8 @@ export type SpySaveAd = {
   createdAt?: Timestamp;
   updatedAt?: Timestamp;
   analysis?: SpySaveAnalysis;
+  landingPageAnalysis?: SpySaveLandingPageAnalysis;
+  mediaStatus?: SpySaveMediaStatus;
 };
 
 export type SpySaveCompetitor = {
@@ -37,8 +39,31 @@ export type SpySaveCompetitor = {
   libraryUrl: string;
   niche?: string;
   notes?: string;
+  trackedAdsCount?: number;
+  lastCheckedAt?: Timestamp;
+  lastCheckSummary?: string;
   createdAt?: Timestamp;
   updatedAt?: Timestamp;
+};
+
+export type SpySaveLandingPageAnalysis = {
+  url: string;
+  title: string;
+  description: string;
+  headlineGuess: string;
+  offerGuess: string;
+  priceGuess: string;
+  ctaGuess: string;
+  adMatchScore: number;
+  recommendations: string[];
+  checkedAt: string;
+};
+
+export type SpySaveMediaStatus = {
+  mediaUrl?: string;
+  source: "detected-url" | "manual-url" | "missing";
+  status: "ready" | "missing" | "external-preview-risk";
+  recommendation: string;
 };
 
 export type SpySaveAnalysis = {
@@ -106,6 +131,19 @@ export type SpySaveNotification = {
   createdAt?: Timestamp;
 };
 
+export type SpySaveWorkspace = {
+  id?: string;
+  userId: string;
+  name: string;
+  plan: "Free" | "Pro" | "Agency";
+  members: Array<{
+    email: string;
+    role: "Admin" | "Member" | "Viewer";
+  }>;
+  createdAt?: Timestamp;
+  updatedAt?: Timestamp;
+};
+
 export async function saveAd(ad: SpySaveAd) {
   return addDoc(collection(db, "ads"), {
     ...ad,
@@ -128,6 +166,87 @@ export async function saveAnalysis(adId: string, analysis: SpySaveAnalysis) {
     analyzedAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
   });
+}
+
+export async function saveLandingPageAnalysis(
+  adId: string,
+  landingPageAnalysis: SpySaveLandingPageAnalysis,
+) {
+  return updateDoc(doc(db, "ads", adId), {
+    landingPageAnalysis,
+    updatedAt: serverTimestamp(),
+  });
+}
+
+export async function saveMediaStatus(adId: string, mediaStatus: SpySaveMediaStatus) {
+  return updateDoc(doc(db, "ads", adId), {
+    mediaStatus,
+    updatedAt: serverTimestamp(),
+  });
+}
+
+export async function updateCompetitorCheck(
+  competitorId: string,
+  changes: Pick<
+    SpySaveCompetitor,
+    "trackedAdsCount" | "lastCheckSummary"
+  >,
+) {
+  return updateDoc(doc(db, "competitors", competitorId), {
+    ...changes,
+    lastCheckedAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  });
+}
+
+export async function createNotification(
+  notification: Omit<SpySaveNotification, "id" | "createdAt">,
+) {
+  return addDoc(collection(db, "notifications"), {
+    ...notification,
+    createdAt: serverTimestamp(),
+  });
+}
+
+export async function markNotificationRead(notificationId: string) {
+  return updateDoc(doc(db, "notifications", notificationId), {
+    read: true,
+  });
+}
+
+export async function saveWorkspace(workspace: SpySaveWorkspace) {
+  return addDoc(collection(db, "workspaces"), {
+    ...workspace,
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  });
+}
+
+export function watchUserWorkspaces(
+  userId: string,
+  onChange: (workspaces: SpySaveWorkspace[]) => void,
+  onError: (error: Error) => void,
+) {
+  const workspacesQuery = query(
+    collection(db, "workspaces"),
+    where("userId", "==", userId),
+  );
+
+  return onSnapshot(
+    workspacesQuery,
+    (snapshot) => {
+      const workspaces = snapshot.docs
+        .map((item) => ({ id: item.id, ...item.data() }) as SpySaveWorkspace)
+        .sort((a, b) => {
+          const aTime = a.createdAt?.toMillis?.() ?? 0;
+          const bTime = b.createdAt?.toMillis?.() ?? 0;
+          return bTime - aTime;
+        });
+
+      onChange(workspaces);
+    },
+    onError,
+  );
 }
 
 export async function getAd(adId: string) {
