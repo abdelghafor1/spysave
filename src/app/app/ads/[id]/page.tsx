@@ -4,6 +4,7 @@ import { Bot, ChevronLeft, Gauge, RefreshCw, Trash2 } from "lucide-react";
 import { onAuthStateChanged, User } from "firebase/auth";
 import Link from "next/link";
 import { use, useEffect, useState } from "react";
+import { SavedAdMedia } from "@/components/SavedAdMedia";
 import {
   SpySaveAd,
   SpySaveAnalysis,
@@ -129,6 +130,7 @@ export default function AdDetailPage({
               <p className="text-sm font-bold uppercase text-[#07966f]">Ad detail</p>
               <h1 className="mt-2 text-4xl font-semibold">{ad.pageName}</h1>
               <p className="mt-3 text-sm leading-7 text-[#4f635d]">{ad.adText}</p>
+              <SavedAdMedia mediaUrl={ad.mediaUrl} label="Product creative" />
 
               <div className="mt-5 grid gap-3 md:grid-cols-2">
                 {[

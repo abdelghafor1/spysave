@@ -5,7 +5,6 @@ import {
   ChevronLeft,
   Download,
   Gauge,
-  ImageIcon,
   RefreshCw,
   Search,
   Tags,
@@ -14,6 +13,7 @@ import {
 import { User, onAuthStateChanged } from "firebase/auth";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import { SavedAdMedia } from "@/components/SavedAdMedia";
 import { ServiceMenu } from "@/components/ServiceMenu";
 import {
   SpySaveAd,
@@ -332,32 +332,7 @@ export default function SavedAdsPage() {
                       </div>
                     </div>
 
-                    {ad.mediaUrl ? (
-                      <a
-                        href={ad.mediaUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="mt-4 flex items-center gap-3 rounded-lg border border-[#e0d7c8] bg-white p-3 text-sm font-bold text-[#625d53]"
-                      >
-                        <span
-                          className="grid size-12 place-items-center rounded-md bg-[#f6f3ed] text-[#d25f3f]"
-                          style={
-                            /\.(png|jpe?g|webp|gif)$/i.test(ad.mediaUrl)
-                              ? {
-                                  backgroundImage: `url(${ad.mediaUrl})`,
-                                  backgroundSize: "cover",
-                                  backgroundPosition: "center",
-                                }
-                              : undefined
-                          }
-                        >
-                          {!/\.(png|jpe?g|webp|gif)$/i.test(ad.mediaUrl) ? (
-                            <ImageIcon size={18} />
-                          ) : null}
-                        </span>
-                        Open saved media
-                      </a>
-                    ) : null}
+                    <SavedAdMedia mediaUrl={ad.mediaUrl} label="Product creative" />
 
                     <p className="mt-3 text-sm leading-6">{ad.adText}</p>
 

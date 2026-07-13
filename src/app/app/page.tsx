@@ -8,7 +8,6 @@ import {
   Download,
   Eye,
   Gauge,
-  ImageIcon,
   LogOut,
   Bell,
   Plus,
@@ -30,6 +29,7 @@ import {
 import Link from "next/link";
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import { BrandMark } from "@/components/BrandMark";
+import { SavedAdMedia } from "@/components/SavedAdMedia";
 import { ServiceMenu } from "@/components/ServiceMenu";
 import { auth } from "@/lib/firebase";
 import {
@@ -1189,32 +1189,7 @@ export default function SpySaveApp() {
                     </div>
                   </div>
 
-                  {ad.mediaUrl ? (
-                    <a
-                      href={ad.mediaUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="mt-4 flex items-center gap-3 rounded-lg border border-[#e0d7c8] bg-white p-3 text-sm font-bold text-[#625d53]"
-                    >
-                      <span
-                        className="grid size-12 place-items-center rounded-md bg-[#f6f3ed] text-[#d25f3f]"
-                        style={
-                          /\.(png|jpe?g|webp|gif)$/i.test(ad.mediaUrl)
-                            ? {
-                                backgroundImage: `url(${ad.mediaUrl})`,
-                                backgroundSize: "cover",
-                                backgroundPosition: "center",
-                              }
-                            : undefined
-                        }
-                      >
-                        {!/\.(png|jpe?g|webp|gif)$/i.test(ad.mediaUrl) ? (
-                          <ImageIcon size={18} />
-                        ) : null}
-                      </span>
-                      Open saved media
-                    </a>
-                  ) : null}
+                  <SavedAdMedia mediaUrl={ad.mediaUrl} label="Product creative" />
 
                   <p className="mt-3 text-sm leading-6">{ad.adText}</p>
 
@@ -1368,19 +1343,7 @@ export default function SpySaveApp() {
               </div>
             </div>
 
-            {selectedAd.mediaUrl ? (
-              <a
-                href={selectedAd.mediaUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="mt-4 flex items-center gap-3 rounded-lg border border-[#e0d7c8] p-4 text-sm font-bold text-[#625d53]"
-              >
-                <span className="grid size-10 place-items-center rounded-md bg-[#f6f3ed] text-[#d25f3f]">
-                  <ImageIcon size={18} />
-                </span>
-                Open media creative
-              </a>
-            ) : null}
+            <SavedAdMedia mediaUrl={selectedAd.mediaUrl} label="Product creative" />
 
             <div className="mt-4 grid gap-4 md:grid-cols-2">
               {[
