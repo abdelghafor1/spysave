@@ -22,51 +22,49 @@ export function SavedAdMedia({
   if (!cleanUrl) return null;
 
   return (
-    <div className="mt-4 overflow-hidden rounded-lg border border-[#dbe7e2] bg-white">
-      <div className="flex items-center justify-between gap-3 border-b border-[#e6eee9] px-3 py-2">
-        <p className="text-xs font-bold uppercase text-[#4f635d]">{label}</p>
+    <div className="mt-4 rounded-lg border border-[#dbe7e2] bg-white p-3">
+      <div className="flex items-center gap-3">
+        <div className="grid size-16 shrink-0 place-items-center overflow-hidden rounded-md bg-[#f6f3ed] text-[#d25f3f]">
+          {failed ? (
+            <ImageIcon size={18} />
+          ) : looksLikeVideo(cleanUrl) ? (
+            <video
+              src={cleanUrl}
+              muted
+              playsInline
+              className="h-full w-full object-cover"
+              onError={() => setFailed(true)}
+            />
+          ) : (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={cleanUrl}
+              alt="Saved ad product creative"
+              className="h-full w-full object-cover"
+              loading="lazy"
+              referrerPolicy="no-referrer"
+              onError={() => setFailed(true)}
+            />
+          )}
+        </div>
+
+        <div className="min-w-0 flex-1">
+          <p className="text-xs font-bold uppercase text-[#4f635d]">{label}</p>
+          <p className="mt-1 truncate text-sm font-bold text-[#625d53]">
+            {failed ? "Preview unavailable" : "Product media detected"}
+          </p>
+        </div>
+
         <a
           href={cleanUrl}
           target="_blank"
           rel="noreferrer"
-          className="inline-flex items-center gap-1 text-xs font-bold text-[#3157d5]"
+          className="inline-flex shrink-0 items-center gap-1 rounded-md border border-[#dbe7e2] px-2 py-1 text-xs font-bold text-[#3157d5]"
         >
-          Open original
+          Open
           <ExternalLink size={13} />
         </a>
       </div>
-
-      {failed ? (
-        <a
-          href={cleanUrl}
-          target="_blank"
-          rel="noreferrer"
-          className="flex min-h-28 items-center gap-3 p-4 text-sm font-bold text-[#625d53]"
-        >
-          <span className="grid size-12 place-items-center rounded-md bg-[#f6f3ed] text-[#d25f3f]">
-            <ImageIcon size={18} />
-          </span>
-          Media preview unavailable. Open original creative.
-        </a>
-      ) : looksLikeVideo(cleanUrl) ? (
-        <video
-          src={cleanUrl}
-          controls
-          playsInline
-          className="max-h-[360px] w-full bg-[#101413] object-contain"
-          onError={() => setFailed(true)}
-        />
-      ) : (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={cleanUrl}
-          alt="Saved ad product creative"
-          className="max-h-[360px] w-full bg-[#f6f3ed] object-contain"
-          loading="lazy"
-          referrerPolicy="no-referrer"
-          onError={() => setFailed(true)}
-        />
-      )}
     </div>
   );
 }
