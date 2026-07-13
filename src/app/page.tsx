@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import {
   Bell,
@@ -23,75 +23,232 @@ import { BrandMark } from "@/components/BrandMark";
 
 type Locale = "en" | "ar" | "fr";
 
-const workflow = [
-  ["Open Meta Ad Library", "Find an ad from a product or competitor page."],
-  ["Save with extension", "SpySave captures page name, text, links, and media."],
-  ["Analyze with AI", "Get hook, offer, CTA, niche, audience, and winning score."],
-  ["Build your next test", "Use the best angles inside your next creative brief."],
-];
-
-const productScreens = [
-  {
-    label: "Dashboard",
-    title: "Command center",
-    description:
-      "Overview dyal saved ads, AI scores, tracked brands, notifications, w quick actions f blasa wahda.",
-    icon: Gauge,
-    accent: "#2563eb",
-    preview: "dashboard",
-    screenshot: "/screenshots/dashboard.png",
-  },
-  {
-    label: "Saved Ads",
-    title: "Clean swipe file",
-    description:
-      "Kol ad kayban msetef b page name, tags, notes, media link, score, search, filters, w export CSV.",
-    icon: BookmarkPlus,
-    accent: "#f59e0b",
-    preview: "ads",
-    screenshot: "/screenshots/saved-ads.png",
-  },
-  {
-    label: "AI Detail",
-    title: "Deep creative analysis",
-    description:
-      "Hook, offer, CTA, pain point, audience, trust signals, weaknesses, test ideas, w rewrite suggestions.",
-    icon: Bot,
-    accent: "#7c3aed",
-    preview: "ai",
-    screenshot: "/screenshots/ai-detail.png",
-  },
-  {
-    label: "Tracking",
-    title: "Competitor tracking",
-    description:
-      "Zid competitor pages, organize niches, w khlli SpySave ijme3 lik updates f notifications page.",
-    icon: Users,
-    accent: "#06b6d4",
-    preview: "tracking",
-    screenshot: "/screenshots/tracking.png",
-  },
-  {
-    label: "Notifications",
-    title: "Updates inbox",
-    description:
-      "Blasa n9iya katban fiha alerts mlli competitor li tracked kayban 3ndo ad jdida.",
-    icon: Bell,
-    accent: "#f97316",
-    preview: "notifications",
-    screenshot: "/screenshots/notifications.png",
-  },
-  {
-    label: "Help",
-    title: "Setup and launch guide",
-    description:
-      "Page katjme3 install steps, workflow, privacy, pricing info, w launch checklist bach demo ib9a wadeh.",
-    icon: FileText,
-    accent: "#475569",
-    preview: "help",
-    screenshot: "/screenshots/help.png",
-  },
+const screenshots = [
+  { key: "dashboard", icon: Gauge, accent: "#2563eb", screenshot: "/screenshots/dashboard.png" },
+  { key: "savedAds", icon: BookmarkPlus, accent: "#f59e0b", screenshot: "/screenshots/saved-ads.png" },
+  { key: "aiDetail", icon: Bot, accent: "#7c3aed", screenshot: "/screenshots/ai-detail.png" },
+  { key: "tracking", icon: Users, accent: "#06b6d4", screenshot: "/screenshots/tracking.png" },
+  { key: "notifications", icon: Bell, accent: "#f97316", screenshot: "/screenshots/notifications.png" },
+  { key: "help", icon: FileText, accent: "#475569", screenshot: "/screenshots/help.png" },
 ] as const;
+
+const translations = {
+  en: {
+    meta: "Meta ads research",
+    navBadge: "Public ad research workspace",
+    heroBadge: "Ad intelligence workspace",
+    heroTitle: "Research competitor ads before you launch.",
+    heroBody:
+      "Preview how SpySave helps you save ads, organize swipe files, analyze creative angles with AI, and track competitor activity.",
+    tryFree: "Try for free",
+    seeProduct: "See product",
+    stats: [
+      ["AI score", "Hook, offer, fatigue risk"],
+      ["Swipe file", "Tags, notes, media preview"],
+      ["Tracking", "Competitor updates"],
+    ],
+    screens: {
+      dashboard: [
+        "Dashboard",
+        "Command center",
+        "Overview of saved ads, AI scores, tracked brands, notifications, and quick actions in one workspace.",
+      ],
+      savedAds: [
+        "Saved Ads",
+        "Clean swipe file",
+        "Every ad is organized with page name, tags, notes, media preview, score, search, filters, and CSV export.",
+      ],
+      aiDetail: [
+        "AI Detail",
+        "Deep creative analysis",
+        "Hook, offer, CTA, pain point, audience, trust signals, objection handling, fatigue risk, and rewrite ideas.",
+      ],
+      tracking: [
+        "Tracking",
+        "Competitor tracking",
+        "Add competitor pages, organize niches, and keep their saved ads connected to your research.",
+      ],
+      notifications: [
+        "Notifications",
+        "Updates inbox",
+        "A clean inbox for alerts when tracked competitors have new saved ads or activity.",
+      ],
+      help: [
+        "Help",
+        "Setup and launch guide",
+        "Install steps, workflow, privacy, and launch checklist for a clear product demo.",
+      ],
+    },
+    tryPage: "Try this page",
+    betaEyebrow: "Beta access",
+    betaTitle: "Join the SpySave beta and test with real ads.",
+    joinBeta: "Join beta",
+    bookDemo: "Book demo",
+    productCards: [
+      ["Save ads", "Capture public Meta ads into your account."],
+      ["Organize", "Tags, notes, folders, search, and CSV export."],
+      ["AI analysis", "Hook, offer, CTA, audience, ideas, and score."],
+      ["Track competitors", "Save competitor pages and compare their ads."],
+    ],
+    workflowEyebrow: "Workflow",
+    workflowTitle: "From competitor ad to test idea.",
+    workflowBody:
+      "Simple enough for a 14-day MVP, useful enough for a real product demo.",
+    workflow: [
+      ["Open Meta Ad Library", "Find an ad from a product or competitor page."],
+      ["Save with extension", "SpySave captures page name, text, links, and media."],
+      ["Analyze with AI", "Get hook, offer, CTA, niche, audience, and winning score."],
+      ["Build your next test", "Use the best angles inside your next creative brief."],
+    ],
+    footerLeft: "Public ad research. Minimal extension permissions.",
+    footerLang: "EN / AR / FR",
+    footerSwipe: "Swipe file SaaS",
+    footerMvp: "MVP ready",
+  },
+  ar: {
+    meta: "بحث إعلانات ميتا",
+    navBadge: "مساحة بحث للإعلانات العامة",
+    heroBadge: "منصة ذكاء الإعلانات",
+    heroTitle: "حلّل إعلانات المنافسين قبل إطلاق حملتك.",
+    heroBody:
+      "SpySave يساعدك تحفظ الإعلانات، تنظّم ملف الأفكار، تحلل الزوايا الإبداعية بالذكاء الاصطناعي، وتتابع نشاط المنافسين.",
+    tryFree: "جرّب مجاناً",
+    seeProduct: "شاهد المنتج",
+    stats: [
+      ["نقاط AI", "Hook، عرض، خطر التعب"],
+      ["ملف الإعلانات", "Tags، ملاحظات، معاينة media"],
+      ["التتبع", "تحديثات المنافسين"],
+    ],
+    screens: {
+      dashboard: [
+        "لوحة التحكم",
+        "مركز العمل",
+        "نظرة عامة على الإعلانات المحفوظة، نقاط AI، العلامات المتتبعة، التنبيهات، والإجراءات السريعة.",
+      ],
+      savedAds: [
+        "الإعلانات المحفوظة",
+        "ملف أفكار مرتب",
+        "كل إعلان يظهر مع اسم الصفحة، الوسوم، الملاحظات، معاينة المنتج، النتيجة، البحث، الفلاتر، والتصدير.",
+      ],
+      aiDetail: [
+        "تفاصيل AI",
+        "تحليل إبداعي عميق",
+        "Hook، العرض، CTA، نقطة الألم، الجمهور، إشارات الثقة، الاعتراضات، خطر التعب، واقتراحات إعادة الكتابة.",
+      ],
+      tracking: [
+        "التتبع",
+        "تتبع المنافسين",
+        "أضف صفحات المنافسين، نظّم المجالات، واربط إعلاناتهم المحفوظة ببحثك.",
+      ],
+      notifications: [
+        "التنبيهات",
+        "صندوق التحديثات",
+        "مكان واضح للتنبيهات عندما يظهر نشاط أو إعلان محفوظ جديد لمنافس متتبع.",
+      ],
+      help: [
+        "المساعدة",
+        "دليل الإعداد والإطلاق",
+        "خطوات التثبيت، طريقة العمل، الخصوصية، وقائمة الإطلاق لعرض المنتج بوضوح.",
+      ],
+    },
+    tryPage: "جرّب هذه الصفحة",
+    betaEyebrow: "دخول تجريبي",
+    betaTitle: "انضم لنسخة SpySave التجريبية وجرب بإعلانات حقيقية.",
+    joinBeta: "انضم للبيتا",
+    bookDemo: "احجز عرضاً",
+    productCards: [
+      ["حفظ الإعلانات", "احفظ إعلانات Meta العامة داخل حسابك."],
+      ["تنظيم", "وسوم، ملاحظات، مجلدات، بحث، وتصدير CSV."],
+      ["تحليل AI", "Hook، عرض، CTA، جمهور، أفكار، ونتيجة."],
+      ["تتبع المنافسين", "احفظ صفحات المنافسين وقارن إعلاناتهم."],
+    ],
+    workflowEyebrow: "طريقة العمل",
+    workflowTitle: "من إعلان منافس إلى فكرة اختبار.",
+    workflowBody: "بسيطة كـ MVP في 14 يوم، ومفيدة كعرض منتج حقيقي.",
+    workflow: [
+      ["افتح Meta Ad Library", "ابحث عن إعلان منتج أو صفحة منافس."],
+      ["احفظ بالإكستنشن", "SpySave يلتقط اسم الصفحة، النص، الروابط، والmedia."],
+      ["حلّل بالذكاء الاصطناعي", "احصل على hook، عرض، CTA، niche، جمهور، وwinning score."],
+      ["ابنِ الاختبار التالي", "استعمل أقوى الزوايا في brief الإعلان القادم."],
+    ],
+    footerLeft: "بحث في الإعلانات العامة. صلاحيات الإكستنشن محدودة.",
+    footerLang: "EN / AR / FR",
+    footerSwipe: "SaaS لملف الإعلانات",
+    footerMvp: "جاهز كـ MVP",
+  },
+  fr: {
+    meta: "Recherche publicitaire Meta",
+    navBadge: "Espace de recherche publicitaire",
+    heroBadge: "Workspace d'intelligence publicitaire",
+    heroTitle: "Analysez les pubs concurrentes avant de lancer.",
+    heroBody:
+      "SpySave vous aide à sauvegarder des publicités, organiser votre swipe file, analyser les angles créatifs avec l'IA et suivre l'activité des concurrents.",
+    tryFree: "Essayer gratuitement",
+    seeProduct: "Voir le produit",
+    stats: [
+      ["Score IA", "Hook, offre, risque de fatigue"],
+      ["Swipe file", "Tags, notes, aperçu média"],
+      ["Tracking", "Mises à jour concurrents"],
+    ],
+    screens: {
+      dashboard: [
+        "Dashboard",
+        "Centre de commande",
+        "Vue globale des pubs sauvegardées, scores IA, marques suivies, notifications et actions rapides.",
+      ],
+      savedAds: [
+        "Pubs sauvegardées",
+        "Swipe file propre",
+        "Chaque pub est organisée avec page, tags, notes, aperçu média, score, recherche, filtres et export CSV.",
+      ],
+      aiDetail: [
+        "Détail IA",
+        "Analyse créative profonde",
+        "Hook, offre, CTA, douleur client, audience, preuves, objections, fatigue publicitaire et idées de réécriture.",
+      ],
+      tracking: [
+        "Tracking",
+        "Suivi des concurrents",
+        "Ajoutez des pages concurrentes, organisez les niches et reliez leurs pubs à votre recherche.",
+      ],
+      notifications: [
+        "Notifications",
+        "Boîte de mises à jour",
+        "Un espace clair pour les alertes quand un concurrent suivi a une nouvelle activité.",
+      ],
+      help: [
+        "Aide",
+        "Guide de configuration",
+        "Installation, workflow, confidentialité et checklist de lancement pour une démo claire.",
+      ],
+    },
+    tryPage: "Essayer cette page",
+    betaEyebrow: "Accès bêta",
+    betaTitle: "Rejoignez la bêta SpySave et testez avec de vraies pubs.",
+    joinBeta: "Rejoindre la bêta",
+    bookDemo: "Demander une démo",
+    productCards: [
+      ["Sauvegarder", "Capturez des publicités Meta publiques dans votre compte."],
+      ["Organiser", "Tags, notes, dossiers, recherche et export CSV."],
+      ["Analyse IA", "Hook, offre, CTA, audience, idées et score."],
+      ["Suivre concurrents", "Sauvegardez des pages concurrentes et comparez leurs pubs."],
+    ],
+    workflowEyebrow: "Workflow",
+    workflowTitle: "De la pub concurrente à l'idée de test.",
+    workflowBody:
+      "Assez simple pour un MVP en 14 jours, assez utile pour une vraie démo produit.",
+    workflow: [
+      ["Ouvrir Meta Ad Library", "Trouvez une pub depuis une page produit ou concurrent."],
+      ["Sauvegarder avec l'extension", "SpySave capture page, texte, liens et média."],
+      ["Analyser avec l'IA", "Obtenez hook, offre, CTA, niche, audience et winning score."],
+      ["Créer le prochain test", "Utilisez les meilleurs angles dans votre prochain brief créatif."],
+    ],
+    footerLeft: "Recherche d'annonces publiques. Permissions d'extension minimales.",
+    footerLang: "EN / AR / FR",
+    footerSwipe: "Swipe file SaaS",
+    footerMvp: "MVP prêt",
+  },
+} as const;
 
 function ProductScreenPreview({
   label,
@@ -107,13 +264,14 @@ function ProductScreenPreview({
       width={1263}
       height={744}
       className="real-screen-shot"
-      priority={label === "Dashboard"}
+      priority={label === "Dashboard" || label === "لوحة التحكم"}
     />
   );
 }
 
 export default function Home() {
   const [locale, setLocale] = useState<Locale>("en");
+  const copy = translations[locale];
   const dir = locale === "ar" ? "rtl" : "ltr";
 
   return (
@@ -124,13 +282,13 @@ export default function Home() {
             <BrandMark size={44} className="shadow-sm" />
             <span>
               <span className="block text-lg font-semibold leading-none">SpySave</span>
-              <span className="text-xs font-medium text-[#4f635d]">Meta ads research</span>
+              <span className="text-xs font-medium text-[#4f635d]">{copy.meta}</span>
             </span>
           </a>
 
           <div className="hidden items-center gap-2 rounded-full border border-[#d8e8e1] bg-white/70 px-3 py-2 text-sm font-bold text-[#4f635d] md:flex">
             <ShieldCheck size={15} className="text-[#0f9f7a]" />
-            Public ad research workspace
+            {copy.navBadge}
           </div>
 
           <div className="flex items-center gap-2 rounded-lg border border-[#d8e8e1] bg-white/80 p-1 shadow-sm">
@@ -141,9 +299,7 @@ export default function Home() {
                 type="button"
                 onClick={() => setLocale(item)}
                 className={`h-8 rounded-md px-3 text-xs font-bold uppercase ${
-                  locale === item
-                    ? "brand-gradient"
-                    : "text-[#29423a] hover:bg-[#eaf7f2]"
+                  locale === item ? "brand-gradient" : "text-[#29423a] hover:bg-[#eaf7f2]"
                 }`}
               >
                 {item}
@@ -158,24 +314,19 @@ export default function Home() {
           <div className="mx-auto max-w-4xl text-center">
             <span className="inline-flex items-center gap-2 rounded-full border border-[#d8e8e1] bg-white/80 px-4 py-2 text-sm font-bold text-[#29423a] shadow-sm backdrop-blur">
               <Sparkles size={16} className="text-[#0f9f7a]" />
-              Ad intelligence workspace
+              {copy.heroBadge}
             </span>
             <h1 className="mt-5 text-4xl font-semibold leading-tight text-[#13231f] md:text-6xl">
-              Research competitor ads before you launch.
+              {copy.heroTitle}
             </h1>
             <p className="mx-auto mt-4 max-w-2xl text-base font-medium leading-7 text-[#4f635d]">
-              Preview how SpySave helps you save ads, organize swipe files,
-              analyze creative angles with AI, and track competitor activity.
+              {copy.heroBody}
             </p>
             <div className="mx-auto mt-5 grid max-w-2xl gap-2 sm:grid-cols-3">
-              {[
-                ["AI score", "Hook, offer, fatigue risk"],
-                ["Swipe file", "Tags, notes, media preview"],
-                ["Tracking", "Competitor updates"],
-              ].map(([title, body]) => (
+              {copy.stats.map(([title, body]) => (
                 <div
                   key={title}
-                  className="rounded-lg border border-[#d8e8e1] bg-white/75 px-3 py-3 text-left shadow-sm"
+                  className="rounded-lg border border-[#d8e8e1] bg-white/75 px-3 py-3 text-start shadow-sm"
                 >
                   <p className="text-sm font-bold text-[#13231f]">{title}</p>
                   <p className="mt-1 text-xs font-semibold leading-5 text-[#4f635d]">
@@ -189,25 +340,26 @@ export default function Home() {
                 href="/app"
                 className="brand-gradient inline-flex h-12 items-center justify-center gap-2 rounded-lg px-6 text-sm font-bold shadow-sm"
               >
-                Try for free
+                {copy.tryFree}
                 <ChevronRight size={17} />
               </a>
               <a
                 href="#product"
                 className="inline-flex h-12 items-center justify-center gap-2 rounded-lg border border-[#d8e8e1] bg-white px-6 text-sm font-bold text-[#13231f] shadow-sm"
               >
-                See product
+                {copy.seeProduct}
               </a>
             </div>
           </div>
 
           <div className="vertical-screens mt-8" aria-label="SpySave page previews">
-            {productScreens.map((screen) => {
+            {screenshots.map((screen) => {
               const Icon = screen.icon;
+              const [label, title, description] = copy.screens[screen.key];
 
               return (
                 <article
-                  key={`first-${screen.label}`}
+                  key={`first-${screen.key}`}
                   className="screen-card screen-card-vertical hover-glow"
                   style={{ "--screen-accent": screen.accent } as CSSProperties}
                 >
@@ -216,26 +368,23 @@ export default function Home() {
                       <span className="screen-icon">
                         <Icon size={18} />
                       </span>
-                      <span className="screen-label">{screen.label}</span>
+                      <span className="screen-label">{label}</span>
                     </div>
 
-                    <h3>{screen.title}</h3>
-                    <p>{screen.description}</p>
+                    <h3>{title}</h3>
+                    <p>{description}</p>
 
                     <a
                       href="/app"
                       className="mt-5 inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-[#d8e8e1] bg-white px-4 text-sm font-bold text-[#13231f]"
                     >
-                      Try this page
+                      {copy.tryPage}
                       <ChevronRight size={16} />
                     </a>
                   </div>
 
                   <div className="screen-browser">
-                    <ProductScreenPreview
-                      label={screen.label}
-                      screenshot={screen.screenshot}
-                    />
+                    <ProductScreenPreview label={label} screenshot={screen.screenshot} />
                   </div>
                 </article>
               );
@@ -247,23 +396,23 @@ export default function Home() {
       <section className="mx-auto max-w-7xl px-5 pb-6">
         <div className="premium-panel flex flex-wrap items-center justify-between gap-3 rounded-xl p-4">
           <div>
-            <p className="text-sm font-bold uppercase text-[#08775d]">Beta access</p>
-            <h2 className="mt-1 text-2xl font-semibold">
-              Join the SpySave beta and test with real ads.
-            </h2>
+            <p className="text-sm font-bold uppercase text-[#08775d]">
+              {copy.betaEyebrow}
+            </p>
+            <h2 className="mt-1 text-2xl font-semibold">{copy.betaTitle}</h2>
           </div>
           <div className="flex flex-wrap gap-2">
             <a
               href="/app"
               className="brand-gradient inline-flex h-11 items-center rounded-lg px-4 text-sm font-bold"
             >
-              Join beta
+              {copy.joinBeta}
             </a>
             <a
               href="mailto:hello@spysave.app?subject=SpySave%20demo"
               className="inline-flex h-11 items-center rounded-lg border border-[#d8e8e1] bg-white px-4 text-sm font-bold text-[#13231f]"
             >
-              Book demo
+              {copy.bookDemo}
             </a>
           </div>
         </div>
@@ -271,18 +420,14 @@ export default function Home() {
 
       <section id="product" className="border-y border-[#dbe7e2] bg-white/70">
         <div className="mx-auto grid max-w-7xl gap-3 px-5 py-8 md:grid-cols-4">
-          {[
-            [BookmarkPlus, "Save ads", "Capture public Meta ads into your account."],
-            [Tags, "Organize", "Tags, notes, folders, search, and CSV export."],
-            [Bot, "AI analysis", "Hook, offer, CTA, audience, ideas, and score."],
-            [Bell, "Track competitors", "Save competitor pages and compare their ads."],
-          ].map(([Icon, title, body]) => {
-            const IconComponent = Icon as typeof BookmarkPlus;
+          {copy.productCards.map(([title, body], index) => {
+            const icons = [BookmarkPlus, Tags, Bot, Bell];
+            const IconComponent = icons[index];
             return (
-              <article key={title as string} className="premium-panel rounded-lg p-4">
+              <article key={title} className="premium-panel rounded-lg p-4">
                 <IconComponent size={22} className="text-[#07966f]" />
-                <h3 className="mt-4 text-lg font-semibold">{title as string}</h3>
-                <p className="mt-2 text-sm leading-6 text-[#66736d]">{body as string}</p>
+                <h3 className="mt-4 text-lg font-semibold">{title}</h3>
+                <p className="mt-2 text-sm leading-6 text-[#66736d]">{body}</p>
               </article>
             );
           })}
@@ -292,16 +437,18 @@ export default function Home() {
       <section id="workflow" className="mx-auto max-w-7xl px-5 py-9">
         <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
           <div>
-            <p className="text-sm font-bold uppercase text-[#07966f]">Workflow</p>
-            <h2 className="mt-2 text-3xl font-semibold">From competitor ad to test idea.</h2>
+            <p className="text-sm font-bold uppercase text-[#07966f]">
+              {copy.workflowEyebrow}
+            </p>
+            <h2 className="mt-2 text-3xl font-semibold">{copy.workflowTitle}</h2>
           </div>
           <p className="max-w-md text-sm leading-6 text-[#66736d]">
-            Simple enough for a 14-day MVP, useful enough for a real product demo.
+            {copy.workflowBody}
           </p>
         </div>
 
         <div className="grid gap-3 md:grid-cols-4">
-          {workflow.map(([title, body], index) => (
+          {copy.workflow.map(([title, body], index) => (
             <article key={title} className="premium-panel rounded-lg p-4">
               <span className="brand-gradient grid size-9 place-items-center rounded-lg text-sm font-bold">
                 {index + 1}
@@ -316,24 +463,23 @@ export default function Home() {
       <footer className="mx-auto flex max-w-7xl flex-col gap-3 px-5 py-5 text-sm font-medium text-[#66736d] md:flex-row md:items-center md:justify-between">
         <div className="flex items-center gap-2">
           <ShieldCheck size={16} />
-          Public ad research. Minimal extension permissions.
+          {copy.footerLeft}
         </div>
         <div className="flex flex-wrap items-center gap-4">
           <span className="inline-flex items-center gap-2">
             <Globe2 size={16} />
-            EN / AR / FR
+            {copy.footerLang}
           </span>
           <span className="inline-flex items-center gap-2">
             <Library size={16} />
-            Swipe file SaaS
+            {copy.footerSwipe}
           </span>
           <span className="inline-flex items-center gap-2">
             <Layers3 size={16} />
-            MVP ready
+            {copy.footerMvp}
           </span>
         </div>
       </footer>
     </main>
   );
 }
-
