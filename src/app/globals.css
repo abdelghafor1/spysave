@@ -1718,7 +1718,7 @@ article:hover {
   flex-direction: column;
   align-items: center;
   gap: 32px;
-  padding: 86px 0 48px;
+  padding: 66px 0 48px;
   text-align: center;
 }
 
@@ -2047,7 +2047,7 @@ article:hover {
 
 @media (max-width: 680px) {
   .ray-hero {
-    padding-top: 58px;
+    padding-top: 44px;
   }
 
   .ray-shot-hero .ray-window {
@@ -2068,6 +2068,7 @@ article:hover {
 .ray-nav {
   width: min(1760px, calc(100% - 42px));
   padding: 26px 0 18px;
+  margin-inline: auto;
 }
 
 .ray-nav::after {
@@ -2076,10 +2077,10 @@ article:hover {
 
 .ray-nav-shell {
   display: grid;
-  grid-template-columns: minmax(210px, 0.8fr) minmax(440px, 1.3fr) minmax(260px, 0.8fr);
+  grid-template-columns: 260px minmax(520px, 1fr) 320px;
   align-items: center;
-  gap: 28px;
-  min-height: 112px;
+  gap: 22px;
+  min-height: 110px;
   border: 1px solid rgba(255, 255, 255, 0.11);
   border-radius: 26px;
   background:
@@ -2105,13 +2106,13 @@ article:hover {
 }
 
 .ray-brand {
-  gap: 14px;
+  gap: 13px;
 }
 
 .ray-brand img,
 .ray-brand svg {
-  width: 43px !important;
-  height: 43px !important;
+  width: 39px !important;
+  height: 39px !important;
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 11px;
   box-shadow:
@@ -2120,7 +2121,7 @@ article:hover {
 }
 
 .ray-brand strong {
-  font-size: 1.46rem;
+  font-size: 1.35rem;
   font-weight: 850;
   letter-spacing: -0.03em;
   line-height: 1;
@@ -2130,13 +2131,14 @@ article:hover {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: clamp(22px, 3vw, 48px);
+  gap: clamp(22px, 3.1vw, 52px);
+  min-width: 0;
 }
 
 .ray-nav-links a,
 .ray-login-link {
   color: rgba(246, 248, 247, 0.72);
-  font-size: 1.14rem;
+  font-size: 1.05rem;
   font-weight: 850;
   line-height: 1;
 }
@@ -2160,7 +2162,7 @@ article:hover {
 
 .ray-download-button {
   display: inline-flex;
-  min-height: 56px;
+  min-height: 54px;
   align-items: center;
   justify-content: center;
   border: 1px solid rgba(255, 255, 255, 0.78);
@@ -2168,7 +2170,7 @@ article:hover {
   background: linear-gradient(180deg, #ffffff, #d6d9d7);
   color: #161817;
   padding: 0 24px;
-  font-size: 1.12rem;
+  font-size: 1.05rem;
   font-weight: 900;
   box-shadow:
     0 18px 36px rgba(255, 255, 255, 0.12),
@@ -2181,7 +2183,7 @@ article:hover {
 
 .ray-theme-toggle {
   display: grid;
-  min-height: 52px;
+  min-height: 50px;
   place-items: center;
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 999px;
@@ -2190,8 +2192,25 @@ article:hover {
 }
 
 .ray-theme-toggle {
-  width: 52px;
+  width: 50px;
   padding: 0;
+}
+
+@media (min-width: 1500px) {
+  .ray-nav-shell {
+    grid-template-columns: 300px minmax(700px, 1fr) 360px;
+  }
+}
+
+@media (max-width: 1500px) {
+  .ray-nav-shell {
+    grid-template-columns: 235px minmax(420px, 1fr) 300px;
+    padding-inline: 34px;
+  }
+
+  .ray-nav-links {
+    gap: 28px;
+  }
 }
 
 .ray-extension {
@@ -2269,10 +2288,7 @@ article:hover {
     padding-inline: 28px;
   }
 
-  .ray-nav-links a:nth-child(3),
-  .ray-nav-links a:nth-child(4),
-  .ray-nav-links a:nth-child(5),
-  .ray-nav-links a:nth-child(6) {
+  .ray-nav-links a:nth-child(n + 3) {
     display: none;
   }
 }
