@@ -6,7 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "extension:zip": "powershell -ExecutionPolicy Bypass -File scripts/build-extension.ps1 all",
+    "extension:zip:chrome": "powershell -ExecutionPolicy Bypass -File scripts/build-extension.ps1 chrome",
+    "extension:zip:edge": "powershell -ExecutionPolicy Bypass -File scripts/build-extension.ps1 edge",
+    "extension:zip:firefox": "powershell -ExecutionPolicy Bypass -File scripts/build-extension.ps1 firefox"
   },
   "dependencies": {
     "firebase": "^12.15.0",

@@ -7,7 +7,7 @@ SpySave is a 14-day MVP for saving, organizing, and analyzing Meta/Facebook ads 
 - Next.js website with landing page, dashboard preview, pricing, roadmap, and English/Arabic/French language switcher.
 - Firebase client setup for Auth, Firestore, and Storage.
 - API route for saving ads and returning NVIDIA/OpenAI analysis when API keys are set.
-- Chrome Manifest V3 extension that auto-detects selected ad text, page title, source URL, and a likely landing page link.
+- Browser extension packages for Chrome, Microsoft Edge, and Firefox that auto-detect selected ad text, page title, source URL, and a likely landing page link.
 - Dashboard filters for All, Winners, Good, Weak, and Unscored ads.
 - CSV export for filtered ads.
 - Media URL capture and media links in the dashboard.
@@ -135,6 +135,19 @@ Restart the dev server after changing `.env.local`.
 12. Click Auto detect ad if fields are not filled.
 13. Review the fields and press Save ad.
 14. Close the sidebar with its `X` button when you are done.
+
+## Build browser store packages
+
+```powershell
+npm.cmd run extension:zip
+```
+
+This creates Chrome, Edge, and Firefox zip files in `dist/extensions/`.
+
+- Chrome and Edge use the side panel flow.
+- Firefox uses a normal extension popup for compatibility.
+
+See `ADDON_PUBLISHING.md` for store notes.
 
 ## Next build steps
 
