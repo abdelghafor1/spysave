@@ -6841,7 +6841,7 @@ article:hover {
   transition: opacity 150ms ease, transform 150ms ease;
 }
 
-.app-sidebar-logout:hover { border-color: #ecd9d5; background: #fff7f5; color: #b54d3f; }
+.app-sidebar-logout:hover { border-color: #ecd9d5; background: #fff7f5; color: #b54d3f; transform: none !important; box-shadow: none !important; }
 .app-sidebar-logout:hover::after, .app-sidebar-logout:focus-visible::after { opacity: 1; transform: translateY(-50%) translateX(0); }
 
 .app-menu-link {
@@ -6879,7 +6879,16 @@ article:hover {
   border-color: #d8e4df;
   background: #f1f6f3;
   color: #1d2a25;
-  transform: translateY(-1px);
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* Keep the global page glow from creating a dark orb behind sidebar controls. */
+.app-menu-link::after {
+  z-index: 100;
+  height: auto;
+  filter: none !important;
+  box-shadow: none !important;
 }
 
 .app-menu-link:hover::after,
