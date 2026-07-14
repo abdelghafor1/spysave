@@ -45,7 +45,6 @@ import {
   watchUserNotifications,
   watchUserAds,
 } from "@/lib/ads";
-import { demoAds } from "@/lib/demoAds";
 
 type AdForm = {
   pageName: string;
@@ -168,6 +167,7 @@ export default function SpySaveApp() {
   const [isSaving, setIsSaving] = useState(false);
   const [copiedUserId, setCopiedUserId] = useState(false);
   const [showSaveForm, setShowSaveForm] = useState(true);
+  const [showOnboarding, setShowOnboarding] = useState(true);
   const [showExtensionHelper, setShowExtensionHelper] = useState(false);
   const [showExtensionFallback, setShowExtensionFallback] = useState(false);
   const [extensionConnectStatus, setExtensionConnectStatus] = useState("");
@@ -193,6 +193,9 @@ export default function SpySaveApp() {
         const helperSeenKey = `spysave-extension-helper-seen-${currentUser.uid}`;
         setShowExtensionHelper(
           window.localStorage.getItem(helperSeenKey) !== "yes",
+        );
+        setShowOnboarding(
+          window.localStorage.getItem(`spysave-onboarding-hidden-${currentUser.uid}`) !== "yes",
         );
       }
       setStatus("");
@@ -691,7 +694,7 @@ export default function SpySaveApp() {
         <ServiceMenu />
       </header>
 
-      <section className="mx-auto grid max-w-7xl gap-4 px-5 py-4 lg:grid-cols-[0.78fr_1.22fr]">
+      <section className="dashboard-shell mx-auto grid max-w-7xl gap-5 px-5 py-6">
         {showExtensionFallback ? (
           <aside className="fixed bottom-5 right-5 z-50 w-[min(420px,calc(100vw-32px))] rounded-xl border border-[#dde4f3] bg-white p-4 text-[#172033] shadow-2xl">
             <div className="flex items-start justify-between gap-3">
@@ -739,202 +742,77 @@ export default function SpySaveApp() {
           </aside>
         ) : null}
 
-        <div className="lg:col-span-2">
-          <p className="text-sm font-bold uppercase text-[#07966f]">Dashboard</p>
-          <h1 className="mt-1 text-4xl font-semibold">SpySave workspace</h1>
-          <p className="mt-2 max-w-2xl text-sm leading-6 text-[#4f635d]">
-            Save competitor ads, connect your extension, and jump to your library or tracking page.
-          </p>
+        <div className="dashboard-heading">
+          <div>
+            <p className="text-sm font-bold uppercase tracking-[0.14em] text-[#07966f]">Command center</p>
+            <h1 className="mt-1 text-4xl font-semibold tracking-tight">Your ad research, at a glance.</h1>
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-[#4f635d]">
+              Save a competitor ad, understand why it works, and turn the insight into your next test.
+            </p>
+          </div>
+          <Link href="/app/ads" className="dashboard-heading-link">
+            <BookmarkPlus size={17} /> Open library
+          </Link>
         </div>
 
-        {showExtensionHelper && (
-          <section className="premium-panel rounded-xl border-2 border-[#3157d5] p-5 lg:col-span-2">
-            <div className="grid gap-4 lg:grid-cols-[1fr_auto] lg:items-center">
-              <div>
-                <p className="text-sm font-bold uppercase text-[#3157d5]">
-                  Required first setup
-                </p>
-                <h2 className="mt-1 text-2xl font-semibold">
-                  Connect your Chrome extension first
-                </h2>
-                <p className="mt-1 max-w-2xl text-sm leading-6 text-[#4f635d]">
-                  Install SpySave once. The dashboard will then detect the extension,
-                  connect your account automatically, and remember it.
-                </p>
-                {extensionConnectStatus ? (
-                  <p className="mt-2 text-sm font-bold text-[#2f8a61]">
-                    {extensionConnectStatus}
-                  </p>
-                ) : null}
-              </div>
-
-              <div className="grid gap-2 sm:min-w-[420px]">
-                <code className="max-w-full overflow-x-auto rounded-lg bg-[#eef2f0] px-3 py-3 text-xs font-bold text-[#101413]">
-                  {user.uid}
-                </code>
-                <div className="grid gap-2 sm:grid-cols-2">
-                  <button
-                    onClick={copyUserId}
-                    className="inline-flex h-11 items-center justify-center gap-2 rounded-lg border border-[#d8e8e1] bg-white px-4 text-sm font-bold text-[#13231f]"
-                  >
-                    <Copy size={16} />
-                    {copiedUserId ? "Copied" : "Copy User ID"}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={connectExtension}
-                    className="brand-gradient inline-flex h-11 items-center justify-center gap-2 rounded-lg px-4 text-sm font-bold"
-                  >
-                    <Sparkles size={16} />
-                    {extensionDetected ? "Open extension" : "Install extension"}
-                  </button>
-                </div>
-              </div>
-            </div>
-          </section>
-        )}
-
-        <div className="grid gap-2 lg:col-span-2 md:grid-cols-3">
-          {dashboardStats.map(([label, value]) => (
-            <div
-              key={label}
-              className="premium-panel rounded-xl p-4"
-            >
-              <p className="text-sm font-bold uppercase text-[#66736d]">{label}</p>
-              <p className="mt-1 text-3xl font-semibold">{value}</p>
+        <div className="dashboard-statbar">
+          {dashboardStats.map(([label, value], index) => (
+            <div key={label} className={`dashboard-stat dashboard-stat-${index}`}>
+              <span className="dashboard-stat-icon">
+                {index === 0 ? <BookmarkPlus size={17} /> : index === 1 ? <Gauge size={17} /> : <Tags size={17} />}
+              </span>
+              <span>
+                <b>{value}</b>
+                <small>{label}</small>
+              </span>
             </div>
           ))}
-        </div>
-
-        {!showExtensionHelper && (
-        <div className="lg:col-span-2">
-          <div className="premium-panel flex flex-wrap items-center justify-between gap-3 rounded-xl p-4">
-            <div>
-              <p className="text-sm font-bold uppercase text-[#e15f41]">
-                Extension
-              </p>
-              <h2 className="mt-1 text-2xl font-semibold">
-                Connect extension
-              </h2>
-              <p className="mt-1 text-sm leading-6 text-[#5c6863]">
-                Use this ID once to connect SpySave with your Chrome extension.
-              </p>
-            </div>
-            <div className="flex min-w-0 flex-wrap items-center gap-2">
-              <code className="max-w-full overflow-x-auto rounded-lg bg-[#eef2f0] px-3 py-2 text-xs font-bold text-[#101413]">
-                {user.uid}
-              </code>
-              <button
-                onClick={copyUserId}
-                className="inline-flex h-10 items-center gap-2 rounded-lg border border-[#d8e8e1] bg-white px-4 text-sm font-bold text-[#13231f]"
-              >
-                <Copy size={16} />
-                {copiedUserId ? "Copied" : "Copy User ID"}
-              </button>
-              <button
-                type="button"
-                onClick={connectExtension}
-                className="brand-gradient inline-flex h-10 items-center gap-2 rounded-lg px-4 text-sm font-bold"
-              >
-                <Sparkles size={16} />
-                Open extension
-              </button>
-            </div>
+          <div className="dashboard-stat dashboard-stat-health">
+            <span className="dashboard-stat-icon"><Sparkles size={17} /></span>
+            <span><b>{ads.length ? "Ready" : "Start here"}</b><small>Research status</small></span>
           </div>
         </div>
-        )}
 
-        <section className="premium-panel rounded-xl p-4 lg:col-span-2">
-          <div className="grid gap-3 md:grid-cols-[0.9fr_1.1fr] md:items-center">
-            <div>
-              <p className="text-sm font-bold uppercase text-[#07966f]">
-                Quick onboarding
-              </p>
-              <h2 className="mt-1 text-2xl font-semibold">Start in 3 steps</h2>
-              <p className="mt-2 text-sm leading-6 text-[#4f635d]">
-                Connect the extension, save one ad, then run AI analysis from the
-                ad detail page.
-              </p>
-            </div>
-            <div className="grid gap-2 md:grid-cols-3">
-              {[
-                ["1", "Copy User ID"],
-                ["2", "Open extension"],
-                ["3", "Save first ad"],
-              ].map(([step, label]) => (
-                <div key={label} className="rounded-lg bg-[#eef8f2] p-3">
-                  <span className="brand-gradient inline-grid size-7 place-items-center rounded-md text-xs font-bold">
-                    {step}
-                  </span>
-                  <p className="mt-2 text-sm font-bold">{label}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {ads.length === 0 ? (
-          <section className="premium-panel rounded-xl p-4 lg:col-span-2">
-            <div className="flex flex-wrap items-start justify-between gap-3">
-              <div>
-                <p className="text-sm font-bold uppercase text-[#3157d5]">
-                  Demo swipe file
-                </p>
-                <h2 className="mt-1 text-2xl font-semibold">
-                  See what SpySave gives users after the first save
-                </h2>
-                <p className="mt-1 max-w-2xl text-sm leading-6 text-[#4f635d]">
-                  These examples are not saved to your account. Use one to fill the
-                  form or open Reports to preview the output.
-                </p>
+        {showOnboarding ? (
+          <section className="onboarding-banner">
+            <div className="onboarding-copy">
+              <div className="onboarding-title-row">
+                <span className="section-eyebrow">Quick setup</span>
+                <span className="onboarding-progress">{showExtensionHelper ? "1/4" : "2/4"} complete</span>
               </div>
-              <Link
-                href="/app/reports"
-                className="brand-gradient inline-flex h-10 items-center rounded-lg px-4 text-sm font-bold"
-              >
-                Preview reports
-              </Link>
+              <h2>Get your research loop ready</h2>
+              <p>Connect the extension, save an ad, then open its AI breakdown.</p>
+              <div className="onboarding-progress-track"><span style={{ width: showExtensionHelper ? "25%" : "50%" }} /></div>
             </div>
-            <div className="mt-4 grid gap-3 md:grid-cols-2">
-              {demoAds.map((demoAd) => (
-                <article
-                  key={demoAd.id}
-                  className="rounded-lg border border-[#d8e8e1] bg-white p-4"
-                >
-                  <div className="flex flex-wrap items-start justify-between gap-3">
-                    <div>
-                      <p className="text-lg font-semibold">{demoAd.pageName}</p>
-                      <p className="mt-1 text-sm font-bold text-[#08775d]">
-                        {demoAd.analysis?.winningScore}/100{" "}
-                        {demoAd.analysis?.verdict}
-                      </p>
-                    </div>
-                    <span className="rounded-md bg-[#eff6ff] px-2 py-1 text-xs font-bold text-[#3157d5]">
-                      Demo
-                    </span>
-                  </div>
-                  <p className="mt-3 text-sm leading-6 text-[#4f635d]">
-                    {demoAd.analysis?.hook}
-                  </p>
-                  <p className="mt-2 text-sm font-semibold leading-6">
-                    Next test: {demoAd.analysis?.testPlan?.[0]}
-                  </p>
-                  <button
-                    type="button"
-                    onClick={() => loadAdIntoForm(demoAd)}
-                    className="mt-4 inline-flex h-10 items-center rounded-lg border border-[#d8e8e1] bg-white px-4 text-sm font-bold text-[#13231f]"
-                  >
-                    Use this example
-                  </button>
-                </article>
-              ))}
+            <div className="onboarding-steps">
+              <span className={showExtensionHelper ? "is-next" : "is-done"}><i>{showExtensionHelper ? "1" : "✓"}</i> Connect extension</span>
+              <span className={ads.length ? "is-done" : "is-next"}><i>{ads.length ? "✓" : "2"}</i> Save first ad</span>
+              <span><i>3</i> Run AI analysis</span>
+              <span><i>4</i> Try a new angle</span>
+            </div>
+            <div className="onboarding-actions">
+              {showExtensionHelper ? (
+                <button type="button" onClick={connectExtension} className="brand-gradient inline-flex h-10 items-center gap-2 rounded-lg px-4 text-sm font-bold"><Sparkles size={16} /> Connect extension</button>
+              ) : (
+                <button type="button" onClick={() => setShowSaveForm(true)} className="brand-gradient inline-flex h-10 items-center gap-2 rounded-lg px-4 text-sm font-bold"><Plus size={16} /> Save an ad</button>
+              )}
+              <button type="button" onClick={() => { setShowOnboarding(false); if (user) window.localStorage.setItem(`spysave-onboarding-hidden-${user.uid}`, "yes"); }} className="onboarding-dismiss">Minimize</button>
             </div>
           </section>
         ) : null}
 
-        <section
-          className="premium-panel rounded-xl p-4 lg:col-start-1 lg:row-start-3"
-        >
+        {showExtensionHelper && (
+          <div className="extension-inline-note">
+            <span><Sparkles size={16} /> {extensionConnectStatus || "Extension setup needs one quick connection."}</span>
+            <div className="flex flex-wrap items-center gap-2">
+              <code>{user.uid}</code>
+              <button onClick={copyUserId} className="inline-flex h-9 items-center gap-2 rounded-lg border border-[#d8e8e1] bg-white px-3 text-xs font-bold"><Copy size={14} /> {copiedUserId ? "Copied" : "Copy ID"}</button>
+              <button type="button" onClick={connectExtension} className="text-xs font-bold text-[#08775d]">Open extension</button>
+            </div>
+          </div>
+        )}
+
+        <section className="premium-panel dashboard-save-panel rounded-xl p-5">
           <div className="flex items-center justify-between gap-3">
             <div>
               <p className="text-sm font-bold uppercase text-[#07966f]">Save</p>
@@ -1055,7 +933,7 @@ export default function SpySaveApp() {
           )}
         </section>
 
-        <section className="premium-panel order-last rounded-xl p-4 lg:col-span-2">
+        <section className="premium-panel dashboard-secondary-card dashboard-secondary-tracking rounded-xl p-5">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <p className="text-sm font-bold uppercase text-[#07966f]">
@@ -1077,7 +955,7 @@ export default function SpySaveApp() {
           </div>
         </section>
 
-        <section className="premium-panel order-last rounded-xl p-4 lg:col-span-2">
+        <section className="premium-panel dashboard-secondary-card dashboard-secondary-reports rounded-xl p-5">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <p className="text-sm font-bold uppercase text-[#07966f]">
@@ -1099,7 +977,7 @@ export default function SpySaveApp() {
           </div>
         </section>
 
-        <section className="premium-panel order-last rounded-xl p-4 lg:col-span-2">
+        <section className="premium-panel dashboard-secondary-card dashboard-secondary-notifications rounded-xl p-5">
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div>
               <p className="text-sm font-bold uppercase text-[#07966f]">
@@ -1138,7 +1016,7 @@ export default function SpySaveApp() {
           </div>
         </section>
 
-        <section className="premium-panel rounded-xl p-4 lg:col-start-2 lg:row-start-3">
+        <section className="premium-panel dashboard-secondary-card dashboard-secondary-library rounded-xl p-5">
           <div className="flex h-full min-h-[280px] flex-col justify-between gap-4">
             <div>
               <p className="text-sm font-bold uppercase text-[#07966f]">Library</p>
