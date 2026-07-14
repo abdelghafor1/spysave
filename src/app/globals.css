@@ -5643,3 +5643,248 @@ article:hover {
   transform: none;
 }
 
+/* Dark editorial stages around genuine SpySave product captures. */
+.ss-landing .ss-real-shot {
+  position: relative;
+  min-height: 0;
+  border-color: rgba(255, 255, 255, 0.12);
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 50% 112%, rgba(40, 224, 157, 0.17), transparent 35%),
+    radial-gradient(circle at 8% 8%, rgba(40, 224, 157, 0.065), transparent 22%),
+    #050707;
+  padding: 0 clamp(22px, 4vw, 70px) clamp(30px, 5vw, 76px);
+  box-shadow:
+    0 38px 110px rgba(0, 0, 0, 0.48),
+    inset 0 1px rgba(255, 255, 255, 0.025),
+    0 0 90px rgba(40, 224, 157, 0.075);
+}
+
+.ss-landing .ss-real-shot-label {
+  position: relative;
+  z-index: 4;
+  min-height: 58px;
+  margin: 0 calc(clamp(22px, 4vw, 70px) * -1) clamp(32px, 4vw, 58px);
+  border-bottom-color: rgba(255, 255, 255, 0.09);
+  padding-inline: clamp(18px, 2.4vw, 38px);
+  background: rgba(3, 5, 5, 0.72);
+  color: #707977;
+  backdrop-filter: blur(18px);
+}
+
+.ss-landing .ss-real-shot-label b {
+  color: #d8dfdc;
+  letter-spacing: 0.04em;
+}
+
+.ss-shot-grid {
+  position: absolute;
+  z-index: 0;
+  inset: 58px 0 0;
+  overflow: hidden;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.026) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.026) 1px, transparent 1px);
+  background-size: 52px 52px;
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.82), transparent 92%);
+}
+
+.ss-shot-grid i {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border: 1px solid rgba(49, 229, 162, 0.55);
+  border-radius: 50%;
+  background: #07110d;
+  box-shadow: 0 0 20px rgba(49, 229, 162, 0.35);
+}
+
+.ss-shot-grid i:nth-child(1) {
+  top: 18%;
+  left: 7%;
+}
+
+.ss-shot-grid i:nth-child(2) {
+  top: 36%;
+  right: 9%;
+}
+
+.ss-shot-grid i:nth-child(3) {
+  right: 28%;
+  bottom: 8%;
+}
+
+.ss-landing .ss-real-shot img {
+  position: relative;
+  z-index: 2;
+  width: 92%;
+  max-width: 1380px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 12px;
+  box-shadow:
+    0 32px 90px rgba(0, 0, 0, 0.62),
+    0 0 0 8px rgba(255, 255, 255, 0.018);
+  transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1), border-color 240ms ease;
+}
+
+.ss-landing .ss-real-shot:hover img {
+  border-color: rgba(49, 229, 162, 0.38);
+}
+
+.ss-real-hero-stage .ss-real-shot {
+  transform: none;
+}
+
+.ss-real-hero-stage .ss-real-shot:hover {
+  transform: translateY(-4px);
+}
+
+.ss-real-hero-stage .ss-real-shot img {
+  width: 94%;
+  margin-inline: auto;
+  transform: perspective(1700px) rotateX(1.4deg) scale(0.985);
+  transform-origin: center bottom;
+}
+
+.ss-real-hero-stage .ss-real-shot:hover img {
+  transform: perspective(1700px) rotateX(0.5deg) scale(1);
+}
+
+#analysis > .ss-real-shot img,
+#tracking > .ss-real-shot img {
+  margin-right: auto;
+  margin-left: 0;
+  transform: perspective(1800px) rotateY(2.5deg) rotateX(0.5deg);
+  transform-origin: left center;
+}
+
+#library > .ss-real-shot img,
+#notifications > .ss-real-shot img {
+  margin-right: 0;
+  margin-left: auto;
+  transform: perspective(1800px) rotateY(-2.5deg) rotateX(0.5deg);
+  transform-origin: right center;
+}
+
+#analysis > .ss-real-shot:hover img,
+#tracking > .ss-real-shot:hover img,
+#library > .ss-real-shot:hover img,
+#notifications > .ss-real-shot:hover img {
+  transform: perspective(1800px) rotateY(0) rotateX(0) scale(1.006);
+}
+
+.ss-landing .ss-real-shot.is-compact {
+  padding: 0 clamp(16px, 2.5vw, 34px) clamp(22px, 3vw, 38px);
+}
+
+.ss-landing .ss-real-shot.is-compact .ss-real-shot-label {
+  min-height: 50px;
+  margin-right: calc(clamp(16px, 2.5vw, 34px) * -1);
+  margin-bottom: 26px;
+  margin-left: calc(clamp(16px, 2.5vw, 34px) * -1);
+}
+
+.ss-landing .ss-real-shot.is-compact img {
+  width: 96%;
+  margin-inline: auto;
+}
+
+.ss-landing[data-theme="light"] .ss-real-shot {
+  border-color: rgba(7, 14, 12, 0.88);
+  background:
+    radial-gradient(circle at 50% 112%, rgba(40, 224, 157, 0.17), transparent 35%),
+    radial-gradient(circle at 8% 8%, rgba(40, 224, 157, 0.065), transparent 22%),
+    #050707;
+  box-shadow:
+    0 34px 90px rgba(16, 31, 27, 0.22),
+    0 0 86px rgba(21, 153, 105, 0.09);
+}
+
+@media (max-width: 760px) {
+  .ss-nav {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px;
+    overflow: hidden;
+  }
+
+  .ss-brand {
+    min-width: 0;
+  }
+
+  .ss-brand img {
+    width: 30px !important;
+    height: 30px !important;
+  }
+
+  .ss-brand strong {
+    font-size: 0.96rem;
+  }
+
+  .ss-nav .ss-button {
+    max-width: 96px;
+    padding-inline: 10px;
+    white-space: nowrap;
+  }
+
+  .ss-nav .ss-button svg {
+    display: none;
+  }
+
+  .ss-theme-toggle {
+    width: 38px;
+    height: 38px;
+  }
+
+  .ss-hero h1 {
+    max-width: 100%;
+    font-size: clamp(3rem, 13.5vw, 3.7rem);
+    letter-spacing: -0.055em;
+    overflow-wrap: anywhere;
+  }
+
+  .ss-hero > p {
+    max-width: 100%;
+    font-size: 0.95rem;
+  }
+
+  .ss-hero-actions {
+    flex-direction: column;
+    width: min(100%, 280px);
+    margin-inline: auto;
+  }
+
+  .ss-hero-actions .ss-button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .ss-hero-stage {
+    width: 100%;
+  }
+
+  .ss-landing .ss-real-shot {
+    border-radius: 12px;
+    padding: 0 12px 20px;
+  }
+
+  .ss-landing .ss-real-shot-label,
+  .ss-landing .ss-real-shot.is-compact .ss-real-shot-label {
+    min-height: 42px;
+    margin: 0 -12px 18px;
+    padding-inline: 13px;
+  }
+
+  .ss-landing .ss-real-shot img,
+  .ss-landing .ss-real-shot.is-compact img {
+    width: 100%;
+    border-radius: 7px;
+    transform: none !important;
+  }
+
+  .ss-shot-grid {
+    top: 42px;
+    background-size: 34px 34px;
+  }
+}
+

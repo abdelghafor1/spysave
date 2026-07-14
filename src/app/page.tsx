@@ -83,9 +83,10 @@ function ProductScreenshot({
     >
       <span className="ss-real-shot-label">
         <i />
-        Real SpySave screen
+        Live product
         <b>{label}</b>
       </span>
+      <span className="ss-shot-grid" aria-hidden="true"><i /><i /><i /></span>
       <Image
         src={src}
         alt={alt}
