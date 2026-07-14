@@ -131,19 +131,54 @@ function ResearchBlueprint() {
     <div className="ss-blueprint">
       <article>
         <small>FIG 0.1</small>
-        <div className="ss-line-stack"><i /><i /><i /><i /></div>
+        <div className="ss-blueprint-visual ss-research-map" aria-hidden="true">
+          <div className="ss-source-list">
+            <span><b>Meta</b><em>GlowLab serum</em></span>
+            <span><b>TikTok</b><em>NovaFit UGC</em></span>
+            <span><b>Meta</b><em>Maison home</em></span>
+          </div>
+          <div className="ss-ingest-path"><span /><span /><span /></div>
+          <div className="ss-swipe-node">
+            <span>SWIPE FILE</span>
+            <strong>248 creatives</strong>
+            <div><b>Hook</b><b>Offer</b><b>Angle</b></div>
+          </div>
+        </div>
         <h3>Built for research</h3>
         <p>Public competitor ads become structured creative knowledge.</p>
       </article>
       <article>
         <small>FIG 0.2</small>
-        <div className="ss-line-nodes"><i /><i /><i /><i /></div>
+        <div className="ss-blueprint-visual ss-strategy-map" aria-hidden="true">
+          <div className="ss-strategy-core">
+            <Sparkles size={17} />
+            <span>AI STRATEGY</span>
+            <strong>87 / 100</strong>
+          </div>
+          <div className="ss-strategy-signals">
+            <span><b>Hook</b><em>Curiosity</em></span>
+            <span><b>Offer</b><em>Bundle -20%</em></span>
+            <span><b>Audience</b><em>Women 25-40</em></span>
+            <span><b>Fatigue</b><em>Low risk</em></span>
+          </div>
+        </div>
         <h3>Powered by strategy</h3>
         <p>AI explains why an angle works and what to test next.</p>
       </article>
       <article>
         <small>FIG 0.3</small>
-        <div className="ss-line-cards"><i /><i /><i /><i /><i /></div>
+        <div className="ss-blueprint-visual ss-action-map" aria-hidden="true">
+          <div className="ss-action-head">
+            <span>CREATIVE TEST PLAN</span>
+            <b>Ready</b>
+          </div>
+          <div className="ss-action-list">
+            <span><i>01</i><strong>Curiosity hook</strong><em>5 variants</em></span>
+            <span><i>02</i><strong>15s UGC script</strong><em>Drafted</em></span>
+            <span><i>03</i><strong>Offer A/B test</strong><em>2 versions</em></span>
+          </div>
+          <div className="ss-action-footer"><span>Research</span><i /><span>Launch</span></div>
+        </div>
         <h3>Designed for action</h3>
         <p>Research flows into hooks, scripts, offers, and briefs.</p>
       </article>
