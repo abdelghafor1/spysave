@@ -71,13 +71,12 @@ export function ServiceMenu() {
       </aside>
       {pathname === "/app/settings" || pathname === "/app/account" ? (
         <header className="app-utilitybar" aria-label="Account controls">
-          <div className="app-utilitybar-title">Account settings</div>
           <div className="app-utilitybar-actions">
-            <Link href="/app/settings" className={`app-utility-link${pathname === "/app/settings" ? " is-active" : ""}`} title="Settings" aria-label="Settings">
-              <Settings size={17} aria-hidden="true" />
+            <Link href="/app/settings" className={`app-utility-link${pathname === "/app/settings" ? " is-active" : ""}`}>
+              <Settings size={16} aria-hidden="true" /> Settings
             </Link>
-            <Link href="/app/account" className={`app-utility-link${pathname === "/app/account" ? " is-active" : ""}`} title="Account" aria-label="Account">
-              <CircleUserRound size={18} aria-hidden="true" />
+            <Link href="/app/account" className={`app-utility-link${pathname === "/app/account" ? " is-active" : ""}`}>
+              <CircleUserRound size={17} aria-hidden="true" /> Account
             </Link>
           </div>
         </header>

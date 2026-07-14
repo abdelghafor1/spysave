@@ -6910,24 +6910,27 @@ article:hover {
   display: flex;
   height: 72px;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   border-bottom: 1px solid var(--app-line);
   background: rgba(250, 251, 249, 0.94);
   padding: 0 28px;
   backdrop-filter: blur(16px);
 }
 
-.app-utilitybar-title { color: #4f635d; font-size: 0.82rem; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; }
 .app-utilitybar-actions { display: flex; gap: 8px; }
 
 .app-utility-link {
-  display: grid;
-  width: 34px;
-  height: 34px;
-  place-items: center;
+  display: inline-flex;
+  height: 36px;
+  align-items: center;
+  gap: 7px;
+  padding: 0 14px;
+  justify-content: center;
   border: 1px solid transparent;
   border-radius: 7px;
   color: #5e6c65;
+  font-size: 0.86rem;
+  font-weight: 750;
 }
 
 .app-utility-link:hover { border-color: #d8e4df; background: #f1f6f3; color: #1d2a25; transform: none !important; box-shadow: none !important; }
@@ -6949,7 +6952,6 @@ article:hover {
 
 .spysave-dark .aurora-page { background: #101412; color: #edf4ef; }
 .spysave-dark .app-sidebar, .spysave-dark .app-utilitybar { border-color: #2c3832; background: rgba(16, 20, 18, 0.94); }
-.spysave-dark .app-utilitybar-title { color: #afbbb5; }
 .spysave-dark .app-menu-brand, .spysave-dark .premium-panel, .spysave-dark .settings-choice, .spysave-dark .settings-action, .spysave-dark .settings-select { border-color: #2c3832; background: #171d1a; color: #edf4ef; }
 .spysave-dark .app-menu-link, .spysave-dark .app-sidebar-settings, .spysave-dark .app-utility-link { color: #9da9a3; }
 .spysave-dark .app-menu-link:hover, .spysave-dark .app-sidebar-settings:hover, .spysave-dark .app-utility-link:hover { border-color: #365346; background: #1d2a24; color: #ffffff; }
