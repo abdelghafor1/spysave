@@ -3635,6 +3635,26 @@ article:hover {
   gap: 16px;
 }
 
+.ss-theme-toggle {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
+  place-items: center;
+  border: 1px solid var(--ss-line);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.025);
+  color: #9ba19f;
+  cursor: pointer;
+  transition: border-color 160ms ease, background 160ms ease, color 160ms ease !important;
+}
+
+.ss-theme-toggle:hover {
+  border-color: rgba(255, 255, 255, 0.2) !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  color: #ffffff !important;
+}
+
 .ss-login {
   min-width: 62px;
   text-align: center;
@@ -4997,6 +5017,174 @@ article:hover {
 .ss-reveal.ss-visible {
   opacity: 1;
   transform: translateY(0);
+}
+
+/* Light theme. Product canvases deliberately stay dark in both themes. */
+.ss-landing[data-theme="light"] {
+  --ss-bg: #f7f7f5;
+  --ss-panel: #ffffff;
+  --ss-panel-2: #f0f1ef;
+  --ss-line: rgba(16, 20, 18, 0.13);
+  --ss-line-soft: rgba(16, 20, 18, 0.075);
+  --ss-text: #141716;
+  --ss-muted: #646b68;
+  --ss-dim: #909694;
+  --ss-accent: #098f64;
+  background: var(--ss-bg);
+  color: var(--ss-text);
+}
+
+.ss-landing[data-theme="light"] .ss-nav {
+  background: rgba(250, 250, 248, 0.88);
+  box-shadow: 0 16px 50px rgba(18, 24, 21, 0.07);
+}
+
+.ss-landing[data-theme="light"] .ss-nav-links a,
+.ss-landing[data-theme="light"] .ss-login {
+  color: #6b716f;
+}
+
+.ss-landing[data-theme="light"] .ss-nav-links a:hover,
+.ss-landing[data-theme="light"] .ss-login:hover {
+  color: #101312;
+}
+
+.ss-landing[data-theme="light"] .ss-theme-toggle {
+  background: rgba(16, 20, 18, 0.035);
+  color: #555c59;
+}
+
+.ss-landing[data-theme="light"] .ss-theme-toggle:hover {
+  border-color: rgba(16, 20, 18, 0.24) !important;
+  background: rgba(16, 20, 18, 0.07) !important;
+  color: #111412 !important;
+}
+
+.ss-landing[data-theme="light"] .ss-button-light {
+  border-color: #171a19;
+  background: #171a19;
+  color: #ffffff !important;
+}
+
+.ss-landing[data-theme="light"] .ss-button-light:hover {
+  background: #000000 !important;
+}
+
+.ss-landing[data-theme="light"] .ss-button-ghost {
+  background: rgba(16, 20, 18, 0.025);
+  color: #4f5653 !important;
+}
+
+.ss-landing[data-theme="light"] .ss-button-ghost:hover {
+  border-color: rgba(16, 20, 18, 0.24) !important;
+  color: #111412 !important;
+}
+
+.ss-landing[data-theme="light"] .ss-eyebrow,
+.ss-landing[data-theme="light"] .ss-workflow > header > span {
+  color: #6b726f;
+}
+
+.ss-landing[data-theme="light"] .ss-hero h1,
+.ss-landing[data-theme="light"] .ss-workflow h2,
+.ss-landing[data-theme="light"] .ss-manifesto > h2 span,
+.ss-landing[data-theme="light"] .ss-story > header h2,
+.ss-landing[data-theme="light"] .ss-proof > h2,
+.ss-landing[data-theme="light"] .ss-release-log > h2,
+.ss-landing[data-theme="light"] .ss-setup > header h2,
+.ss-landing[data-theme="light"] .ss-final-cta h2 {
+  color: #111412;
+}
+
+.ss-landing[data-theme="light"] .ss-manifesto > h2 {
+  color: #8a908d;
+}
+
+.ss-landing[data-theme="light"] .ss-workflow article h3,
+.ss-landing[data-theme="light"] .ss-blueprint h3,
+.ss-landing[data-theme="light"] .ss-release-log h3 {
+  color: #353b38;
+}
+
+.ss-landing[data-theme="light"] .ss-workflow article p,
+.ss-landing[data-theme="light"] .ss-blueprint p,
+.ss-landing[data-theme="light"] .ss-release-log p,
+.ss-landing[data-theme="light"] .ss-setup > header p,
+.ss-landing[data-theme="light"] .ss-setup-grid article p,
+.ss-landing[data-theme="light"] .ss-final-cta p {
+  color: #696f6c;
+}
+
+.ss-landing[data-theme="light"] .ss-blueprint article > small,
+.ss-landing[data-theme="light"] .ss-workflow article small,
+.ss-landing[data-theme="light"] .ss-release-log small {
+  color: #969c99;
+}
+
+.ss-landing[data-theme="light"] .ss-blueprint i {
+  border-color: #a8afac;
+  background: rgba(16, 20, 18, 0.01);
+}
+
+.ss-landing[data-theme="light"] .ss-story > header p {
+  color: #555c59;
+}
+
+.ss-landing[data-theme="light"] .ss-story > header a {
+  color: #858b88;
+}
+
+.ss-landing[data-theme="light"] .ss-proof article small,
+.ss-landing[data-theme="light"] .ss-proof article span {
+  color: #69706d;
+}
+
+.ss-landing[data-theme="light"] .ss-proof article strong {
+  color: #151817;
+}
+
+.ss-landing[data-theme="light"] .ss-proof article span,
+.ss-landing[data-theme="light"] .ss-final-cta > span {
+  color: var(--ss-accent);
+}
+
+.ss-landing[data-theme="light"] .ss-setup-grid article {
+  background: linear-gradient(150deg, #ffffff, #f3f4f2);
+  box-shadow: 0 20px 70px rgba(18, 24, 21, 0.055);
+}
+
+.ss-landing[data-theme="light"] .ss-setup-grid article h3 {
+  color: #181b1a;
+}
+
+.ss-landing[data-theme="light"] .ss-setup-grid article a {
+  color: #343a37;
+}
+
+.ss-landing[data-theme="light"] .ss-release-log article i {
+  border-color: #eceeeb;
+}
+
+.ss-landing[data-theme="light"] .ss-footer {
+  color: #7a817e;
+}
+
+.ss-landing[data-theme="light"] .ss-footer > div {
+  color: #252a28;
+}
+
+.ss-landing[data-theme="light"] :where(.ss-window, .ss-scene) {
+  --ss-line: rgba(255, 255, 255, 0.095);
+  --ss-line-soft: rgba(255, 255, 255, 0.055);
+  --ss-text: #f5f7f6;
+  --ss-muted: #8a9090;
+  --ss-dim: #555b5b;
+  --ss-accent: #36d39a;
+  color: #f5f7f6;
+}
+
+.ss-landing[data-theme="light"] .ss-scene::after {
+  background: linear-gradient(180deg, transparent 66%, #080909), linear-gradient(90deg, #080909, transparent 13%, transparent 87%, #080909);
 }
 
 @media (prefers-reduced-motion: reduce) {

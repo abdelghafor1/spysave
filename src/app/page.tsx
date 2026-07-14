@@ -9,8 +9,10 @@ import {
   Library,
   Search,
   Sparkles,
+  Moon,
+  Sun,
 } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { BrandMark } from "@/components/BrandMark";
 
 const workflow = [
@@ -247,14 +249,43 @@ function SetupScene() {
 }
 
 export default function Home() {
+  const [theme, setTheme] = useState<"dark" | "light">("dark");
+
   useReveal();
 
+  useEffect(() => {
+    const savedTheme = window.localStorage.getItem("spysave-theme");
+    const preferredTheme = savedTheme === "dark" || savedTheme === "light"
+      ? savedTheme
+      : window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+    const frame = window.requestAnimationFrame(() => setTheme(preferredTheme));
+    return () => window.cancelAnimationFrame(frame);
+  }, []);
+
+  function toggleTheme() {
+    const nextTheme = theme === "dark" ? "light" : "dark";
+    setTheme(nextTheme);
+    window.localStorage.setItem("spysave-theme", nextTheme);
+  }
+
   return (
-    <main className="ss-landing">
+    <main className="ss-landing" data-theme={theme}>
       <nav className="ss-nav">
         <a href="#top" className="ss-brand" aria-label="SpySave home"><BrandMark size={32} /><strong>SpySave</strong></a>
         <div className="ss-nav-links"><a href="#workflow">Workflow</a><a href="#analysis">AI analysis</a><a href="#library">Library</a><a href="#tracking">Tracking</a><a href="#intelligence">Reports</a></div>
-        <div className="ss-nav-actions"><a href="/app" className="ss-login">Log in</a><a href="/app" className="ss-button ss-button-light">Try for free <ArrowRight size={15} /></a></div>
+        <div className="ss-nav-actions">
+          <button
+            type="button"
+            className="ss-theme-toggle"
+            onClick={toggleTheme}
+            aria-label={theme === "dark" ? "Use light mode" : "Use dark mode"}
+            title={theme === "dark" ? "Use light mode" : "Use dark mode"}
+          >
+            {theme === "dark" ? <Sun size={17} /> : <Moon size={17} />}
+          </button>
+          <a href="/app" className="ss-login">Log in</a>
+          <a href="/app" className="ss-button ss-button-light">Try for free <ArrowRight size={15} /></a>
+        </div>
       </nav>
 
       <section id="top" className="ss-hero ss-reveal">
