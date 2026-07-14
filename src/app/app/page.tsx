@@ -160,7 +160,7 @@ export default function SpySaveApp() {
   const [error, setError] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const [copiedUserId, setCopiedUserId] = useState(false);
-  const [showSaveForm, setShowSaveForm] = useState(true);
+  const [showSaveForm, setShowSaveForm] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(true);
   const [showExtensionHelper, setShowExtensionHelper] = useState(false);
   const [showExtensionFallback, setShowExtensionFallback] = useState(false);
@@ -316,6 +316,12 @@ export default function SpySaveApp() {
       ["Competitors", competitors.length.toString()],
     ];
   }, [ads, competitors.length]);
+
+  const recentAds = useMemo(() => ads.slice(0, 3), [ads]);
+  const analyzedCount = useMemo(
+    () => ads.filter((ad) => Boolean(ad.analysis?.winningScore)).length,
+    [ads],
+  );
 
   async function handleAuth(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -896,6 +902,52 @@ export default function SpySaveApp() {
           {error && <p className="mt-3 text-sm font-semibold text-[#b42318]">{error}</p>}
             </form>
           )}
+        </section>
+
+        <section className="hidden">
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <p className="text-sm font-bold uppercase text-[#3157d5]">Research queue</p>
+              <h2 className="mt-1 text-2xl font-semibold">What needs your attention</h2>
+              <p className="mt-1 text-sm leading-6 text-[#4f635d]">
+                Your latest saved creatives and the next step for each one.
+              </p>
+            </div>
+            <span className="dashboard-queue-count">{analyzedCount}/{ads.length} scored</span>
+          </div>
+
+          {recentAds.length ? (
+            <div className="dashboard-research-list">
+              {recentAds.map((ad) => {
+                const score = scoreLabel(ad.analysis);
+                const isScored = Boolean(ad.analysis?.winningScore);
+                return (
+                  <Link key={ad.id} href={ad.id ? `/app/ads/${ad.id}` : "/app/ads"} className="dashboard-research-item">
+                    <span className={`dashboard-research-score${isScored ? " is-scored" : ""}`}>{score.score}</span>
+                    <span className="min-w-0">
+                      <b>{ad.pageName || "Untitled competitor ad"}</b>
+                      <small>{isScored ? `${score.verdict} - open AI detail` : "Ready for AI analysis"}</small>
+                    </span>
+                    <span aria-hidden="true">›</span>
+                  </Link>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="dashboard-empty-queue">
+              <BookmarkPlus size={21} />
+              <div>
+                <b>No ads in your queue yet.</b>
+                <p>Save your first competitor ad to start building useful research here.</p>
+              </div>
+              <button type="button" onClick={() => setShowSaveForm(true)}>Save first ad</button>
+            </div>
+          )}
+
+          <div className="dashboard-next-action">
+            <span>Next action</span>
+            <b>{recentAds.find((ad) => !ad.analysis?.winningScore) ? "Open an unscored ad and run AI analysis." : ads.length ? "Review your strongest creative and generate a new test." : "Paste a competitor ad into the form."}</b>
+          </div>
         </section>
 
         <section className="hidden">

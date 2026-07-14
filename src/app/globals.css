@@ -6811,7 +6811,7 @@ article:hover {
   justify-items: center;
 }
 
-.app-sidebar-logout {
+.app-sidebar-settings {
   position: relative;
   display: grid;
   width: 44px;
@@ -6820,10 +6820,10 @@ article:hover {
   margin-top: auto;
   border: 1px solid transparent;
   border-radius: 8px;
-  color: #8a625e;
+  color: #77807b;
 }
 
-.app-sidebar-logout::after {
+.app-sidebar-settings::after {
   position: absolute;
   left: calc(100% + 12px);
   top: 50%;
@@ -6841,8 +6841,9 @@ article:hover {
   transition: opacity 150ms ease, transform 150ms ease;
 }
 
-.app-sidebar-logout:hover { border-color: #ecd9d5; background: #fff7f5; color: #b54d3f; transform: none !important; box-shadow: none !important; }
-.app-sidebar-logout:hover::after, .app-sidebar-logout:focus-visible::after { opacity: 1; transform: translateY(-50%) translateX(0); }
+.app-sidebar-settings:hover { border-color: #d8e4df; background: #f1f6f3; color: #1d2a25; transform: none !important; box-shadow: none !important; }
+.app-sidebar-settings:hover::after, .app-sidebar-settings:focus-visible::after { opacity: 1; transform: translateY(-50%) translateX(0); }
+.app-sidebar-settings.is-active { border-color: #b8dacf; background: var(--app-accent); color: #ffffff; }
 
 .app-menu-link {
   position: relative;
@@ -6900,7 +6901,57 @@ article:hover {
   color: #ffffff;
 }
 
-@media (max-width: 760px) {
+.app-utilitybar {
+  position: fixed;
+  top: 18px;
+  right: 22px;
+  z-index: 55;
+  display: flex;
+  gap: 8px;
+  padding: 6px;
+  border: 1px solid var(--app-line);
+  border-radius: 10px;
+  background: rgba(250, 251, 249, 0.9);
+  backdrop-filter: blur(16px);
+}
+
+.app-utility-link {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  color: #5e6c65;
+}
+
+.app-utility-link:hover { border-color: #d8e4df; background: #f1f6f3; color: #1d2a25; transform: none !important; box-shadow: none !important; }
+
+.settings-choice, .settings-action, .settings-delete { display: inline-flex; min-height: 42px; align-items: center; justify-content: center; gap: 8px; border: 1px solid #d8e4df; border-radius: 8px; background: #ffffff; color: #263731; font-size: 0.9rem; font-weight: 750; }
+.settings-select { width: 100%; height: 44px; margin-top: 16px; border: 1px solid #d8e4df; border-radius: 8px; background: #ffffff; padding: 0 12px; font-weight: 700; }
+.settings-choice.is-selected { border-color: var(--app-accent); background: #effaf5; color: #08765a; }
+.settings-action, .settings-delete { padding: 0 15px; }
+.settings-logout { border-color: #ecd9d5; color: #a34b40; }
+.settings-delete { border-color: #d35b4d; background: #b42318; color: #ffffff; }
+.settings-message, .settings-error { margin-top: 20px; border-radius: 8px; padding: 12px; font-size: 0.9rem; font-weight: 700; }
+.settings-message { border: 1px solid #b8dacf; background: #effaf5; color: #16745a; }
+.settings-error { border: 1px solid #f0c8c2; background: #fff5f3; color: #b42318; }
+.account-avatar { display: grid; width: 52px; height: 52px; place-items: center; border-radius: 50%; background: var(--app-accent); color: #ffffff; font-size: 1.4rem; font-weight: 800; }
+.account-detail { min-height: 104px; border: 1px solid #d8e8e1; border-radius: 9px; padding: 15px; }
+.account-detail dt { display: flex; align-items: center; gap: 7px; color: #66766f; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; }
+.account-detail dd { margin: 9px 0 0; color: #20312b; font-size: 0.92rem; font-weight: 700; }
+
+.spysave-dark .aurora-page { background: #101412; color: #edf4ef; }
+.spysave-dark .app-sidebar, .spysave-dark .app-utilitybar { border-color: #2c3832; background: rgba(16, 20, 18, 0.94); }
+.spysave-dark .app-menu-brand, .spysave-dark .premium-panel, .spysave-dark .settings-choice, .spysave-dark .settings-action, .spysave-dark .settings-select { border-color: #2c3832; background: #171d1a; color: #edf4ef; }
+.spysave-dark .app-menu-link, .spysave-dark .app-sidebar-settings, .spysave-dark .app-utility-link { color: #9da9a3; }
+.spysave-dark .app-menu-link:hover, .spysave-dark .app-sidebar-settings:hover, .spysave-dark .app-utility-link:hover { border-color: #365346; background: #1d2a24; color: #ffffff; }
+.spysave-dark .app-menu-link.is-active, .spysave-dark .app-sidebar-settings.is-active { color: #ffffff; }
+.spysave-dark .aurora-page h1, .spysave-dark .aurora-page h2, .spysave-dark .account-detail dd { color: #edf4ef; }
+.spysave-dark .aurora-page p, .spysave-dark .account-detail dt { color: #afbbb5; }
+.spysave-dark .account-detail { border-color: #2c3832; }
+
+@media (max-width: 860px) {
   .aurora-page { padding-left: 0; padding-bottom: 78px; }
   .app-sidebar {
     inset: auto 0 0 0;
@@ -6915,7 +6966,8 @@ article:hover {
   .app-menu-brand { display: none; }
   .app-menu-links { display: flex; width: auto; max-width: 100%; gap: 5px; margin: 0; overflow-x: auto; padding: 0 4px; }
   .app-menu-link { width: 40px; height: 40px; flex: 0 0 auto; }
-  .app-sidebar-logout { display: none; }
+  .app-sidebar-settings { display: none; }
+  .app-utilitybar { top: 12px; right: 12px; }
   .app-menu-link::after { display: none; }
 }
 
