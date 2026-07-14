@@ -5,12 +5,39 @@ import Link from "next/link";
 import {
   ArrowRight,
   ChevronRight,
+  Languages,
   Moon,
   Sparkles,
   Sun,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { BrandMark } from "@/components/BrandMark";
+
+type Locale = "en" | "fr" | "ar";
+
+const copy = {
+  en: {
+    workflow: "Workflow", analysis: "AI analysis", library: "Library", tracking: "Tracking", help: "Help",
+    login: "Log in", tryFree: "Try for free", eyebrow: "AI creative intelligence for e-commerce",
+    title: "Know which competitor ad to build on next.",
+    intro: "SpySave captures public ads, explains the strategy behind them, and turns the strongest ideas into clear creative tests your team can launch.",
+    start: "Start researching", seeHow: "See how it works",
+  },
+  fr: {
+    workflow: "Fonctionnement", analysis: "Analyse IA", library: "Bibliothèque", tracking: "Suivi", help: "Aide",
+    login: "Connexion", tryFree: "Essayer gratuitement", eyebrow: "Intelligence créative IA pour l’e-commerce",
+    title: "Identifiez la prochaine publicité concurrente à exploiter.",
+    intro: "SpySave capture les publicités publiques, explique leur stratégie et transforme les meilleures idées en tests créatifs prêts à lancer.",
+    start: "Commencer la recherche", seeHow: "Voir comment ça marche",
+  },
+  ar: {
+    workflow: "طريقة العمل", analysis: "تحليل الذكاء", library: "المكتبة", tracking: "التتبع", help: "المساعدة",
+    login: "تسجيل الدخول", tryFree: "جرّب مجاناً", eyebrow: "ذكاء إبداعي للتجارة الإلكترونية",
+    title: "اعرف إعلان المنافس الذي يستحق أن تبني عليه.",
+    intro: "يحفظ SpySave الإعلانات العامة، ويشرح الاستراتيجية وراءها، ويحوّل أقوى الأفكار إلى اختبارات إبداعية واضحة وجاهزة للإطلاق.",
+    start: "ابدأ البحث", seeHow: "شاهد كيف يعمل",
+  },
+} satisfies Record<Locale, Record<string, string>>;
 
 const workflow = [
   {
@@ -126,6 +153,8 @@ function ResearchBlueprint() {
 
 export default function Home() {
   const [theme, setTheme] = useState<"dark" | "light">("dark");
+  const [locale, setLocale] = useState<Locale>("en");
+  const text = copy[locale];
 
   useReveal();
 
@@ -137,6 +166,24 @@ export default function Home() {
     const frame = window.requestAnimationFrame(() => setTheme(preferredTheme));
     return () => window.cancelAnimationFrame(frame);
   }, []);
+
+  useEffect(() => {
+    const savedLocale = window.localStorage.getItem("spysave-language");
+    if (savedLocale === "en" || savedLocale === "fr" || savedLocale === "ar") {
+      const frame = window.requestAnimationFrame(() => setLocale(savedLocale));
+      return () => window.cancelAnimationFrame(frame);
+    }
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.lang = locale;
+    document.documentElement.dir = locale === "ar" ? "rtl" : "ltr";
+  }, [locale]);
+
+  function changeLocale(nextLocale: Locale) {
+    setLocale(nextLocale);
+    window.localStorage.setItem("spysave-language", nextLocale);
+  }
 
   function toggleTheme() {
     const nextTheme = theme === "dark" ? "light" : "dark";
@@ -152,13 +199,25 @@ export default function Home() {
           <strong>SpySave</strong>
         </a>
         <div className="ss-nav-links">
-          <a href="#workflow">Workflow</a>
-          <a href="#analysis">AI analysis</a>
-          <a href="#library">Library</a>
-          <a href="#tracking">Tracking</a>
-          <a href="#setup">Help</a>
+          <a href="#workflow">{text.workflow}</a>
+          <a href="#analysis">{text.analysis}</a>
+          <a href="#library">{text.library}</a>
+          <a href="#tracking">{text.tracking}</a>
+          <a href="#setup">{text.help}</a>
         </div>
         <div className="ss-nav-actions">
+          <label className="ss-language-select" title="Change language">
+            <Languages size={16} aria-hidden="true" />
+            <select
+              value={locale}
+              onChange={(event) => changeLocale(event.target.value as Locale)}
+              aria-label="Change language"
+            >
+              <option value="en">EN</option>
+              <option value="fr">FR</option>
+              <option value="ar">AR</option>
+            </select>
+          </label>
           <button
             type="button"
             className="ss-theme-toggle"
@@ -168,29 +227,42 @@ export default function Home() {
           >
             {theme === "dark" ? <Sun size={17} /> : <Moon size={17} />}
           </button>
-          <a href="/app" className="ss-login">Log in</a>
+          <a href="/app" className="ss-login">{text.login}</a>
           <a href="/app" className="ss-button ss-button-light">
-            Try for free <ArrowRight size={15} />
+            {text.tryFree} <ArrowRight size={15} />
           </a>
         </div>
       </nav>
 
       <section id="top" className="ss-hero ss-reveal">
         <span className="ss-eyebrow">
-          <Sparkles size={14} /> AI creative intelligence for e-commerce
+          <Sparkles size={14} /> {text.eyebrow}
         </span>
-        <h1>Know which competitor ad to build on next.</h1>
-        <p>
-          SpySave captures public ads, explains the strategy behind them, and turns
-          the strongest ideas into clear creative tests your team can launch.
-        </p>
+        <h1>{text.title}</h1>
+        <p>{text.intro}</p>
         <div className="ss-hero-actions">
           <a href="/app" className="ss-button ss-button-light">
-            Start researching <ArrowRight size={16} />
+            {text.start} <ArrowRight size={16} />
           </a>
-          <a href="#workflow" className="ss-button ss-button-ghost">See how it works</a>
+          <a href="#workflow" className="ss-button ss-button-ghost">{text.seeHow}</a>
         </div>
         <div className="ss-hero-stage ss-real-hero-stage">
+          <aside className="ss-hero-screen-copy">
+            <span>Creative command center</span>
+            <h2>See the full picture before you build the next ad.</h2>
+            <p>
+              Your dashboard keeps saved creatives, AI analysis, competitor research,
+              and the next action together in one focused workspace.
+            </p>
+            <div className="ss-hero-capabilities">
+              <span><i /> Save ads from Meta and TikTok</span>
+              <span><i /> Analyze only when you choose</span>
+              <span><i /> Move from research to a test plan</span>
+            </div>
+            <Link href="/app">
+              Open the workspace <ArrowRight size={15} />
+            </Link>
+          </aside>
           <ProductScreenshot
             src="/screenshots/dashboard.png"
             alt="The real SpySave dashboard with saved ads, AI scores, competitors, and save controls"
