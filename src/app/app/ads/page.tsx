@@ -175,9 +175,7 @@ export default function SavedAdsPage() {
 
   return (
     <main className="aurora-page min-h-screen text-[#13231f]">
-      <header className="glass-nav border-b backdrop-blur">
-        <ServiceMenu />
-      </header>
+      <ServiceMenu />
 
       <section className="mx-auto max-w-7xl px-5 py-5">
         <div className="premium-panel app-primary-panel rounded-xl p-4">

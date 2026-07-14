@@ -8,7 +8,6 @@ import {
   Download,
   Eye,
   Gauge,
-  LogOut,
   Bell,
   Plus,
   RefreshCw,
@@ -24,7 +23,6 @@ import {
   onAuthStateChanged,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
-  signOut,
 } from "firebase/auth";
 import Link from "next/link";
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
@@ -674,25 +672,7 @@ export default function SpySaveApp() {
 
   return (
     <main className="aurora-page min-h-screen text-[#101413]">
-      <header className="glass-nav border-b backdrop-blur">
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-5 py-3">
-          <Link href="/" className="flex items-center gap-3">
-            <BrandMark size={40} />
-            <div>
-              <p className="font-semibold leading-none">SpySave</p>
-              <p className="text-xs text-[#4f635d]">{user.email}</p>
-            </div>
-          </Link>
-          <button
-            onClick={() => signOut(auth)}
-            className="inline-flex h-10 items-center gap-2 rounded-lg border border-[#d8e8e1] bg-white/80 px-4 text-sm font-bold text-[#13231f]"
-          >
-            <LogOut size={16} />
-            Logout
-          </button>
-        </div>
-        <ServiceMenu />
-      </header>
+      <ServiceMenu />
 
       <section className="dashboard-shell mx-auto grid max-w-7xl gap-5 px-5 py-6">
         {showExtensionFallback ? (
