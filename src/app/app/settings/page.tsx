@@ -60,7 +60,7 @@ export default function SettingsPage() {
 
   return <main className="aurora-page min-h-screen px-5 py-6 text-[#13231f]">
     <ServiceMenu />
-    <section className="mx-auto max-w-4xl pt-16">
+    <section className="mx-auto max-w-4xl pt-24">
       <p className="app-kicker">Workspace preferences</p><h1 className="mt-2 text-4xl font-semibold">Settings</h1>
       <p className="mt-2 text-sm font-semibold text-[#4f635d]">Control how SpySave looks, reads, and protects your account.</p>
       {message ? <p className="settings-message">{message}</p> : null}

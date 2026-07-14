@@ -6903,17 +6903,22 @@ article:hover {
 
 .app-utilitybar {
   position: fixed;
-  top: 18px;
-  right: 22px;
+  top: 0;
+  right: 0;
+  left: 78px;
   z-index: 55;
   display: flex;
-  gap: 8px;
-  padding: 6px;
-  border: 1px solid var(--app-line);
-  border-radius: 10px;
-  background: rgba(250, 251, 249, 0.9);
+  height: 72px;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--app-line);
+  background: rgba(250, 251, 249, 0.94);
+  padding: 0 28px;
   backdrop-filter: blur(16px);
 }
+
+.app-utilitybar-title { color: #4f635d; font-size: 0.82rem; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; }
+.app-utilitybar-actions { display: flex; gap: 8px; }
 
 .app-utility-link {
   display: grid;
@@ -6926,6 +6931,7 @@ article:hover {
 }
 
 .app-utility-link:hover { border-color: #d8e4df; background: #f1f6f3; color: #1d2a25; transform: none !important; box-shadow: none !important; }
+.app-utility-link.is-active { border-color: #b8dacf; background: #effaf5; color: #08765a; }
 
 .settings-choice, .settings-action, .settings-delete { display: inline-flex; min-height: 42px; align-items: center; justify-content: center; gap: 8px; border: 1px solid #d8e4df; border-radius: 8px; background: #ffffff; color: #263731; font-size: 0.9rem; font-weight: 750; }
 .settings-select { width: 100%; height: 44px; margin-top: 16px; border: 1px solid #d8e4df; border-radius: 8px; background: #ffffff; padding: 0 12px; font-weight: 700; }
@@ -6943,6 +6949,7 @@ article:hover {
 
 .spysave-dark .aurora-page { background: #101412; color: #edf4ef; }
 .spysave-dark .app-sidebar, .spysave-dark .app-utilitybar { border-color: #2c3832; background: rgba(16, 20, 18, 0.94); }
+.spysave-dark .app-utilitybar-title { color: #afbbb5; }
 .spysave-dark .app-menu-brand, .spysave-dark .premium-panel, .spysave-dark .settings-choice, .spysave-dark .settings-action, .spysave-dark .settings-select { border-color: #2c3832; background: #171d1a; color: #edf4ef; }
 .spysave-dark .app-menu-link, .spysave-dark .app-sidebar-settings, .spysave-dark .app-utility-link { color: #9da9a3; }
 .spysave-dark .app-menu-link:hover, .spysave-dark .app-sidebar-settings:hover, .spysave-dark .app-utility-link:hover { border-color: #365346; background: #1d2a24; color: #ffffff; }
@@ -6967,7 +6974,7 @@ article:hover {
   .app-menu-links { display: flex; width: auto; max-width: 100%; gap: 5px; margin: 0; overflow-x: auto; padding: 0 4px; }
   .app-menu-link { width: 40px; height: 40px; flex: 0 0 auto; }
   .app-sidebar-settings { display: none; }
-  .app-utilitybar { top: 12px; right: 12px; }
+  .app-utilitybar { left: 0; height: 58px; padding: 0 16px; }
   .app-menu-link::after { display: none; }
 }
 
