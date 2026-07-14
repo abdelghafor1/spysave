@@ -8,7 +8,6 @@ import {
   Download,
   Eye,
   Gauge,
-  Bell,
   Plus,
   RefreshCw,
   RotateCcw,
@@ -34,13 +33,11 @@ import {
   SpySaveAd,
   SpySaveAnalysis,
   SpySaveCompetitor,
-  SpySaveNotification,
   deleteAdWithFallback,
   saveAd,
   saveAnalysis,
   updateAd,
   watchUserCompetitors,
-  watchUserNotifications,
   watchUserAds,
 } from "@/lib/ads";
 
@@ -158,7 +155,6 @@ export default function SpySaveApp() {
   const [form, setForm] = useState<AdForm>(emptyForm);
   const [ads, setAds] = useState<SpySaveAd[]>([]);
   const [competitors, setCompetitors] = useState<SpySaveCompetitor[]>([]);
-  const [notifications, setNotifications] = useState<SpySaveNotification[]>([]);
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("");
   const [error, setError] = useState("");
@@ -185,7 +181,6 @@ export default function SpySaveApp() {
       if (!currentUser) {
         setAds([]);
         setCompetitors([]);
-        setNotifications([]);
         setShowExtensionHelper(false);
       } else {
         const helperSeenKey = `spysave-extension-helper-seen-${currentUser.uid}`;
@@ -207,16 +202,6 @@ export default function SpySaveApp() {
     }
 
     return watchUserAds(user.uid, setAds, (watchError) => {
-      setError(watchError.message);
-    });
-  }, [user]);
-
-  useEffect(() => {
-    if (!user) {
-      return;
-    }
-
-    return watchUserNotifications(user.uid, setNotifications, (watchError) => {
       setError(watchError.message);
     });
   }, [user]);
@@ -911,117 +896,6 @@ export default function SpySaveApp() {
           {error && <p className="mt-3 text-sm font-semibold text-[#b42318]">{error}</p>}
             </form>
           )}
-        </section>
-
-        <section className="premium-panel dashboard-secondary-card dashboard-secondary-tracking rounded-xl p-5">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div>
-              <p className="text-sm font-bold uppercase text-[#07966f]">
-                Tracking
-              </p>
-              <h2 className="mt-1 text-2xl font-semibold">
-                Track competitors
-              </h2>
-              <p className="mt-1 text-sm text-[#4f635d]">
-                Add competitor pages and compare their saved ads.
-              </p>
-            </div>
-            <Link
-              href="/app/competitors"
-              className="brand-gradient inline-flex h-11 items-center rounded-lg px-4 text-sm font-bold"
-            >
-              Manage competitors
-            </Link>
-          </div>
-        </section>
-
-        <section className="premium-panel dashboard-secondary-card dashboard-secondary-reports rounded-xl p-5">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div>
-              <p className="text-sm font-bold uppercase text-[#07966f]">
-                Reports
-              </p>
-              <h2 className="mt-1 text-2xl font-semibold">
-                Turn saved ads into research summaries
-              </h2>
-              <p className="mt-1 text-sm text-[#4f635d]">
-                Review top ads, hooks, niches, offers, and next test ideas.
-              </p>
-            </div>
-            <Link
-              href="/app/reports"
-              className="brand-gradient inline-flex h-11 items-center rounded-lg px-4 text-sm font-bold"
-            >
-              Open reports
-            </Link>
-          </div>
-        </section>
-
-        <section className="premium-panel dashboard-secondary-card dashboard-secondary-notifications rounded-xl p-5">
-          <div className="flex flex-wrap items-start justify-between gap-3">
-            <div>
-              <p className="text-sm font-bold uppercase text-[#07966f]">
-                Notifications
-              </p>
-              <h2 className="mt-1 text-2xl font-semibold">
-                Competitor updates
-              </h2>
-              <p className="mt-1 text-sm text-[#4f635d]">
-                Alerts appear here when a tracked competitor gets a new saved ad.
-              </p>
-            </div>
-            <span className="inline-flex h-10 items-center gap-2 rounded-lg bg-[#eef8f2] px-3 text-sm font-bold text-[#08775d]">
-              <Bell size={16} />
-              {notifications.length} alerts
-            </span>
-          </div>
-
-          <div className="mt-4 grid gap-2">
-            {notifications.slice(0, 4).map((notification) => (
-              <article
-                key={notification.id}
-                className="rounded-lg border border-[#d8e8e1] bg-white p-3"
-              >
-                <p className="font-bold">{notification.title}</p>
-                <p className="mt-1 text-sm text-[#4f635d]">
-                  {notification.message}
-                </p>
-              </article>
-            ))}
-            {!notifications.length ? (
-              <div className="rounded-lg border border-dashed border-[#d8e8e1] bg-white/70 p-4 text-sm font-semibold text-[#4f635d]">
-                No notifications yet.
-              </div>
-            ) : null}
-          </div>
-        </section>
-
-        <section className="premium-panel dashboard-secondary-card dashboard-secondary-library rounded-xl p-5">
-          <div className="flex h-full min-h-[280px] flex-col justify-between gap-4">
-            <div>
-              <p className="text-sm font-bold uppercase text-[#07966f]">Library</p>
-              <h2 className="mt-1 text-3xl font-semibold">
-                Open ad library
-              </h2>
-              <p className="mt-2 text-sm leading-6 text-[#4f635d]">
-                Search, filter, export, delete, and review saved ads in one clean page.
-              </p>
-            </div>
-            <div className="grid gap-3 sm:grid-cols-2">
-              <div className="rounded-lg bg-[#eef8f2] p-4">
-                <p className="text-sm font-bold uppercase text-[#66736d]">
-                  Saved ads
-                </p>
-                <p className="mt-1 text-3xl font-semibold">{ads.length}</p>
-              </div>
-              <Link
-                href="/app/ads"
-                className="brand-gradient inline-flex min-h-20 items-center justify-center rounded-lg px-4 text-sm font-bold"
-              >
-                Open saved ads
-              </Link>
-            </div>
-          </div>
         </section>
 
         <section className="hidden">
