@@ -16,6 +16,135 @@
   --shadow-strong: 0 24px 70px rgba(15, 23, 42, 0.14);
 }
 
+/* Real product captures used on the public landing page. */
+.ss-real-shot {
+  position: relative;
+  isolation: isolate;
+  display: block;
+  overflow: hidden;
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 16px;
+  background: #080a0a;
+  box-shadow:
+    0 32px 90px rgba(0, 0, 0, 0.42),
+    0 0 80px rgba(54, 211, 154, 0.07);
+  color: #eef2f0;
+  transition: border-color 220ms ease, transform 300ms ease, box-shadow 300ms ease;
+}
+
+.ss-real-shot:hover {
+  border-color: rgba(54, 211, 154, 0.42);
+  box-shadow:
+    0 38px 110px rgba(0, 0, 0, 0.5),
+    0 0 95px rgba(54, 211, 154, 0.11);
+  transform: translateY(-4px);
+}
+
+.ss-real-shot-label {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 44px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+  padding: 0 16px;
+  color: #747b79;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.ss-real-shot-label i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--ss-accent);
+  box-shadow: 0 0 14px rgba(54, 211, 154, 0.75);
+}
+
+.ss-real-shot-label b {
+  margin-left: auto;
+  color: #c7cecb;
+  font-weight: 600;
+}
+
+.ss-real-shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: #f7faf9;
+  object-fit: contain;
+}
+
+.ss-real-hero-stage .ss-real-shot {
+  position: relative;
+  transform: perspective(1500px) rotateX(1.2deg);
+  transform-origin: center bottom;
+}
+
+.ss-real-hero-stage .ss-real-shot:hover {
+  transform: perspective(1500px) rotateX(0.4deg) translateY(-4px);
+}
+
+.ss-story > .ss-real-shot {
+  width: min(1600px, calc(100% - 64px));
+  margin: 130px auto 90px;
+}
+
+.ss-real-shot-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 90px;
+}
+
+.ss-real-shot.is-compact {
+  border-radius: 12px;
+}
+
+.ss-real-shot.is-compact .ss-real-shot-label {
+  min-height: 40px;
+}
+
+.ss-landing[data-theme="light"] .ss-real-shot {
+  border-color: rgba(255, 255, 255, 0.13);
+  background: #080a0a;
+  box-shadow:
+    0 30px 80px rgba(24, 34, 31, 0.2),
+    0 0 80px rgba(23, 153, 111, 0.08);
+  color: #eef2f0;
+}
+
+.ss-landing[data-theme="light"] .ss-real-shot:hover {
+  border-color: rgba(23, 153, 111, 0.45);
+}
+
+@media (max-width: 760px) {
+  .ss-story > .ss-real-shot {
+    width: calc(100% - 28px);
+    margin-top: 70px;
+    margin-bottom: 54px;
+  }
+
+  .ss-real-shot-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+    margin-top: 54px;
+  }
+
+  .ss-real-shot-label {
+    min-height: 38px;
+    padding-inline: 12px;
+    font-size: 0.58rem;
+  }
+
+  .ss-real-hero-stage .ss-real-shot,
+  .ss-real-hero-stage .ss-real-shot:hover {
+    transform: none;
+  }
+}
+
 /* Linear-inspired SpySave landing */
 .linear-page {
   min-height: 100vh;
@@ -5506,5 +5635,11 @@ article:hover {
   .ss-footer {
     align-items: start;
   }
+}
+
+/* Keep product content usable even when browser observers or scripts are delayed. */
+.ss-landing .ss-reveal {
+  opacity: 1;
+  transform: none;
 }
 
