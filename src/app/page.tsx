@@ -198,13 +198,6 @@ export default function Home() {
           <BrandMark size={32} />
           <strong>SpySave</strong>
         </a>
-        <div className="ss-nav-links">
-          <a href="#workflow">{text.workflow}</a>
-          <a href="#analysis">{text.analysis}</a>
-          <a href="#library">{text.library}</a>
-          <a href="#tracking">{text.tracking}</a>
-          <a href="#setup">{text.help}</a>
-        </div>
         <div className="ss-nav-actions">
           <label className="ss-language-select" title="Change language">
             <Languages size={16} aria-hidden="true" />

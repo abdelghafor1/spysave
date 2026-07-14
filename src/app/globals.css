@@ -3700,7 +3700,7 @@ article:hover {
   position: relative;
   z-index: 20;
   display: grid;
-  grid-template-columns: minmax(160px, 0.65fr) minmax(480px, 1.5fr) minmax(220px, 0.65fr);
+  grid-template-columns: minmax(160px, 1fr) auto;
   align-items: center;
   gap: 24px;
   width: calc(100% - 64px);
