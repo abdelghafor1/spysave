@@ -1,8 +1,7 @@
 "use client";
 
-import { Bell, Check, ChevronLeft } from "lucide-react";
+import { Bell, Check } from "lucide-react";
 import { User, onAuthStateChanged } from "firebase/auth";
-import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { ServiceMenu } from "@/components/ServiceMenu";
 import {
@@ -46,15 +45,7 @@ export default function NotificationsPage() {
     <main className="aurora-page min-h-screen px-5 py-6 text-[#13231f]">
       <ServiceMenu />
       <section className="mx-auto max-w-5xl">
-        <Link
-          href="/app"
-          className="mb-4 inline-flex h-10 items-center gap-2 rounded-lg border border-[#d8e8e1] bg-white/80 px-4 text-sm font-bold"
-        >
-          <ChevronLeft size={16} />
-          Back dashboard
-        </Link>
-
-        <section className="premium-panel rounded-xl p-5">
+        <section className="premium-panel app-primary-panel rounded-xl p-5">
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div>
               <p className="text-sm font-bold uppercase text-[#3157d5]">

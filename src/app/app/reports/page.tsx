@@ -1,8 +1,7 @@
 "use client";
 
-import { BarChart3, ChevronLeft, Download, Gauge, Lightbulb, Trophy } from "lucide-react";
+import { BarChart3, Download, Gauge, Lightbulb, Trophy } from "lucide-react";
 import { onAuthStateChanged, User } from "firebase/auth";
-import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { ServiceMenu } from "@/components/ServiceMenu";
 import type { SpySaveAd } from "@/lib/ads";
@@ -146,23 +145,24 @@ export default function ReportsPage() {
   return (
     <main className="aurora-page min-h-screen text-[#13231f]">
       <header className="glass-nav border-b backdrop-blur">
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-5 py-3">
-          <Link
-            href="/app"
-            className="inline-flex h-10 items-center gap-2 rounded-lg border border-[#d8e8e1] bg-white/80 px-4 text-sm font-bold"
-          >
-            <ChevronLeft size={16} />
-            Dashboard
-          </Link>
-          <div className="text-right">
-            <p className="text-sm font-bold uppercase text-[#07966f]">Reports</p>
-            <h1 className="text-2xl font-semibold">Creative research report</h1>
-          </div>
-        </div>
         <ServiceMenu />
       </header>
 
       <section className="mx-auto max-w-7xl px-5 py-5">
+        <header className="app-page-intro">
+          <div>
+            <p className="app-kicker">Creative intelligence</p>
+            <h1>Research report</h1>
+            <p>Patterns, strongest creatives, and the next tests worth running.</p>
+          </div>
+          <button
+            onClick={exportReport}
+            className="brand-gradient inline-flex h-10 items-center gap-2 px-4 text-sm font-bold"
+          >
+            <Download size={16} />
+            Export report
+          </button>
+        </header>
         {error ? <p className="mb-3 text-sm font-bold text-[#b42318]">{error}</p> : null}
         {isDemo ? (
           <div className="mb-4 rounded-xl border border-[#bfdbfe] bg-[#eff6ff] p-4 text-sm font-bold text-[#3157d5]">
@@ -194,13 +194,6 @@ export default function ReportsPage() {
                 <p className="text-sm font-bold uppercase text-[#07966f]">Top ads</p>
                 <h2 className="mt-1 text-2xl font-semibold">Best creative candidates</h2>
               </div>
-              <button
-                onClick={exportReport}
-                className="brand-gradient inline-flex h-10 items-center gap-2 rounded-lg px-4 text-sm font-bold"
-              >
-                <Download size={16} />
-                Export report
-              </button>
             </div>
 
             <div className="mt-4 grid gap-3">

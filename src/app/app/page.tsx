@@ -27,7 +27,7 @@ import {
   signOut,
 } from "firebase/auth";
 import Link from "next/link";
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { BrandMark } from "@/components/BrandMark";
 import { SavedAdMedia } from "@/components/SavedAdMedia";
 import { ServiceMenu } from "@/components/ServiceMenu";
@@ -68,6 +68,9 @@ const emptyForm: AdForm = {
   notes: "",
   folder: "",
 };
+
+const extensionInstallUrl =
+  process.env.NEXT_PUBLIC_CHROME_EXTENSION_URL || "/install-extension";
 
 function tagList(tags: string) {
   return tags
@@ -168,6 +171,8 @@ export default function SpySaveApp() {
   const [showExtensionHelper, setShowExtensionHelper] = useState(false);
   const [showExtensionFallback, setShowExtensionFallback] = useState(false);
   const [extensionConnectStatus, setExtensionConnectStatus] = useState("");
+  const [extensionDetected, setExtensionDetected] = useState(false);
+  const extensionDetectedRef = useRef(false);
   const [selectedAd, setSelectedAd] = useState<SpySaveAd | null>(null);
   const [reAnalyzingId, setReAnalyzingId] = useState<string | null>(null);
   const [deletingAdId, setDeletingAdId] = useState<string | null>(null);
@@ -218,6 +223,25 @@ export default function SpySaveApp() {
   useEffect(() => {
     function handleExtensionMessage(event: MessageEvent) {
       if (event.origin !== window.location.origin) return;
+
+      if (event.data?.type === "SPYSAVE_EXTENSION_PRESENT") {
+        extensionDetectedRef.current = true;
+        setExtensionDetected(true);
+        setExtensionConnectStatus("SpySave extension detected. Connecting...");
+
+        if (user) {
+          window.postMessage(
+            {
+              type: "SPYSAVE_CONNECT_EXTENSION",
+              apiBase: window.location.origin,
+              userId: user.uid,
+            },
+            window.location.origin,
+          );
+        }
+        return;
+      }
+
       if (event.data?.type !== "SPYSAVE_EXTENSION_CONNECTED") return;
 
       setExtensionConnectStatus(
@@ -237,6 +261,14 @@ export default function SpySaveApp() {
     }
 
     window.addEventListener("message", handleExtensionMessage);
+
+    if (user) {
+      window.postMessage(
+        { type: "SPYSAVE_EXTENSION_PING" },
+        window.location.origin,
+      );
+    }
+
     return () => window.removeEventListener("message", handleExtensionMessage);
   }, [user]);
 
@@ -375,6 +407,12 @@ export default function SpySaveApp() {
 
   async function connectExtension() {
     if (!user) return;
+
+    if (!extensionDetectedRef.current) {
+      setExtensionConnectStatus("Opening the SpySave installation page...");
+      window.open(extensionInstallUrl, "_blank", "noopener,noreferrer");
+      return;
+    }
 
     await navigator.clipboard.writeText(user.uid).catch(() => undefined);
     setShowExtensionFallback(false);
@@ -526,32 +564,50 @@ export default function SpySaveApp() {
 
   if (!user) {
     return (
-    <main className="aurora-page min-h-screen px-5 py-7 text-[#13231f]">
-        <section className="mx-auto grid max-w-6xl gap-5 lg:grid-cols-[0.92fr_1.08fr] lg:items-center">
-          <div className="space-y-4">
-            <Link href="/" className="inline-flex items-center gap-2 font-semibold">
-              <BrandMark size={40} />
-              SpySave
+      <main className="aurora-page app-auth-page min-h-screen px-5 py-7 text-[#13231f]">
+        <section className="app-auth-shell">
+          <div className="app-auth-intro">
+            <Link href="/" className="app-auth-brand">
+              <BrandMark size={42} />
+              <span>SpySave</span>
             </Link>
-            <div className="space-y-3">
-              <p className="inline-flex items-center gap-2 rounded-full border border-[#d8e8e1] bg-white/75 px-4 py-2 text-sm font-semibold text-[#29423a] backdrop-blur">
-                <Sparkles size={15} className="text-[#d7ff64]" />
-                Firebase dashboard ready
+            <div>
+              <p className="app-kicker">AI creative research workspace</p>
+              <h1>Turn competitor ads into clear creative decisions.</h1>
+              <p className="app-auth-summary">
+                Save public ads, analyze only the creatives that matter, and
+                leave with hooks, scripts, and test plans your team can use.
               </p>
-              <h1 className="max-w-2xl text-4xl font-semibold leading-[1.02] tracking-normal md:text-5xl">
-                Create your swipe file for competitor ads.
-              </h1>
-              <p className="max-w-xl text-lg leading-8 text-[#5c6863]">
-                Save competitor ads, organize your research, and review AI
-                insights from one workspace.
-              </p>
+            </div>
+
+            <div className="app-auth-proof">
+              <div>
+                <span>01</span>
+                <p>Capture from Meta and TikTok</p>
+              </div>
+              <div>
+                <span>02</span>
+                <p>Run AI analysis only when you choose</p>
+              </div>
+              <div>
+                <span>03</span>
+                <p>Keep every swipe file private to your account</p>
+              </div>
             </div>
           </div>
 
           <form
             onSubmit={handleAuth}
-            className="premium-panel rounded-xl p-5 text-[#101413]"
+            className="premium-panel app-auth-form p-5 text-[#101413]"
           >
+            <div className="app-auth-form-heading">
+              <p>{authMode === "register" ? "Create your workspace" : "Welcome back"}</p>
+              <span>
+                {authMode === "register"
+                  ? "Start organizing your first competitor research board."
+                  : "Continue from your saved ads and analysis."}
+              </span>
+            </div>
             <div className="mb-5 flex rounded-lg bg-[#eef2f0] p-1">
               {(["register", "login"] as const).map((mode) => (
                 <button
@@ -608,22 +664,6 @@ export default function SpySaveApp() {
             {error && <p className="mt-3 text-sm font-semibold text-[#b42318]">{error}</p>}
 
           </form>
-
-          <div className="grid gap-3 lg:col-span-2 md:grid-cols-3">
-            {[
-              ["1", "Save Meta ads", "Use the extension or manual form to capture competitor ads."],
-              ["2", "Analyze with AI", "Get hook, offer, CTA, audience, and winning score."],
-              ["3", "Track competitors", "Group ads by page and compare strongest creatives."],
-            ].map(([step, title, body]) => (
-              <article key={title} className="premium-panel rounded-xl p-4 text-[#101413]">
-                <span className="brand-gradient grid size-9 place-items-center rounded-lg text-sm font-bold">
-                  {step}
-                </span>
-                <h2 className="mt-3 text-lg font-semibold">{title}</h2>
-                <p className="mt-1 text-sm leading-6 text-[#5c6863]">{body}</p>
-              </article>
-            ))}
-          </div>
         </section>
       </main>
     );
@@ -672,8 +712,8 @@ export default function SpySaveApp() {
               </button>
             </div>
             <p className="mt-2 text-sm leading-6 text-[#526173]">
-              Your User ID is already copied. Click the SpySave icon in Chrome,
-              or paste this ID once inside the extension.
+              If SpySave is installed, click its Chrome icon once. If it is not
+              installed yet, install it first and return to this page.
             </p>
             <code className="mt-3 block max-w-full overflow-x-auto rounded-lg bg-[#eef3ff] px-3 py-3 text-xs font-bold">
               {user.uid}
@@ -693,7 +733,7 @@ export default function SpySaveApp() {
                 className="brand-gradient inline-flex h-10 items-center justify-center gap-2 rounded-lg px-3 text-sm font-bold"
               >
                 <Sparkles size={15} />
-                Try again
+                {extensionDetected ? "Try again" : "Install extension"}
               </button>
             </div>
           </aside>
@@ -718,8 +758,8 @@ export default function SpySaveApp() {
                   Connect your Chrome extension first
                 </h2>
                 <p className="mt-1 max-w-2xl text-sm leading-6 text-[#4f635d]">
-                  Copy this User ID, open the SpySave extension on screen, and paste it once.
-                  After that, SpySave will remember it.
+                  Install SpySave once. The dashboard will then detect the extension,
+                  connect your account automatically, and remember it.
                 </p>
                 {extensionConnectStatus ? (
                   <p className="mt-2 text-sm font-bold text-[#2f8a61]">
@@ -746,7 +786,7 @@ export default function SpySaveApp() {
                     className="brand-gradient inline-flex h-11 items-center justify-center gap-2 rounded-lg px-4 text-sm font-bold"
                   >
                     <Sparkles size={16} />
-                    Open extension
+                    {extensionDetected ? "Open extension" : "Install extension"}
                   </button>
                 </div>
               </div>

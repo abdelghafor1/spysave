@@ -2,7 +2,6 @@
 
 import {
   BookmarkPlus,
-  ChevronLeft,
   Download,
   Gauge,
   RefreshCw,
@@ -177,24 +176,11 @@ export default function SavedAdsPage() {
   return (
     <main className="aurora-page min-h-screen text-[#13231f]">
       <header className="glass-nav border-b backdrop-blur">
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-5 py-3">
-          <Link
-            href="/app"
-            className="inline-flex h-10 items-center gap-2 rounded-lg border border-[#d8e8e1] bg-white/80 px-4 text-sm font-bold"
-          >
-            <ChevronLeft size={16} />
-            Dashboard
-          </Link>
-          <div className="text-right">
-            <p className="text-sm font-bold uppercase text-[#07966f]">Library</p>
-            <h1 className="text-2xl font-semibold">Saved ads</h1>
-          </div>
-        </div>
         <ServiceMenu />
       </header>
 
       <section className="mx-auto max-w-7xl px-5 py-5">
-        <div className="premium-panel rounded-xl p-4">
+        <div className="premium-panel app-primary-panel rounded-xl p-4">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <p className="text-sm font-bold uppercase text-[#07966f]">

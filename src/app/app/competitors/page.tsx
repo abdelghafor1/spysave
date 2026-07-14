@@ -1,6 +1,6 @@
 "use client";
 
-import { Building2, ChevronLeft, Plus, RefreshCw, Trash2 } from "lucide-react";
+import { Building2, Plus, RefreshCw, Trash2 } from "lucide-react";
 import { User, onAuthStateChanged } from "firebase/auth";
 import Link from "next/link";
 import { FormEvent, useEffect, useMemo, useState } from "react";
@@ -169,7 +169,7 @@ export default function CompetitorsPage() {
           </p>
           <h1 className="mt-2 text-4xl font-semibold">Login required</h1>
           <p className="mt-2 text-[#4f635d]">
-            Login f dashboard باش تزيد competitors وتشوف stats ديالهم.
+            Sign in to add competitor pages, connect saved ads, and compare their creative scores.
           </p>
           <Link
             href="/app"
@@ -186,15 +186,7 @@ export default function CompetitorsPage() {
     <main className="aurora-page min-h-screen px-5 py-6 text-[#13231f]">
       <ServiceMenu />
       <section className="mx-auto max-w-7xl">
-        <Link
-          href="/app"
-          className="mb-4 inline-flex h-10 items-center gap-2 rounded-lg border border-[#d8e8e1] bg-white/80 px-4 text-sm font-bold"
-        >
-          <ChevronLeft size={16} />
-          Back dashboard
-        </Link>
-
-        <section className="premium-panel rounded-xl p-5">
+        <section className="premium-panel app-primary-panel rounded-xl p-5">
           <div className="mb-5 flex flex-wrap items-start justify-between gap-3">
             <div>
               <p className="text-sm font-bold uppercase text-[#07966f]">
