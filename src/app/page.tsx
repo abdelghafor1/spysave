@@ -225,7 +225,7 @@ export default function Home() {
         <ResearchBlueprint />
       </section>
 
-      <section id="analysis" className="ss-story ss-reveal">
+      <section id="analysis" className="ss-story ss-story-split ss-reveal">
         <header>
           <h2>Know what to do after you save the ad.</h2>
           <div>
@@ -244,7 +244,7 @@ export default function Home() {
         />
       </section>
 
-      <section id="library" className="ss-story ss-reveal">
+      <section id="library" className="ss-story ss-story-split is-reverse ss-reveal">
         <header>
           <h2>Turn scattered inspiration into creative memory.</h2>
           <div>
@@ -263,7 +263,7 @@ export default function Home() {
         />
       </section>
 
-      <section id="tracking" className="ss-story ss-reveal">
+      <section id="tracking" className="ss-story ss-story-split ss-reveal">
         <header>
           <h2>Keep the competitors that matter in one place.</h2>
           <div>
@@ -282,7 +282,7 @@ export default function Home() {
         />
       </section>
 
-      <section id="notifications" className="ss-story ss-reveal">
+      <section id="notifications" className="ss-story ss-story-split is-reverse ss-reveal">
         <header>
           <h2>Stay close to every important update.</h2>
           <div>
