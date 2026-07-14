@@ -6,10 +6,8 @@ import {
   Bookmark,
   CircleDollarSign,
   CircleHelp,
-  House,
   LayoutDashboard,
   Radar,
-  Users,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -17,13 +15,11 @@ import { BrandMark } from "@/components/BrandMark";
 import { serviceMenu } from "@/lib/services";
 
 const menuIcons = {
-  "/": House,
   "/app": LayoutDashboard,
   "/app/ads": Bookmark,
   "/app/competitors": Radar,
   "/app/reports": BarChart3,
   "/app/notifications": Bell,
-  "/app/workspace": Users,
   "/app/billing": CircleDollarSign,
   "/help": CircleHelp,
 } as const;

@@ -58,13 +58,11 @@ export const services = [
 ];
 
 export const serviceMenu = [
-  { label: "Home", href: "/" },
   { label: "Dashboard", href: "/app" },
   { label: "Saved Ads", href: "/app/ads" },
   { label: "Tracking", href: "/app/competitors" },
   { label: "Reports", href: "/app/reports" },
   { label: "Notifications", href: "/app/notifications" },
-  { label: "Workspace", href: "/app/workspace" },
   { label: "Billing", href: "/app/billing" },
   { label: "Help", href: "/help" },
 ];
