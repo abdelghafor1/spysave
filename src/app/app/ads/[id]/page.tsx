@@ -244,7 +244,7 @@ export default function AdDetailPage({
         {error ? <p className="mt-4 font-semibold text-[#b42318]">{error}</p> : null}
 
         {ad ? (
-          <div className="mt-5 grid gap-4 lg:grid-cols-[1fr_0.9fr]">
+          <div className="mt-5 grid gap-4">
             <section className="premium-panel rounded-xl p-5">
               <p className="text-sm font-bold uppercase text-[#07966f]">Ad detail</p>
               <h1 className="mt-2 text-4xl font-semibold">{ad.pageName}</h1>
