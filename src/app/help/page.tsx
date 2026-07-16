@@ -7,6 +7,7 @@ import { services } from "@/lib/services";
 export default function HelpPage() {
   return (
     <main className="aurora-page min-h-screen text-[#13231f]">
+      <ServiceMenu />
       <nav className="glass-nav sticky top-0 z-40 border-b backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-5 py-3">
           <Link href="/" className="flex items-center gap-3">
@@ -29,7 +30,6 @@ export default function HelpPage() {
             <ChevronRight size={16} />
           </Link>
         </div>
-        <ServiceMenu />
       </nav>
 
       <section className="app-help-shell">
