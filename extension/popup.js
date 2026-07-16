@@ -408,13 +408,24 @@ async function saveCompetitor() {
   saveCompetitorBtn.disabled = true;
   setStatus("Saving competitor...");
   try {
-    const response = await fetch(`${apiBase}/api/competitors`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
+    const data = await new Promise((resolve, reject) => {
+      chrome.runtime.sendMessage(
+        { type: "SPYSAVE_SAVE_COMPETITOR", apiBase, payload },
+        (response) => {
+          if (chrome.runtime.lastError || !response?.ok) {
+            reject(
+              new Error(
+                response?.error ||
+                  chrome.runtime.lastError?.message ||
+                  "Competitor save failed",
+              ),
+            );
+            return;
+          }
+          resolve(response.data || {});
+        },
+      );
     });
-    const data = await response.json().catch(() => ({}));
-    if (!response.ok) throw new Error(data.error || "Competitor save failed");
     setStatus(`Competitor saved: ${data.competitor?.name || payload.name}.`);
   } catch (error) {
     setStatus(error instanceof Error ? error.message : "Could not save competitor.", true);

@@ -28,22 +28,35 @@ export async function POST(request: Request) {
     );
   }
 
-  const saved = await saveCompetitor({
-    userId,
-    name,
-    libraryUrl: payload.libraryUrl?.trim() || "",
-    niche: payload.niche?.trim() || "",
-    notes: payload.notes?.trim() || "",
-  });
-
-  return NextResponse.json({
-    id: saved.id,
-    userId,
-    competitor: {
+  try {
+    const saved = await saveCompetitor({
+      userId,
       name,
       libraryUrl: payload.libraryUrl?.trim() || "",
       niche: payload.niche?.trim() || "",
       notes: payload.notes?.trim() || "",
-    },
-  });
+    });
+
+    return NextResponse.json({
+      id: saved.id,
+      userId,
+      competitor: {
+        name,
+        libraryUrl: payload.libraryUrl?.trim() || "",
+        niche: payload.niche?.trim() || "",
+        notes: payload.notes?.trim() || "",
+      },
+    });
+  } catch (error) {
+    console.error("SpySave competitor save failed", error);
+    return NextResponse.json(
+      {
+        error:
+          error instanceof Error
+            ? error.message
+            : "Competitor save failed. Check Firestore rules and try again.",
+      },
+      { status: 500 },
+    );
+  }
 }
