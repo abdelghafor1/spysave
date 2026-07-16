@@ -126,7 +126,7 @@ function setActiveTool(tool) {
   competitorsTab.setAttribute("aria-pressed", String(!isAds));
   adsPanel.hidden = !isAds;
   competitorsPanel.hidden = isAds;
-  if (!isAds) fillCompetitorFromPage();
+  if (!isAds) fillCompetitorFromPage(false);
 }
 
 function setPickMode(active) {
@@ -271,25 +271,59 @@ async function fillFromPage() {
   }
 }
 
-async function fillCompetitorFromPage() {
+function getPageContextFromContent(tabId) {
+  return new Promise((resolve, reject) => {
+    chrome.tabs.sendMessage(tabId, { type: "SPYSAVE_GET_PAGE_CONTEXT" }, (response) => {
+      if (chrome.runtime.lastError || !response) {
+        reject(new Error(chrome.runtime.lastError?.message || "Could not read this page."));
+        return;
+      }
+      resolve(response);
+    });
+  });
+}
+
+async function fillCompetitorFromPage(showStatus = true) {
   const tab = await getActiveTab();
-  if (!tab) return;
+  if (!tab?.id || !tab.url) {
+    if (showStatus) setStatus("Open a competitor page first.", true);
+    return;
+  }
 
   if (!competitorUrlInput.value) competitorUrlInput.value = tab.url || "";
-  if (competitorNameInput.value) return;
+  let detectedName = tab.title || "";
+  let detectedUrl = tab.url || "";
 
   try {
-    const [injected] = await chrome.scripting.executeScript({
+    await chrome.scripting.executeScript({
       target: { tabId: tab.id },
-      func: () => document.title,
+      files: ["content.js"],
     });
-    competitorNameInput.value = (injected?.result || "Competitor page")
+    const context = await getPageContextFromContent(tab.id);
+    detectedName = context.title || detectedName;
+    detectedUrl = context.url || detectedUrl;
+  } catch {
+    // Fallback to the current browser tab when the page blocks script injection.
+  }
+
+  if (!competitorUrlInput.value || competitorUrlInput.value === tab.url) {
+    competitorUrlInput.value = detectedUrl;
+  }
+  if (!competitorNameInput.value || competitorNameInput.value === "Competitor page") {
+    competitorNameInput.value = (detectedName || "Competitor page")
       .replace(/\| Facebook.*$/i, "")
       .replace(/- Meta.*$/i, "")
       .replace(/\| TikTok.*$/i, "")
       .trim();
-  } catch {
-    competitorNameInput.value = "Competitor page";
+  }
+
+  if (showStatus) {
+    setStatus(
+      competitorNameInput.value && competitorNameInput.value !== "Competitor page"
+        ? "Competitor page detected. Review the fields, then save."
+        : "URL detected. Add the competitor name, then save.",
+      !competitorNameInput.value || competitorNameInput.value === "Competitor page",
+    );
   }
 }
 
@@ -393,7 +427,7 @@ loadSavedSettings().then(fillFromPage);
 apiBaseInput.addEventListener("input", saveSettings);
 userIdInput.addEventListener("input", saveSettings);
 detectBtn.addEventListener("click", fillFromPage);
-detectCompetitorBtn.addEventListener("click", fillCompetitorFromPage);
+detectCompetitorBtn.addEventListener("click", () => fillCompetitorFromPage(true));
 clearBtn.addEventListener("click", clearAdFields);
 pickBtn.addEventListener("click", togglePickFromPage);
 saveBtn.addEventListener("click", saveAd);
