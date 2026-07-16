@@ -6975,6 +6975,16 @@ article:hover {
 .spysave-dark .aurora-page p, .spysave-dark .account-detail dt { color: #afbbb5; }
 .spysave-dark .account-detail { border-color: #2c3832; }
 
+html[dir="rtl"] .aurora-page { padding-left: 0; padding-right: 78px; }
+html[dir="rtl"] .app-sidebar { inset: 0 0 0 auto; border-left: 1px solid var(--app-line); border-right: 0; }
+html[dir="rtl"] .app-utilitybar { right: 78px; left: 0; }
+html[dir="rtl"] .app-menu-link::after,
+html[dir="rtl"] .app-sidebar-settings::after { right: calc(100% + 12px); left: auto; transform: translateY(-50%) translateX(4px); }
+html[dir="rtl"] .app-menu-link:hover::after,
+html[dir="rtl"] .app-menu-link:focus-visible::after,
+html[dir="rtl"] .app-sidebar-settings:hover::after,
+html[dir="rtl"] .app-sidebar-settings:focus-visible::after { transform: translateY(-50%) translateX(0); }
+
 @media (max-width: 860px) {
   .aurora-page { padding-left: 0; padding-bottom: 78px; }
   .app-sidebar {
@@ -6993,6 +7003,9 @@ article:hover {
   .app-sidebar-settings { display: none; }
   .app-utilitybar { left: 0; height: 58px; padding: 0 16px; }
   .app-menu-link::after { display: none; }
+  html[dir="rtl"] .aurora-page { padding-right: 0; }
+  html[dir="rtl"] .app-sidebar { inset: auto 0 0 0; border-left: 0; }
+  html[dir="rtl"] .app-utilitybar { right: 0; left: 0; }
 }
 
 /* Product guide and authentication: editorial structure, not feature cards. */

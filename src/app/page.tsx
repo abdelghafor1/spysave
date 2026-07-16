@@ -12,8 +12,7 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { BrandMark } from "@/components/BrandMark";
-
-type Locale = "en" | "fr" | "ar";
+import { type Locale, useLanguage } from "@/components/LanguageProvider";
 
 const copy = {
   en: {
@@ -188,7 +187,7 @@ function ResearchBlueprint() {
 
 export default function Home() {
   const [theme, setTheme] = useState<"dark" | "light">("dark");
-  const [locale, setLocale] = useState<Locale>("en");
+  const { locale, setLocale } = useLanguage();
   const text = copy[locale];
 
   useReveal();
@@ -201,24 +200,6 @@ export default function Home() {
     const frame = window.requestAnimationFrame(() => setTheme(preferredTheme));
     return () => window.cancelAnimationFrame(frame);
   }, []);
-
-  useEffect(() => {
-    const savedLocale = window.localStorage.getItem("spysave-language");
-    if (savedLocale === "en" || savedLocale === "fr" || savedLocale === "ar") {
-      const frame = window.requestAnimationFrame(() => setLocale(savedLocale));
-      return () => window.cancelAnimationFrame(frame);
-    }
-  }, []);
-
-  useEffect(() => {
-    document.documentElement.lang = locale;
-    document.documentElement.dir = locale === "ar" ? "rtl" : "ltr";
-  }, [locale]);
-
-  function changeLocale(nextLocale: Locale) {
-    setLocale(nextLocale);
-    window.localStorage.setItem("spysave-language", nextLocale);
-  }
 
   function toggleTheme() {
     const nextTheme = theme === "dark" ? "light" : "dark";
@@ -238,7 +219,7 @@ export default function Home() {
             <Languages size={16} aria-hidden="true" />
             <select
               value={locale}
-              onChange={(event) => changeLocale(event.target.value as Locale)}
+              onChange={(event) => setLocale(event.target.value as "en" | "fr" | "ar")}
               aria-label="Change language"
             >
               <option value="en">EN</option>
