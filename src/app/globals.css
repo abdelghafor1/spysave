@@ -6827,6 +6827,8 @@ article:hover {
 
 .app-sidebar-settings::after {
   position: absolute;
+  right: auto;
+  bottom: auto;
   left: calc(100% + 12px);
   top: 50%;
   transform: translateY(-50%) translateX(-4px);
@@ -6843,6 +6845,7 @@ article:hover {
   font-weight: 700;
   letter-spacing: 0.02em;
   white-space: nowrap;
+  width: max-content;
   box-shadow: 0 10px 22px rgba(6, 72, 57, 0.2) !important;
   transition: opacity 150ms ease, transform 150ms ease;
 }
@@ -6865,6 +6868,8 @@ article:hover {
 
 .app-menu-link::after {
   position: absolute;
+  right: auto;
+  bottom: auto;
   left: calc(100% + 12px);
   top: 50%;
   z-index: 120;
@@ -6881,6 +6886,7 @@ article:hover {
   font-weight: 700;
   letter-spacing: 0.02em;
   white-space: nowrap;
+  width: max-content;
   box-shadow: 0 10px 22px rgba(6, 72, 57, 0.2) !important;
   transition: opacity 150ms ease, transform 150ms ease;
 }
