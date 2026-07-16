@@ -53,6 +53,35 @@ p {
   font-weight: 700;
 }
 
+.tabs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 5px;
+  margin-top: 14px;
+  border: 1px solid #d8e8e1;
+  border-radius: 9px;
+  background: #fff;
+  padding: 5px;
+}
+
+button.tab {
+  height: 36px;
+  margin-top: 0;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: #526173;
+}
+
+button.tab.active {
+  background: #103b31;
+  color: #d9fff0;
+}
+
+[hidden] {
+  display: none !important;
+}
+
 label {
   display: grid;
   gap: 6px;

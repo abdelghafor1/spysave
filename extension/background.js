@@ -1,8 +1,12 @@
 const DEFAULT_API_BASE = "https://spysave.vercel.app";
 
-chrome.runtime.onInstalled.addListener(() => {
+chrome.runtime.onInstalled.addListener((details) => {
   if (chrome.sidePanel?.setPanelBehavior) {
     chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true }).catch(() => undefined);
+  }
+
+  if (details.reason === "install") {
+    chrome.tabs.create({ url: `${DEFAULT_API_BASE}/app?extensionInstalled=1` });
   }
 });
 

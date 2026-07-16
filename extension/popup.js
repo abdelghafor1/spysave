@@ -6,10 +6,20 @@ const landingPageUrlInput = document.getElementById("landingPageUrl");
 const mediaUrlInput = document.getElementById("mediaUrl");
 const tagsInput = document.getElementById("tags");
 const notesInput = document.getElementById("notes");
+const competitorNameInput = document.getElementById("competitorName");
+const competitorUrlInput = document.getElementById("competitorUrl");
+const competitorNicheInput = document.getElementById("competitorNiche");
+const competitorNotesInput = document.getElementById("competitorNotes");
 const detectBtn = document.getElementById("detectBtn");
+const detectCompetitorBtn = document.getElementById("detectCompetitorBtn");
 const clearBtn = document.getElementById("clearBtn");
 const pickBtn = document.getElementById("pickBtn");
 const saveBtn = document.getElementById("saveBtn");
+const saveCompetitorBtn = document.getElementById("saveCompetitorBtn");
+const adsTab = document.getElementById("adsTab");
+const competitorsTab = document.getElementById("competitorsTab");
+const adsPanel = document.getElementById("adsPanel");
+const competitorsPanel = document.getElementById("competitorsPanel");
 const statusEl = document.getElementById("status");
 const DEFAULT_API_BASE = "https://spysave.vercel.app";
 let isPickMode = false;
@@ -106,6 +116,17 @@ function clearAdFields() {
   tagsInput.value = "";
   notesInput.value = "";
   setStatus("Ad fields cleared. User ID stayed connected.");
+}
+
+function setActiveTool(tool) {
+  const isAds = tool === "ads";
+  adsTab.classList.toggle("active", isAds);
+  competitorsTab.classList.toggle("active", !isAds);
+  adsTab.setAttribute("aria-pressed", String(isAds));
+  competitorsTab.setAttribute("aria-pressed", String(!isAds));
+  adsPanel.hidden = !isAds;
+  competitorsPanel.hidden = isAds;
+  if (!isAds) fillCompetitorFromPage();
 }
 
 function setPickMode(active) {
@@ -250,6 +271,28 @@ async function fillFromPage() {
   }
 }
 
+async function fillCompetitorFromPage() {
+  const tab = await getActiveTab();
+  if (!tab) return;
+
+  if (!competitorUrlInput.value) competitorUrlInput.value = tab.url || "";
+  if (competitorNameInput.value) return;
+
+  try {
+    const [injected] = await chrome.scripting.executeScript({
+      target: { tabId: tab.id },
+      func: () => document.title,
+    });
+    competitorNameInput.value = (injected?.result || "Competitor page")
+      .replace(/\| Facebook.*$/i, "")
+      .replace(/- Meta.*$/i, "")
+      .replace(/\| TikTok.*$/i, "")
+      .trim();
+  } catch {
+    competitorNameInput.value = "Competitor page";
+  }
+}
+
 async function saveAd() {
   const apiBase = apiBaseInput.value.replace(/\/$/, "");
   const userId = userIdInput.value.trim();
@@ -308,13 +351,55 @@ async function saveAd() {
   }
 }
 
+async function saveCompetitor() {
+  const apiBase = apiBaseInput.value.trim().replace(/\/$/, "");
+  const userId = userIdInput.value.trim();
+  const payload = {
+    userId,
+    name: competitorNameInput.value.trim(),
+    libraryUrl: competitorUrlInput.value.trim(),
+    niche: competitorNicheInput.value.trim(),
+    notes: competitorNotesInput.value.trim(),
+  };
+
+  if (!payload.userId) {
+    setStatus("Paste your User ID from the SpySave dashboard first.", true);
+    return;
+  }
+  if (!payload.name) {
+    setStatus("Add competitor name first.", true);
+    return;
+  }
+
+  saveCompetitorBtn.disabled = true;
+  setStatus("Saving competitor...");
+  try {
+    const response = await fetch(`${apiBase}/api/competitors`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(data.error || "Competitor save failed");
+    setStatus(`Competitor saved: ${data.competitor?.name || payload.name}.`);
+  } catch (error) {
+    setStatus(error instanceof Error ? error.message : "Could not save competitor.", true);
+  } finally {
+    saveCompetitorBtn.disabled = false;
+  }
+}
+
 loadSavedSettings().then(fillFromPage);
 apiBaseInput.addEventListener("input", saveSettings);
 userIdInput.addEventListener("input", saveSettings);
 detectBtn.addEventListener("click", fillFromPage);
+detectCompetitorBtn.addEventListener("click", fillCompetitorFromPage);
 clearBtn.addEventListener("click", clearAdFields);
 pickBtn.addEventListener("click", togglePickFromPage);
 saveBtn.addEventListener("click", saveAd);
+saveCompetitorBtn.addEventListener("click", saveCompetitor);
+adsTab.addEventListener("click", () => setActiveTool("ads"));
+competitorsTab.addEventListener("click", () => setActiveTool("competitors"));
 
 chrome.runtime.onMessage.addListener((message) => {
   if (message.type !== "SPYSAVE_PAGE_PICK_RESULT") return;

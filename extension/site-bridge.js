@@ -1,4 +1,18 @@
 window.addEventListener("message", (event) => {
+  if (event.source !== window || event.data?.type !== "SPYSAVE_EXTENSION_PING") {
+    return;
+  }
+
+  window.postMessage(
+    {
+      type: "SPYSAVE_EXTENSION_PRESENT",
+      version: chrome.runtime.getManifest().version,
+    },
+    event.origin,
+  );
+});
+
+window.addEventListener("message", (event) => {
   if (event.source !== window || event.data?.type !== "SPYSAVE_CONNECT_EXTENSION") {
     return;
   }

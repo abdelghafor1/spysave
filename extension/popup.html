@@ -32,41 +32,74 @@
       </label>
       <p class="hint">Paste it once. SpySave will remember it.</p>
 
-      <button id="detectBtn" class="secondary" type="button">Auto detect ad</button>
-      <button id="clearBtn" class="danger" type="button">Clear ad fields</button>
-      <button id="pickBtn" class="pick" type="button" aria-pressed="false">Pick ad from page</button>
+      <nav class="tabs" aria-label="SpySave tools">
+        <button id="adsTab" class="tab active" type="button" aria-pressed="true">Ads</button>
+        <button id="competitorsTab" class="tab" type="button" aria-pressed="false">Competitors</button>
+      </nav>
 
-      <label>
-        Page name
-        <input id="pageName" placeholder="Brand or competitor name" />
-      </label>
+      <section id="adsPanel">
+        <button id="detectBtn" class="secondary" type="button">Auto detect ad</button>
+        <button id="clearBtn" class="danger" type="button">Clear ad fields</button>
+        <button id="pickBtn" class="pick" type="button" aria-pressed="false">Pick ad from page</button>
 
-      <label>
-        Ad text
-        <textarea id="adText" placeholder="Select ad text on the page, then open SpySave."></textarea>
-      </label>
+        <label>
+          Page name
+          <input id="pageName" placeholder="Brand or competitor name" />
+        </label>
 
-      <label>
-        Landing page URL
-        <input id="landingPageUrl" placeholder="https://store.com/product" />
-      </label>
+        <label>
+          Ad text
+          <textarea id="adText" placeholder="Select ad text on the page, then open SpySave."></textarea>
+        </label>
 
-      <label>
-        Media URL
-        <input id="mediaUrl" placeholder="Detected image/video URL" />
-      </label>
+        <label>
+          Landing page URL
+          <input id="landingPageUrl" placeholder="https://store.com/product" />
+        </label>
 
-      <label>
-        Tags
-        <input id="tags" placeholder="skincare, ugc, winning idea" />
-      </label>
+        <label>
+          Media URL
+          <input id="mediaUrl" placeholder="Detected image/video URL" />
+        </label>
 
-      <label>
-        Notes
-        <textarea id="notes" class="short" placeholder="Why are you saving this ad?"></textarea>
-      </label>
+        <label>
+          Tags
+          <input id="tags" placeholder="skincare, ugc, winning idea" />
+        </label>
 
-      <button id="saveBtn">Save ad</button>
+        <label>
+          Notes
+          <textarea id="notes" class="short" placeholder="Why are you saving this ad?"></textarea>
+        </label>
+
+        <button id="saveBtn">Save ad</button>
+      </section>
+
+      <section id="competitorsPanel" hidden>
+        <button id="detectCompetitorBtn" class="secondary" type="button">Detect competitor page</button>
+
+        <label>
+          Competitor name
+          <input id="competitorName" placeholder="Brand or page name" />
+        </label>
+
+        <label>
+          Page or library URL
+          <input id="competitorUrl" placeholder="Meta Library or TikTok page URL" />
+        </label>
+
+        <label>
+          Niche
+          <input id="competitorNiche" placeholder="skincare, fashion, gadgets..." />
+        </label>
+
+        <label>
+          Notes
+          <textarea id="competitorNotes" class="short" placeholder="Why track this competitor?"></textarea>
+        </label>
+
+        <button id="saveCompetitorBtn">Save competitor</button>
+      </section>
       <p id="status"></p>
     </main>
     <script src="popup.js"></script>
